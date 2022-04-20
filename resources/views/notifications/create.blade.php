@@ -1,27 +1,33 @@
 
 <x-app-layout>
     <div class="container mx-auto">
-      {!! Form::open(['route'=>'accounts.store','class'=>'w-full max-w-lg mx-auto']) !!}
+      {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto']) !!}
 
 
 
-
-
-      <div class="flex flex-wrap justify-center -mx-3 mb-6">
-          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-             {!! Form::label("date_expenses", "Fecha de gasto", ['class'=> 'label-control']) !!}
-             {!! Form::date("date_expenses", null, ['class'=>'form-control']) !!}
+<div class="flex flex-wrap  mb-6 mx-auto">
+          <div class="w-full px-3">
+             {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control']) !!}
+            
+             {!! Form::datetimeLocal("started_date", null ,['class'=>'form-control']) !!}
           </div>
-
-
       </div>
 
       <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("area_id", "Areas", ['class'=>'label-control']) !!}
-             {!! Form::select("area_id", $areas, null , ["class"=>"form-control",'placeholder' => 'Selecciona una caja...']) !!}
+        <div class="w-full px-3">
+           {!! Form::label("finish_date", "Fecha de inicio", ['class'=> 'label-control']) !!}
+          
+           {!! Form::datetimeLocal("finish_date", null ,['class'=>'form-control']) !!}
+        </div>
+    </div>
 
-             @error('area_id')
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+          <div class="w-full px-3">
+             {!! Form::label("type_identification_id", "Tipo de identificación", ['class'=>'label-control']) !!}
+             {!! Form::select("type_identification_id", $types, null , ["class"=>"form-control",'placeholder' => 'Selecciona una tipo de identificación...']) !!}
+
+             @error('type_identification_id')
              <br>
              <small>
               *{{$message}}
@@ -31,6 +37,106 @@
           </div>
       </div>
 
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+           {!! Form::label("employee_id", "Empleados", ['class'=>'label-control']) !!}
+           {!! Form::select("employee_id", $employees, null , ["class"=>"form-control",'placeholder' => 'Selecciona un empleado...']) !!}
+
+           @error('employee_id')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+           {!! Form::label("center_cost_id", "Centro de costos", ['class'=>'label-control']) !!}
+           {!! Form::select("center_cost_id", $center_costs, null , ["class"=>"form-control",'placeholder' => 'Selecciona un empleado...']) !!}
+
+           @error('center_cost_id')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+           {!! Form::label("position_id", "Cargo", ['class'=>'label-control']) !!}
+           {!! Form::select("position_id", $positions, null , ["class"=>"form-control",'placeholder' => 'Selecciona el cargo correspondiente..']) !!}
+
+           @error('position_id')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+           {!! Form::label("boss_id", "Jefes", ['class'=>'label-control']) !!}
+           {!! Form::select("boss_id", $bosses, null , ["class"=>"form-control",'placeholder' => 'Selecciona Jefe de area']) !!}
+
+           @error('boss_id')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+           {!! Form::label("notifications_type_id", "Tipos de novedades", ['class'=>'label-control']) !!}
+           {!! Form::select("notifications_type_id", $notifications, null , ["class"=>"form-control",'placeholder' => 'Selecciona Jefe de area']) !!}
+
+           @error('notifications_type_id')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+
+            
+                    {!! Form::label("total_days", "total_days", ['class'=>'label-control']) !!}
+                    {!! Form::text("total_days", null , ["class"=>"form-control"]) !!}
+              
+
+           @error('total_days')
+           <br>
+           <small>
+            *{{$message}}
+           </small>
+           <br>
+           @enderror
+        </div>
+      </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        <div class="w-full px-3">
+        {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
+        </div>
+    </div>
+{{--  
       <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">
               {!! Form::label("supplier", "Proveedor", ['class'=>'label-control']) !!}
@@ -128,17 +234,13 @@
       </div>
 
 
-      <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-          {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
-          </div>
-      </div>
+   
 
 
 
 
 
-
+--}}
         {!!Form::close() !!}
     </div>
 
@@ -150,6 +252,11 @@
           $('#cost_center_id').select2({ });
           $('#cost_sub_center_id').select2({ });
           $('#expense_id').select2({ });
+          $('#employee_id').select2({});
+          $('#position_id').select2({});
+          $('#notifications_type_id').select2({});
+         
+
 
       });
     </script>
