@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
+
+use App\Exports\NotificationExport;
+use Maatwebsite\Excel\Facades\Excel;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +27,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     })->name('dashboard');
 
     Route::resource('notifications',NotificationController::class)->names('notifications');
+
+    Route::get('/excel', function () {
+        return Excel::download(new NotificationExport, 'novedades.xlsx');
+    });
 });
 
 

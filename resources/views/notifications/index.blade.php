@@ -1,3 +1,4 @@
 <x-app-layout>
-    <h1>Hola mundo </h1>
+    <p>Hola</p>
+    <a href="{{ url("/excel") }}">generar</a><button type="button"></button>
 </x-app-layout>

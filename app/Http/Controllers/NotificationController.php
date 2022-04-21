@@ -11,10 +11,14 @@ Use App\Models\CenterCost;
 use App\Models\Employee;
 use App\Models\IdentificationType;
 use App\Models\Boss;
+use App\Models\Notification;
 use App\Models\NotificationType;
 use App\Models\Position;
 
+/* Modulos  */
+
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
@@ -36,66 +40,54 @@ class NotificationController extends Controller
 
 
         /*$fechaEmision = Carbon::parse($req->input('fecha_emision'));
-$fechaExpiracion = Carbon::parse($req->input('fecha_expiracion'));
-
-$diasDiferencia = $fechaExpiracion->diffInDays($fechaEmision);*/
+         $fechaExpiracion = Carbon::parse($req->input('fecha_expiracion'));
+         $diasDiferencia = $fechaExpiracion->diffInDays($fechaEmision);*/
 
         return view('notifications.create', compact('center_costs','employees','types','positions','bosses','notifications'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        return $request->all();
+
+        $notification = $request->all();
+        $notification_object = (object)$notification;
+
+        $fechaInicio = Carbon::parse($notification_object->started_date);
+        $fechafinalizacion = Carbon::parse($notification_object->finish_date);
+        $notification_object->total_days = $fechaInicio->diffInDays($fechafinalizacion);
+        $notification_object->total_hours = $fechaInicio->floatDiffInHours($fechafinalizacion);
+
+        $notification_array = (array)$notification_object;
+
+        
+
+       $notification = Notification::create($notification_array);
+
+        return redirect()->route('notifications.show', $notification );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function show(Notification $notification)
     {
-        //
+        $notification = Notification::find($notification->id);
+        return view('notifications.show',compact('notification'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function edit($id)
     {
-        //
+       
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
-        //
+        
     }
 }

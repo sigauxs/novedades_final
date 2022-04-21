@@ -115,13 +115,10 @@
 
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
-
-            
-                    {!! Form::label("total_days", "total_days", ['class'=>'label-control']) !!}
-                    {!! Form::text("total_days", null , ["class"=>"form-control"]) !!}
-              
-
-           @error('total_days')
+            {!! Form::label("observation", "observation", ['class'=>'label-control']) !!}
+            {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
+                  
+           @error('observation')
            <br>
            <small>
             *{{$message}}
