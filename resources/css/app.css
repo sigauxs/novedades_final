@@ -14,6 +14,9 @@
     @apply appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 !important;
 }
 
+.inline-block {
+  display: inline-block !important;
+}
 
 .select2-selection{
     height: 35px !important;
@@ -52,4 +55,7 @@
     height: 35px !important;
 }
 
+option{
 
+    text-transform: capitalize;
+}

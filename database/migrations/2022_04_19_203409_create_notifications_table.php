@@ -25,7 +25,7 @@ return new class extends Migration
             $table->datetime('finish_date');
             $table->integer('total_days');
             $table->decimal('total_hours');
-            $table->text('observation');
+            $table->text('observation')->nullable();
             $table->timestamps();
 
             $table->foreign('type_identification_id')

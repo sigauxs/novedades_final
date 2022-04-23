@@ -34,3 +34,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 });
 
 
+Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
+
+
+
