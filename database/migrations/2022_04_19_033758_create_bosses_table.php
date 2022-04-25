@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bosses', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name');
+            $table->string('fullname');
             $table->timestamps();
         });
     }

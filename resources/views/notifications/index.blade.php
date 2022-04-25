@@ -39,34 +39,53 @@
 
 
                     <tbody>
-                        @foreach ($notifications as $notification)
+                     @foreach ($notifications as $notification)
                         <tr class="bg-white border-b">
+                          
+                          
+                          
+                         
+                          
+                          {{$notification->identificacion}}
+                          
+                          {{$notification->jefe_inmediato}}
+                          
+
+
                             <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->identificacion}}
+                              {{$notification->identificacion}} 
                             </td>
+                           <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            {{$notification->nombres}}  {{$notification->apellidos}}
+                            </td>
+                              
+                            
+                          <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            {{$notification->centro_costo}}
+                          </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              {{$notification->first_name}} {{ $notification->last_name}}
+                              {{$notification->jefe_inmediato}}
                             </td>
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              {{$notification->center_costo}}
-                            </td>
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->jefe_inmediato}}
-                            </td>
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->tipo_novedad}}
-                            </td>
+                          <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            {{$notification->tipo_novedad}}
+                          </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                 {{$notification->fecha_inicio}}
                             </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->fecha_finalizacion}}
+                                {{$notification->fecha_final}}
                             </td>
+
+                            <td> {{$notification->id}}</td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a href="{{ route('notifications.edit', $notification->id ) }}">edit</a>
-                          </td>
+                            </td>
+
+                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                              <a href="{{ route('notifications.show', $notification->id ) }}">Ver</a>
+                            </td>--}}
 
                            
                           </tr class="bg-white border-b">
