@@ -20,11 +20,15 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->decimal('salary')->default(0);
+            $table->unsignedBigInteger('center_cost_id');
             $table->boolean('status')->default(1);
             $table->timestamps();
 
             $table->foreign('identification_type_id')
                    ->references('id')->on('identification_types');
+
+            $table->foreign('center_cost_id')
+            ->references('id')->on('center_costs');
         });
     }
 

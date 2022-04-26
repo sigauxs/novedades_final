@@ -3,7 +3,7 @@
 
     <div class="container mx-auto">
 
-     
+{{$user}}
       
       {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 

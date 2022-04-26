@@ -46,11 +46,7 @@
     <div class="py-1" role="none">
       <a href="{{route('notifications.create')}}" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0"> Crear novedad </a>
       <a href="{{route('notifications.index')}}" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Generar novedades</a>
-      <a href="#" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
-      <a href="#" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
-      <form method="POST" action="#" role="none">
-        <button type="submit" class="text-gray-700 block w-full text-left px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
-      </form>
+      
     </div>
   </div>
 </div>
@@ -129,10 +125,7 @@
             <div class="py-1" role="none">
               <a href="{{route('notifications.create')}}" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0"> Crear novedad </a>
               <a href="{{route('notifications.index')}}" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Generar novedades</a>
-              <a href="#" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
-              <form method="POST" action="#" role="none">
-                <button type="submit" class="text-gray-700 block w-full text-left px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
-              </form>
+            
             </div>
           </div>
         </div>

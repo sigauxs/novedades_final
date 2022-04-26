@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto">
-
+      
         <div class="flex flex-col">
             <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="py-2 inline-block min-w-full sm:px-4 lg:px-8">
@@ -17,10 +17,10 @@
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                           Empleados
                         </th>
-                        <th scope="col" class="text-sm font-medium text-white px-4 py-2">
+                        <th scope="col" class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm font-medium text-white px-4 py-2">
                           Centro de costos
                         </th>
-                        <th scope="col" class="text-sm font-medium text-white px-4 py-2">
+                        <th scope="col" class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm font-medium text-white px-4 py-2">
                             Jefe de inmediato
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
@@ -31,6 +31,9 @@
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                             Fecha de finalizacion
+                        </th>
+                        <th scope="col" colspan="2" class="text-sm font-medium text-white px-4 py-2">
+                          
                         </th>
                       </tr>
                     </thead class="border-b">
@@ -46,13 +49,10 @@
                           
                          
                           
-                          {{$notification->identificacion}}
-                          
-                          {{$notification->jefe_inmediato}}
                           
 
 
-                            <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               {{$notification->identificacion}} 
                             </td>
@@ -61,10 +61,10 @@
                             </td>
                               
                             
-                          <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                          <td class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                             {{$notification->centro_costo}}
                           </td>
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            <td class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               {{$notification->jefe_inmediato}}
                             </td>
                           <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
@@ -77,17 +77,18 @@
                                 {{$notification->fecha_final}}
                             </td>
 
-                            <td> {{$notification->id}}</td>
+                            
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              <a href="{{ route('notifications.edit', $notification->id ) }}">edit</a>
+                              <a href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
                             </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              <a href="{{ route('notifications.show', $notification->id ) }}">Ver</a>
-                            </td>--}}
+                              <a href="{{ route('notifications.show', $notification->id ) }}"><span class="material-icons" style="color:green; font-size:26px">preview</span></a>
+                            </td>
 
-                           
+                            
+                            
                           </tr class="bg-white border-b">
                         @endforeach
                     </tbody>

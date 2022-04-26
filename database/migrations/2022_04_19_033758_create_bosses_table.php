@@ -16,7 +16,11 @@ return new class extends Migration
         Schema::create('bosses', function (Blueprint $table) {
             $table->id();
             $table->string('fullname');
+            $table->unsignedBigInteger('center_cost_id');
             $table->timestamps();
+
+            $table->foreign('center_cost_id')
+            ->references('id')->on('center_costs');
         });
     }
 
