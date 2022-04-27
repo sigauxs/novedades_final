@@ -15,20 +15,9 @@
                            Tipo de identificación
                         </td>
                         <td scope="col" class="text-sm font-medium  px-6 py-4">
-                        @switch($notification->type_identification_id)
-                          @case(1)
-                              Cedula de ciudania
-                              @break
-                          @case(2)
-                             Tarjeta de identidad
-                              @break
-                          @case(3)
-                              Pasaporte
-                          @break
-                       
-                          @default
-                              Default case...
-                         @endswitch
+                          
+                        {{$notification->identificationType->name}}
+                         
                         </td>
                     </tr>
                    

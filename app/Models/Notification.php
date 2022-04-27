@@ -28,6 +28,9 @@ class Notification extends Model
             return $this->HasOne(Employee::class,'id','employee_id');
     }
 
+    public function identificationType():HasOne {
+        return $this->HasOne(IdentificationType::class,'id','type_identification_id');
+    }
         
 
     public function centerCost():HasOne{      
