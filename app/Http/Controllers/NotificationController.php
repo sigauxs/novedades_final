@@ -30,6 +30,7 @@ class NotificationController extends Controller
     {
 
       $user = Auth::user()->email;
+      $user_id = Auth::user()->id;
 
       $av = "avidal@sigpeconsultores.com.co";
       $bl = "blamby@sigpeconsultores.com.co";
@@ -41,15 +42,51 @@ class NotificationController extends Controller
       $correos = [$av,$bl,$sc,$lc,$mt,$kb];
 
       
+      $mercadeo = 2;
+      $tsa = 3;
+      $operacional = 1;
+      $gerencia = 7;
+      $administrativo = 6;
+      $drummot = 4;
+      $promigas = 5;
 
+        if( in_array($user,$correos)){
 
-      
-
-        $notifications = DB::table('notifications as n')->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')->join('employees as em', 'n.employee_id','=','em.id')->join('positions as pos','n.position_id','=','pos.id')->join('center_costs as cc','n.center_cost_id','=','cc.id')->join('bosses as boss','n.boss_id','=','boss.id')->join('notifications_types as nt','n.notifications_type_id','=','nt.id')->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad',DB::raw("CONCAT(LEFT((started_date),10),' ',TIME_FORMAT(RIGHT((started_date),8),'%r')) AS 'fecha_inicio' "),DB::raw("CONCAT(LEFT((finish_date),10),' ',TIME_FORMAT(RIGHT((finish_date),8),'%r')) AS 'fecha_final' "),'total_days as total de dias','total_hours as total de horas','observation as observacion')
+        $notifications = DB::table('notifications as n')
+        ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+        ->join('employees as em', 'n.employee_id','=','em.id')
+        ->join('positions as pos','n.position_id','=','pos.id')
+        ->join('center_costs as cc','n.center_cost_id','=','cc.id')
+        ->join('bosses as boss','n.boss_id','=','boss.id')
+        ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+        ->where('n.user_id',$user_id)
+        ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad',DB::raw("CONCAT(LEFT((started_date),10),' ',TIME_FORMAT(RIGHT((started_date),8),'%r')) AS 'fecha_inicio' "),DB::raw("CONCAT(LEFT((finish_date),10),' ',TIME_FORMAT(RIGHT((finish_date),8),'%r')) AS 'fecha_final' "),'total_days as total de dias','total_hours as total de horas','observation as observacion')
         ->orderBy('fecha_inicio','desc')
         ->get();
 
-        return view('notifications.index', compact('notifications','correos','user'));
+        }else{
+
+          $notifications = DB::table('notifications as n')
+          ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+          ->join('employees as em', 'n.employee_id','=','em.id')
+          ->join('positions as pos','n.position_id','=','pos.id')
+          ->join('center_costs as cc','n.center_cost_id','=','cc.id')
+          ->join('bosses as boss','n.boss_id','=','boss.id')
+          ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad',DB::raw("CONCAT(LEFT((started_date),10),' ',TIME_FORMAT(RIGHT((started_date),8),'%r')) AS 'fecha_inicio' "),DB::raw("CONCAT(LEFT((finish_date),10),' ',TIME_FORMAT(RIGHT((finish_date),8),'%r')) AS 'fecha_final' "),'total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->orderBy('fecha_inicio','desc')
+          ->get();
+
+        }
+       
+
+
+      return view('notifications.index', compact('notifications','correos','user'));
+  
+
+     
+
+      
     }
 
   
@@ -73,10 +110,10 @@ class NotificationController extends Controller
     {
 
         $request->validated();
-        
+        $user = Auth::user()->id;
         $notification = $request->all();
         $notification_object = (object)$notification;
-
+        $notification_object->user_id = $user;
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
         $notification_object->total_days = $fechaInicio->diffInDays($fechafinalizacion);

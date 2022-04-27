@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('center_cost_id');
             $table->unsignedBigInteger('boss_id');
             $table->unsignedBigInteger('notifications_type_id');
+            $table->unsignedBigInteger('user_id');
             $table->dateTime('started_date');
             $table->datetime('finish_date');
             $table->integer('total_days');
@@ -30,6 +31,9 @@ return new class extends Migration
 
             $table->foreign('type_identification_id')
             ->references('id')->on('identification_types');
+
+            $table->foreign('user_id')
+            ->references('id')->on('users');
 
             $table->foreign('employee_id')
             ->references('id')->on('employees');

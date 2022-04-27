@@ -69,7 +69,7 @@
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
            {!! Form::label("center_cost_id", "Centro de costos", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("center_cost_id", $center_costs, null , ["class"=>"form-control",'placeholder' => 'Selecciona un empleado...']) !!}
+           {!! Form::select("center_cost_id", $center_costs, null , ["class"=>"form-control"]) !!}
 
            @error('center_cost_id')
            <small class="text-red-600 font-bold text-base">
@@ -97,7 +97,7 @@
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
            {!! Form::label("boss_id", "Jefes", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("boss_id", $bosses, null , ["class"=>"form-control",'placeholder' => 'Selecciona Jefe de area']) !!}
+           {!! Form::select("boss_id", $bosses, null , ["class"=>"form-control","readonly"]) !!}
 
            @error('boss_id')
            <small class="text-red-600 font-bold text-base">

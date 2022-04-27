@@ -22,9 +22,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 ->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/notifications/create', function () {
+        return view('notifications.create');
+    });
 
     Route::resource('notifications',NotificationController::class)->names('notifications');
 
@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
 
 Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
+Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/create'); });
 
 
 

@@ -15,6 +15,7 @@ Use App\Models\Position;
 Use App\Models\Boss;
 Use App\Models\NotificationType;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\User;
 
 class Notification extends Model
 {
@@ -45,6 +46,9 @@ class Notification extends Model
         return $this->hasOne(NotificationType::class,'id','notifications_type_id');
     }
 
+    public function user():HasOne {
+        return $this->hasOne(Notification::class,'id','user_id');
+    }
    
 
 

@@ -107,8 +107,8 @@
     <div class="sm:hidden" id="mobile-menu" x-show="open" @click.away="open = false">
       <div class="px-2 pt-2 pb-3 space-y-1">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-        <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Dashboard</a>
-        <div class="relative block text-left" x-data="{ open: false }">
+        <a href="{{route('notifications.create')}}" class="text-gray-300 hover:bg-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0"> Crear novedad </a>
+        <div class="relative block text-left none" x-data="{ open: false }">
           <div >
             <button type="button"  @click="open = true" class="inline-flex justify-center w-full rounded-md shadow-sm  px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" id="menu-button" aria-expanded="true" aria-haspopup="true">
              Novedades
