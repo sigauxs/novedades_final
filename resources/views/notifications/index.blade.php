@@ -71,10 +71,10 @@
                             {{$notification->tipo_novedad}}
                           </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->fecha_inicio}}
+                                {{\Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y h:i:s A')}}
                             </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->fecha_final}}
+                                {{$notification->finish_date}}
                             </td>
 
                             

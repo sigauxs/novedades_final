@@ -49,6 +49,8 @@ class NotificationController extends Controller
       $administrativo = 6;
       $drummot = 4;
       $promigas = 5;
+     
+      
 
         if( in_array($user,$correos)){
 
@@ -60,8 +62,8 @@ class NotificationController extends Controller
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
         ->where('n.user_id',$user_id)
-        ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad',DB::raw("CONCAT(LEFT((started_date),10),' ',TIME_FORMAT(RIGHT((started_date),8),'%r')) AS 'fecha_inicio' "),DB::raw("CONCAT(LEFT((finish_date),10),' ',TIME_FORMAT(RIGHT((finish_date),8),'%r')) AS 'fecha_final' "),'total_days as total de dias','total_hours as total de horas','observation as observacion')
-        ->orderBy('fecha_inicio','desc')
+        ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+        ->orderBy('started_date','desc')
         ->get();
 
         }else{
@@ -73,8 +75,8 @@ class NotificationController extends Controller
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad',DB::raw("CONCAT(LEFT((started_date),10),' ',TIME_FORMAT(RIGHT((started_date),8),'%r')) AS 'fecha_inicio' "),DB::raw("CONCAT(LEFT((finish_date),10),' ',TIME_FORMAT(RIGHT((finish_date),8),'%r')) AS 'fecha_final' "),'total_days as total de dias','total_hours as total de horas','observation as observacion')
-          ->orderBy('fecha_inicio','desc')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->orderBy('started_date','desc')
           ->get();
 
         }
