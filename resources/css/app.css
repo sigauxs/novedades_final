@@ -65,3 +65,14 @@ option{
 .none{
     display:none !important;
 }
+
+
+.bg-blue-134a5b {
+    background-color: #134a5b;
+}
+
+.o-left{
+    position: absolute;
+    left: 0;
+    background-color: #134a5b;
+}
