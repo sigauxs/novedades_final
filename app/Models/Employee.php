@@ -17,4 +17,8 @@ class Employee extends Model
         return $this->belongsTo(Notification::class);
     }
 
+    public function position(){
+        return $this->hasOne(Position::class,'id','position_id');
+    }
+
 }

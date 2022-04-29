@@ -73,7 +73,7 @@
              @enderror
           </div>
         </div>
-  
+  {{--
         <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">
              {!! Form::label("position_id", "Cargo", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
@@ -86,7 +86,7 @@
              <br>
              @enderror
           </div>
-        </div>
+        </div>--}}
   
         <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">

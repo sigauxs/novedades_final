@@ -29,61 +29,43 @@ class NotificationController extends Controller
     public function index()
     {
 
-      $user = Auth::user()->email;
-      $user_id = Auth::user()->id;
-
-      $av = "avidal@sigpeconsultores.com.co";
-      $bl = "blamby@sigpeconsultores.com.co";
-      $sc = "jefeoperativo@sigpeconsultores.com.co";
-      $lc = "liderproyecto@sigpeconsultores.com.co";
-      $mt = "jefeadmon@sigpeconsultores.com.co";
-      $kb = "gerencia@sigpeconsultores.com.co";
-
-      $correos = [$av,$bl,$sc,$lc,$mt,$kb];
-
       
-      $mercadeo = 2;
-      $tsa = 3;
-      $operacional = 1;
-      $gerencia = 7;
-      $administrativo = 6;
-      $drummot = 4;
-      $promigas = 5;
+      $user = Auth::user()->email;
      
       
+        $user_model = Auth::user();
 
-        if( in_array($user,$correos)){
+        if($user_model->centerCost->name == "Otro"){
 
-        $notifications = DB::table('notifications as n')
-        ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
-        ->join('employees as em', 'n.employee_id','=','em.id')
-        ->join('positions as pos','n.position_id','=','pos.id')
-        ->join('center_costs as cc','n.center_cost_id','=','cc.id')
-        ->join('bosses as boss','n.boss_id','=','boss.id')
-        ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->where('n.user_id',$user_id)
-        ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
-        ->orderBy('started_date','desc')
-        ->get();
+          $notifications = DB::table('notifications as n')
+          ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+          ->join('employees as em', 'n.employee_id','=','em.id')
+          ->join('center_costs as cc','n.center_cost_id','=','cc.id')
+          ->join('bosses as boss','n.boss_id','=','boss.id')
+          ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->orderBy('started_date','desc')
+          ->get();
 
         }else{
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
           ->join('employees as em', 'n.employee_id','=','em.id')
-          ->join('positions as pos','n.position_id','=','pos.id')
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->where('n.user_id',$user_model->id)
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
           ->orderBy('started_date','desc')
           ->get();
-
+              
         }
-       
 
 
-      return view('notifications.index', compact('notifications','correos','user'));
+
+
+      return view('notifications.index', compact('notifications','user_model','user'));
   
 
      
@@ -94,14 +76,14 @@ class NotificationController extends Controller
   
     public function create(){
 
-        $user = Auth::user()->email;
-
-       
-        $center_costs = $this->center($user);
-        $employees = $this->employee($user);
+        
+      $user = Auth::user()->id;
+        $user_model = Auth::user();
+        $center_costs = $this->center($user_model);
+        $employees = $this->employee($user_model);
         $types = IdentificationType::all()->pluck('name','id');
         $positions = Position::all()->pluck('name','id');
-        $bosses = $this->boss($user);
+        $bosses = $this->boss($user_model);
         $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
 
         return view('notifications.create', compact('center_costs','employees','types','positions','bosses','notifications','user'));
@@ -112,6 +94,7 @@ class NotificationController extends Controller
     {
 
         $request->validated();
+
         $user = Auth::user()->id;
         $notification = $request->all();
         $notification_object = (object)$notification;
@@ -143,12 +126,13 @@ class NotificationController extends Controller
   
     public function edit(Notification $notification)
     {
-      $user = Auth::user()->email;
-       $center_costs = $this->center($user);
-        $employees = $this->employee($user);
+        $user = Auth::user()->email;
+        $user_model = Auth::user();
+        $center_costs = $this->center($user_model);
+        $employees = $this->employee($user_model);
         $types = IdentificationType::all()->pluck('name','id');
         $positions = Position::all()->pluck('name','id');
-        $bosses = $this->boss($user);
+        $bosses = $this->boss($user_model);
         $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
         $notification = Notification::find($notification->id);
         $notification->started_date = Carbon::parse($notification->started_date);
@@ -172,132 +156,44 @@ class NotificationController extends Controller
     }
 
 
-    public function employee($email){
+    public function employee($user){
 
-        $av = "avidal@sigpeconsultores.com.co";
-        $bl = "blamby@sigpeconsultores.com.co";
-        $sc = "jefeoperativo@sigpeconsultores.com.co";
-        $lc = "liderproyecto@sigpeconsultores.com.co";
-        $mt = "jefeadmon@sigpeconsultores.com.co";
-        $kb = "gerencia@sigpeconsultores.com.co";
+        $user->centerCost->name;
 
-        $mercadeo = 2;
-        $tsa = 3;
-        $operacional = 1;
-        $gerencia = 7;
-        $administrativo = 6;
-        $drummot = 4;
-        $promigas = 5;
-
-
-        
-        switch ($email) {
-            case $bl:
-              return Employee::where('center_cost_id', $mercadeo)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-               break;
-            case $sc:
-              return Employee::where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $operacional)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                  break;
-            case $kb:
-              return Employee::where('center_cost_id', $gerencia)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                  break;
-            case $mt:
-              return Employee::where('center_cost_id', $administrativo)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                  break;
-            case $av:
-              return Employee::where('center_cost_id', $drummot)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                  break;
-            case $lc:
-               return Employee::where('center_cost_id', $promigas)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                        break;            
-            default:
-              return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-                break;
+        if($user->centerCost->name == "Otro"){
+          return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+        }else{
+          return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         }
 
     }
 
-    public function center($email){
+    public function center($user){
 
-        $av = "avidal@sigpeconsultores.com.co";
-        $bl = "blamby@sigpeconsultores.com.co";
+        $user->centerCost->name;
         $sc = "jefeoperativo@sigpeconsultores.com.co";
-        $lc = "liderproyecto@sigpeconsultores.com.co";
-        $mt = "jefeadmon@sigpeconsultores.com.co";
-        $kb = "gerencia@sigpeconsultores.com.co";
-
-        $mercadeo = 2;
         $tsa = 3;
-        $operacional = 1;
-        $gerencia = 7;
-        $administrativo = 6;
-        $drummot = 4;
-        $promigas = 5;
 
-        switch ($email) {
-            case $bl:
-              return CenterCost::where('id', $mercadeo)->pluck('name', 'id');
-               break;
-            case $sc:
-              return CenterCost::where('id', $tsa)->orWhere('id', '=', $operacional)->pluck('name', 'id');
-                  break;
-            case $kb:
-              return CenterCost::where('id', $gerencia)->pluck('name', 'id');
-                  break;
-            case $mt:
-              return CenterCost::where('id', $administrativo)->pluck('name', 'id');
-                  break;
-            case $av:
-              return centerCost::where('id', $drummot)->pluck('name', 'id');
-                  break;
-            case $lc:
-               return centerCost::where('id', $promigas)->pluck('name', 'id');
-                  break;            
-            default:
-              return CenterCost::all()->pluck('name', 'id');
-                break;
+        if($user->centerCost->name == "Otro"){
+          return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
+                  return $value != "Otro";
+          });
+
+        }elseif($user->email == $sc){
+            return CenterCost::where('id', $tsa)->orWhere('id', '=', $user->center_cost_id)->pluck('name', 'id');
         }
+        else{
+            return CenterCost::where('id', $user->center_cost_id)->pluck('name', 'id');
+        }
+
     }
 
-    public function boss($email){
+    public function boss($user){
 
-        $av = "avidal@sigpeconsultores.com.co";
-        $bl = "blamby@sigpeconsultores.com.co";
-        $sc = "jefeoperativo@sigpeconsultores.com.co";
-        $lc = "liderproyecto@sigpeconsultores.com.co";
-        $mt = "jefeadmon@sigpeconsultores.com.co";
-        $kb = "gerencia@sigpeconsultores.com.co";
-
-        $mercadeo = 2;
-        $tsa = 3;
-        $operacional = 1;
-        $gerencia = 7;
-        $administrativo = 6;
-        $drummot = 4;
-        $promigas = 5;
-
-        switch ($email) {
-          case $bl:
-            return Boss::where('center_cost_id', $mercadeo)->pluck('fullname', 'id');
-             break;
-          case $sc:
-            return Boss::where('center_cost_id', $operacional)->pluck('fullname', 'id');
-                break;
-          case $kb:
-            return Boss::where('center_cost_id', $gerencia)->pluck('fullname', 'id');
-                break;
-          case $mt:
-            return Boss::where('center_cost_id', $administrativo)->pluck('fullname', 'id');
-                break;
-          case $av:
-            return Boss::where('center_cost_id', $drummot)->pluck('fullname', 'id');
-                break;
-          case $lc:
-             return Boss::where('center_cost_id', $promigas)->pluck('fullname', 'id');
-                break;            
-          default:
-            return Boss::all()->pluck('fullname', 'id');
-              break;
-      }
+        if($user->centerCost->name == "Otro"){
+          return Boss::all()->pluck('fullname', 'id');
+        }else{
+            return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
+        }
     }
 }

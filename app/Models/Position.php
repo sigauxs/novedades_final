@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Notification;
 
+use App\Models\Employee;
+
 class Position extends Model
 {
     use HasFactory;
@@ -16,4 +18,10 @@ class Position extends Model
     {
         return $this->belongsTo(Notification::class);
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }
+

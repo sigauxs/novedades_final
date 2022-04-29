@@ -28,7 +28,6 @@ class StoreNotificationRequest extends FormRequest
             'finish_date' => 'required',
             'employee_id' => 'required',
             'boss_id' => 'required',
-            'position_id' => 'required',
             'center_cost_id' => 'required',
             'type_identification_id' => 'required',
             'notifications_type_id' => 'required'
@@ -42,7 +41,6 @@ class StoreNotificationRequest extends FormRequest
               'finish_date' =>  'Fecha de finalizacion',
               'employee_id' => 'Empleado',
               'boss_id' => 'Jefe inmediato',
-              'position_id' => 'Cargo',
               'center_cost_id' => 'Centro de costo',
               'type_identification_id' => 'Tipo de identificación',
               'notifications_type_id' => 'Tipo de novedades'

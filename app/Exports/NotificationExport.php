@@ -20,11 +20,10 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         $notification =  DB::table('notifications as n')
         ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
         ->join('employees as em', 'n.employee_id','=','em.id')
-        ->join('positions as pos','n.position_id','=','pos.id')
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion')->get();
+        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion')->get();
 
         return $notification;
          /*
@@ -70,6 +69,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             $notification->cargo,
             $notification->center_costo,
             $notification->jefe_inmediato,
+            $notification->tipo_novedad,
             Carbon::parse($notification->started_date)->translatedFormat('j F, Y h:i:s A'),
             Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A'),
             $notification->total_dias,

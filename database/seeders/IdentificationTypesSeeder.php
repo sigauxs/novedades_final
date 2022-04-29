@@ -21,10 +21,6 @@ class IdentificationTypesSeeder extends Seeder
         $type_1->abbreviation = "C.C";
         $type_1->save();
 
-        $type_2 = new IdentificationType();
-        $type_2->name = "Tarjeta de identidad";
-        $type_2->abbreviation = "T.I";
-        $type_2->save();
 
         $type_3 = new IdentificationType();
         $type_3->name = "Pasaporte";

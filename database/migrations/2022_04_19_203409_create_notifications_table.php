@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('type_identification_id');
             $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('position_id');
             $table->unsignedBigInteger('center_cost_id');
             $table->unsignedBigInteger('boss_id');
             $table->unsignedBigInteger('notifications_type_id');
@@ -38,8 +37,6 @@ return new class extends Migration
             $table->foreign('employee_id')
             ->references('id')->on('employees');
 
-            $table->foreign('position_id')
-            ->references('id')->on('positions');
 
             $table->foreign('center_cost_id')
             ->references('id')->on('center_costs');

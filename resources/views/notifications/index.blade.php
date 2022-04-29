@@ -1,6 +1,5 @@
 <x-app-layout>
     <div class="container mx-auto">
-      
         <div class="flex flex-col">
             <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="py-2 inline-block min-w-full sm:px-4 lg:px-8">
@@ -17,10 +16,10 @@
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                           Empleados
                         </th>
-                        <th scope="col" class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm font-medium text-white px-4 py-2">
+                        <th scope="col" class="{{ $user_model->centerCost->name == "Otro"  ? '' : 'none'  }} text-sm font-medium text-white px-4 py-2">
                           Centro de costos
                         </th>
-                        <th scope="col" class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm font-medium text-white px-4 py-2">
+                        <th scope="col" class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm font-medium text-white px-4 py-2">
                             Jefe de inmediato
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
@@ -61,10 +60,10 @@
                             </td>
                               
                             
-                          <td class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                          <td class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                             {{$notification->centro_costo}}
                           </td>
-                            <td class="{{ in_array($user,$correos) ? 'none' : ''}} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            <td class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               {{$notification->jefe_inmediato}}
                             </td>
                           <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">

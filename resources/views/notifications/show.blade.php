@@ -41,12 +41,13 @@
 
                     <tr class="bg-white border-b">
                       <td scope="col" class="text-sm font-medium px-6 py-4">
-                        Cargo
+                        cargo
                       </td>
                       <td scope="col" class="text-sm font-medium  px-6 py-4">
-                          {{ $notification->position->name}}
+                          {{ $notification->Employee->position->name}} 
                       </td>
                     </tr>
+    
 
                     <tr class="bg-white border-b">
                       <td scope="col" class="text-sm font-medium px-6 py-4">

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('identification');
             $table->string('first_name');
             $table->string('last_name');
+            $table->unsignedBigInteger('position_id')->default(1);
             $table->decimal('salary')->default(0);
             $table->unsignedBigInteger('center_cost_id');
             $table->boolean('status')->default(1);
@@ -29,6 +30,9 @@ return new class extends Migration
 
             $table->foreign('center_cost_id')
             ->references('id')->on('center_costs');
+
+            $table->foreign('position_id')
+            ->references('id')->on('positions');
         });
     }
 
