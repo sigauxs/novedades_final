@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" >
             @csrf
 
             <div>
@@ -48,16 +48,29 @@
     @push('scripts')
     <script>
  let email = document.querySelector("#email");
+ 
      email.addEventListener('change',chargeEmail);
-
 
 
 function chargeEmail(e) {
 
+   
     const  si = "@sigpeconsultores.com.co";
            email.value += si;
-        e.target.removeEventListener(e.type, chargeEmail);
+           
+        
 
+        let str = email.value;
+        let regex = /@/gi, result, indices = [];
+            while ( (result = regex.exec(str)) ) {
+                    indices.push(result.index);
+                    }
+       
+       if(indices.length > 1){
+           
+         let cut = email.value.slice(0,indices[1]);
+         email.value = cut;
+       }
 }
 
 
