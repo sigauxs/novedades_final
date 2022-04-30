@@ -159,9 +159,9 @@ class NotificationController extends Controller
 
     public function employee(User $user){
 
+        $cc = $this->findCenter($user->center_cost_id);
 
-
-        if($user->centerCost->name == "Otro"){
+        if($cc == "Otro"){
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         }else{
           return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
@@ -196,5 +196,9 @@ class NotificationController extends Controller
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
         }
+    }
+
+    public function findCenter($userCenter){
+        return CenterCost::where('id',$userCenter)->select('name')->get();
     }
 }
