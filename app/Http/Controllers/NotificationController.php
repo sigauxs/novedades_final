@@ -78,16 +78,15 @@ class NotificationController extends Controller
     public function create(){
 
 
-      $user = Auth::user()->id;
+        $user = Auth::user()->id;
         $user_model = Auth::user();
         $center_costs = $this->center($user_model);
-        $employees = $this->employee($user_model);
+        $employees = Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         $types = IdentificationType::all()->pluck('name','id');
-        $positions = Position::all()->pluck('name','id');
         $bosses = $this->boss($user_model);
         $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
 
-        return view('notifications.create', compact('center_costs','employees','types','positions','bosses','notifications','user'));
+        return view('notifications.create', compact('center_costs','employees','types','bosses','notifications','user'));
     }
 
 

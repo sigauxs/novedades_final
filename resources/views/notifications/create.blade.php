@@ -2,13 +2,13 @@
 <x-app-layout>
 
     <div class="container mx-auto">
-     
+     {{ $center_costs}}
       {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
       <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">
              {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-            
+
              {!! Form::datetimeLocal("started_date", null ,['class'=>'form-control']) !!}
 
              @error('started_date')
@@ -23,7 +23,7 @@
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
            {!! Form::label("finish_date", "Fecha de finalización", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-          
+
            {!! Form::datetimeLocal("finish_date", null ,['class'=>'form-control']) !!}
 
            @error('finish_date')
@@ -91,7 +91,7 @@
            @enderror
         </div>
       </div>--}}
-     
+
 
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      
+
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
            {!! Form::label("notifications_type_id", "Tipos de novedades", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
@@ -126,7 +126,7 @@
         <div class="w-full px-3">
             {!! Form::label("observation", "observation", ['class'=>'label-control inline-block mb-2']) !!}
             {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
-                  
+
            @error('observation')
            <small class="text-red-600 font-bold text-base">
             *{{$message}}
