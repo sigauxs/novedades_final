@@ -6,21 +6,21 @@
               <div class="py-4 inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
                   <table class="min-w-full text-center">
-                  
+
                     <tr class="bg-gray-800 border-b rounded border" style="position: relative">
-                      <td colspan="2" class="text-white px-4 py-2"> Detalles  <a href="/notifications"><span class="material-icons" style="color:white; font-size:26px ; position:absolute; right:10px">home</span></a></td>
-                    </tr>  
+                      <td colspan="2" class="text-white px-4 py-2"> Detalles  <a href="{{ url()->previous()}}"><span class="material-icons" style="color:white; font-size:26px ; position:absolute; right:10px">home</span></a></td>
+                    </tr>
                     <tr class="bg-white border-b">
                         <td scope="col" class="text-sm font-medium px-6 py-4">
                            Tipo de identificación
                         </td>
                         <td scope="col" class="text-sm font-medium  px-6 py-4">
-                          
+
                         {{$notification->identificationType->name}}
-                         
+
                         </td>
                     </tr>
-                   
+
                     <tr class="bg-white border-b">
                         <td scope="col" class="text-sm font-medium px-6 py-4">
                           Identification
@@ -44,10 +44,10 @@
                         cargo
                       </td>
                       <td scope="col" class="text-sm font-medium  px-6 py-4">
-                          {{ $notification->Employee->position->name}} 
+                          {{ $notification->Employee->position->name}}
                       </td>
                     </tr>
-    
+
 
                     <tr class="bg-white border-b">
                       <td scope="col" class="text-sm font-medium px-6 py-4">
@@ -57,7 +57,7 @@
                           {{ $notification->boss->fullname}}
                       </td>
                     </tr>
-                    
+
                     <tr class="bg-white border-b">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Centro de costo</td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
@@ -79,7 +79,7 @@
                       </td>
                     </tr class="bg-white border-b">
 
-                    
+
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Fecha de Finalizacion</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
@@ -93,7 +93,7 @@
                        {{ $notification->total_days }}
                       </td>
                     </tr class="bg-white border-b">
-                   
+
 
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de Horas</td>
@@ -104,12 +104,12 @@
 
                     <tr class="bg-white border-b">
                       <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Observaciones</td>
-                
+
                     </tr class="bg-white border-b">
 
                     <tr class="bg-white border-b">
                       <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $notification->observation}}</td>
-                
+
                     </tr class="bg-white border-b">
 
 
@@ -119,7 +119,7 @@
             </div>
           </div>
 
-         
+
      </div>
      <div class="container mx-auto">
 
@@ -127,9 +127,9 @@
         <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded w-40"> <a href="{{route('notifications.edit',$notification) }}">Editar</a> </button>
         <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> <a href="{{ url()->previous()}}">Regresar</a> </button>
        </div>
-     
-      
+
+
 
     </div>
-    
+
 </x-app-layout>

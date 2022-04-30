@@ -28,6 +28,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+       'center_cost_id',
+       'profile_id'
     ];
 
     /**
@@ -60,12 +62,12 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-   
+
     public function profile():HasOne {
-        return $this->HasOne(Employee::class,'id','profile_id');
+        return $this->HasOne(Profile::class,'id','profile_id');
     }
 
-    public function centerCost():HasOne{      
+    public function centerCost():HasOne{
         return $this->hasOne(CenterCost::class,'id','center_cost_id');
     }
 }

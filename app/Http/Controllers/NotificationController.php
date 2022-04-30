@@ -16,6 +16,7 @@ use App\Models\Boss;
 use App\Models\Notification;
 use App\Models\NotificationType;
 use App\Models\Position;
+use App\Models\User;
 
 /* Modulos  */
 
@@ -29,10 +30,10 @@ class NotificationController extends Controller
     public function index()
     {
 
-      
+
       $user = Auth::user()->email;
-     
-      
+
+
         $user_model = Auth::user();
 
         if($user_model->centerCost->name == "Otro"){
@@ -59,24 +60,24 @@ class NotificationController extends Controller
           ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
           ->orderBy('started_date','desc')
           ->get();
-              
+
         }
 
 
 
 
       return view('notifications.index', compact('notifications','user_model','user'));
-  
 
-     
 
-      
+
+
+
     }
 
-  
+
     public function create(){
 
-        
+
       $user = Auth::user()->id;
         $user_model = Auth::user();
         $center_costs = $this->center($user_model);
@@ -89,7 +90,7 @@ class NotificationController extends Controller
         return view('notifications.create', compact('center_costs','employees','types','positions','bosses','notifications','user'));
     }
 
-    
+
     public function store(StoreNotificationRequest $request)
     {
 
@@ -106,24 +107,24 @@ class NotificationController extends Controller
 
         $notification_array = (array)$notification_object;
 
-        
+
 
        $notification = Notification::create($notification_array);
        return redirect()->route('notifications.show',compact('notification'));
-        
+
     }
 
 
     public function show(Notification $notification)
     {
-        
+
         $notification =  Notification::find($notification->id);
-      
-      
+
+
         return view('notifications.show',compact('notification'));
     }
 
-  
+
     public function edit(Notification $notification)
     {
         $user = Auth::user()->email;
@@ -143,22 +144,22 @@ class NotificationController extends Controller
 
     public function update(Request $request,Notification $notification)
     {
-        
+
         $notification =  Notification::find($notification->id);
         $notification->update($request->all());
         return redirect()->route('notifications.show',compact('notification'));
     }
 
-    
+
     public function destroy($id)
     {
-        
+
     }
 
 
-    public function employee($user){
+    public function employee(User $user){
 
-        $user->centerCost->name;
+
 
         if($user->centerCost->name == "Otro"){
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
@@ -168,9 +169,9 @@ class NotificationController extends Controller
 
     }
 
-    public function center($user){
+    public function center(User $user){
 
-        $user->centerCost->name;
+
         $sc = "jefeoperativo@sigpeconsultores.com.co";
         $tsa = 3;
 
@@ -188,7 +189,7 @@ class NotificationController extends Controller
 
     }
 
-    public function boss($user){
+    public function boss(User $user){
 
         if($user->centerCost->name == "Otro"){
           return Boss::all()->pluck('fullname', 'id');

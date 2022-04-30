@@ -45,4 +45,24 @@
             </div>
         </form>
     </x-jet-authentication-card>
+    @push('scripts')
+    <script>
+ let email = document.querySelector("#email");
+     email.addEventListener('change',chargeEmail);
+
+
+
+function chargeEmail(e) {
+
+    const  si = "@sigpeconsultores.com.co";
+           email.value += si;
+        e.target.removeEventListener(e.type, chargeEmail);
+
+}
+
+
+
+    </script>
+
+    @endpush
 </x-guest-layout>
