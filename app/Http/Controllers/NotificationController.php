@@ -32,19 +32,20 @@ class NotificationController extends Controller
 
 
       $user = Auth::user()->email;
+      $user_model = Auth::user();
+      $ccc = 9;
 
 
-        $user_model = Auth::user();
-
-        if($user_model->centerCost->name == "Otro"){
+        if($user_model->center_cost_id == 9){
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
           ->join('employees as em', 'n.employee_id','=','em.id')
+          ->join('positions as pos','em.position_id','=','pos.id')
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -80,14 +81,13 @@ class NotificationController extends Controller
 
         $user = Auth::user()->id;
         $user_model = Auth::user();
-        $cc = $this->findCenter($user_model->center_cost_id);
         $center_costs = $this->center($user_model);
-        $employees = Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+        $employees = $this->employee($user_model);
         $types = IdentificationType::all()->pluck('name','id');
         $bosses = $this->boss($user_model);
         $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
 
-        return view('notifications.create', compact('center_costs','employees','types','bosses','notifications','user','cc'));
+        return view('notifications.create', compact('center_costs','employees','types','bosses','notifications','user'));
     }
 
 
@@ -159,9 +159,10 @@ class NotificationController extends Controller
 
     public function employee(User $user){
 
-        $cc = $this->findCenter($user->center_cost_id);
+        $cc = Auth::user()->center_cost_id;
+        $ccc = 9;
 
-        if($cc == "Otro"){
+        if($cc == $ccc){
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         }else{
           return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
@@ -171,11 +172,14 @@ class NotificationController extends Controller
 
     public function center(User $user){
 
-        $cc = $this->findCenter($user->center_cost_id);
+
         $sc = "jefeoperativo@sigpeconsultores.com.co";
         $tsa = 3;
+        $ccc = 9;
 
-        if($cc == "Otro"){
+        $user = Auth::user();
+
+        if($user->center_cost_id == $ccc){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
                   return $value != "Otro";
           });
@@ -190,15 +194,14 @@ class NotificationController extends Controller
     }
 
     public function boss(User $user){
-        $cc = $this->findCenter($user->center_cost_id);
-        if($cc == "Otro"){
+        $cc = Auth::user()->center_cost_id;
+        $ccc = 9;
+        if($cc == $ccc){
           return Boss::all()->pluck('fullname', 'id');
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
         }
     }
 
-    public function findCenter($userCenter){
-        return CenterCost::where('id',$userCenter)->select('name')->get();
-    }
+
 }
