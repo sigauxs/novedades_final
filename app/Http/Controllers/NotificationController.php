@@ -171,11 +171,11 @@ class NotificationController extends Controller
 
     public function center(User $user){
 
-
+        $cc = $this->findCenter($user->center_cost_id);
         $sc = "jefeoperativo@sigpeconsultores.com.co";
         $tsa = 3;
 
-        if($user->centerCost->name == "Otro"){
+        if($cc == "Otro"){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
                   return $value != "Otro";
           });
@@ -190,8 +190,8 @@ class NotificationController extends Controller
     }
 
     public function boss(User $user){
-
-        if($user->centerCost->name == "Otro"){
+        $cc = $this->findCenter($user->center_cost_id);
+        if($cc == "Otro"){
           return Boss::all()->pluck('fullname', 'id');
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
