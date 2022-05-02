@@ -64,7 +64,7 @@ class centerCostsSeeder extends Seeder
         $center_7->save();
 
         $center_8 = new CenterCost();
-        $center_8->name = "Otro";
+        $center_8->name = "admin";
         $center_8->abbreviation = "N.N";
         $center_8->code = 9;
         $center_8->save();

@@ -8,7 +8,27 @@
                   <table class="min-w-full text-center">
 
                     <tr class="bg-gray-800 border-b rounded border" style="position: relative">
-                      <td colspan="2" class="text-white px-4 py-2"> Detalles  <a href="{{ url()->previous()}}"><span class="material-icons" style="color:white; font-size:26px ; position:absolute; right:10px">home</span></a></td>
+
+                      <td colspan="2" class="text-white px-4 py-2"> Detalles
+                          <a href="{{ route('notifications.index') }}">
+                            <span class="material-icons" style="color:white; font-size:26px ; position:absolute; left:10px">home</span></a>
+                          <a href="{{ url()->previous()}}">
+                            <span class="material-icons" style="color:white; font-size:26px ; position:absolute; right:10px">arrow_back</span>
+                            <span class="material-symbols-outlined">
+
+                                </span>
+                          </a>
+                     </td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <td scope="col" class="text-sm font-medium px-6 py-4">
+                           Soporte entregado
+                        </td>
+                        <td scope="col" class="text-sm font-medium  px-6 py-4">
+
+                        {{$notification->support ? 'Entregado' : 'No entregado'}}
+
+                        </td>
                     </tr>
                     <tr class="bg-white border-b">
                         <td scope="col" class="text-sm font-medium px-6 py-4">
@@ -123,13 +143,21 @@
      </div>
      <div class="container mx-auto">
 
-       <div class="flex flex-col w-full max-w-lg mx-auto mt-10">
-        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded w-40"> <a href="{{route('notifications.edit',$notification) }}">Editar</a> </button>
-        <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> <a href="{{ url()->previous()}}">Regresar</a> </button>
+       <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
+           <div class="">
+               <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded w-40"> <a href="{{route('notifications.edit',$notification) }}">Editar</a> </button>
+            </div>
+           <div class="">
+            <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> <a href="{{ url()->previous()}}">Regresar</a> </button>
+           </div>
+
+
        </div>
 
 
 
     </div>
+
+
 
 </x-app-layout>

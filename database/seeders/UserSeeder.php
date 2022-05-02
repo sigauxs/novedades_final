@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
         $user_7->email = "seleccion@sigpeconsultores.com.co";
         $user_7->password = Hash::make('123456');
         $user_7->profile_id = 1;
-        $user_7->center_cost_id = 9;
+        $user_7->center_cost_id = 8;
         $user_7->save();
 
         $user_8 = New User();
@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
         $user_8->email = "infraestructura@sigpeconsultores.com.co";
         $user_8->password = Hash::make('123456');
         $user_8->profile_id = 1;
-        $user_8->center_cost_id = 9;
+        $user_8->center_cost_id = 6;
         $user_8->save();
 
 

@@ -2,6 +2,8 @@
     <div class="container mx-auto">
         <div class="flex flex-col">
 
+
+
             <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="py-2 inline-block min-w-full sm:px-4 lg:px-8">
                 <div class="overflow-hidden">
@@ -43,7 +45,7 @@
 
                     <tbody>
                      @foreach ($notifications as $notification)
-                        <tr class="bg-white border-b">
+                        <tr class="bg-white border-b {{$notification->support ? '' : 'bg-red-200'}}">
 
 
 

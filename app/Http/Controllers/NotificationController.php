@@ -27,16 +27,34 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+/*
+$mes = $request['mes'];
+$dias = $request['dias'];
+$quince_dias = 15;
+$treinta_dias = 30;
+if($dias == $quince_dias){
+   $dias = $quince_dias;
+}else{
+    $dias = $treinta_dias;
+}
+$date_i = Carbon::now()->startOfMonth()->month($mes);
+        $inicio_mes = Carbon::now()->month($mes)->day($dias);*/
+        $date = Carbon::now();
 
+$date = $date->format('m');
+        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))
+        ->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
 
       $user = Auth::user()->email;
       $user_model = Auth::user();
       $ccc = 9;
 
-
-        if($user_model->center_cost_id == 9){
+      $ad = 9;
+      $administrativo = 6;
+      $do = 8;
+        if($user_model->center_cost_id == $ad || ($user_model->center_cost_id == $administrativo AND $user_model->profile_id == 1 ) || $user_model->center_cost_id == $do){
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -45,7 +63,8 @@ class NotificationController extends Controller
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->whereMonth('started_date',$date)
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -57,8 +76,8 @@ class NotificationController extends Controller
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->where('n.user_id',$user_model->id)
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion')
+          ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -67,7 +86,7 @@ class NotificationController extends Controller
 
 
 
-      return view('notifications.index', compact('notifications','user_model','user'));
+      return view('notifications.index', compact('notifications','user_model','user','date'));
 
 
 
@@ -94,6 +113,7 @@ class NotificationController extends Controller
     public function store(StoreNotificationRequest $request)
     {
 
+
         $request->validated();
 
         $user = Auth::user()->id;
@@ -105,6 +125,9 @@ class NotificationController extends Controller
         $notification_object->total_days = $fechaInicio->diffInDays($fechafinalizacion);
         $notification_object->total_hours = $fechaInicio->floatDiffInHours($fechafinalizacion);
 
+
+
+        $notification_object->business_days = $notification_object->total_days * 8;
         $notification_array = (array)$notification_object;
 
 
@@ -134,6 +157,8 @@ class NotificationController extends Controller
         $types = IdentificationType::all()->pluck('name','id');
         $positions = Position::all()->pluck('name','id');
         $bosses = $this->boss($user_model);
+
+
         $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
         $notification = Notification::find($notification->id);
         $notification->started_date = Carbon::parse($notification->started_date);
@@ -145,7 +170,13 @@ class NotificationController extends Controller
     public function update(Request $request,Notification $notification)
     {
 
-        $notification =  Notification::find($notification->id);
+       $notification =  Notification::find($notification->id);
+        $fechaInicio = Carbon::parse($request->started_date);
+        $fechafinalizacion = Carbon::parse($request->finish_date);
+        $request['total_days'] = $fechaInicio->diffInDays($fechafinalizacion);
+        $request['total_hours'] = $fechaInicio->floatDiffInHours($fechafinalizacion);
+        $request['support'] = $request->support  != "" || $request->support != null ? true : false;
+        $request['business_days'] = $request->total_days * 8;
         $notification->update($request->all());
         return redirect()->route('notifications.show',compact('notification'));
     }
@@ -160,10 +191,14 @@ class NotificationController extends Controller
     public function employee(User $user){
 
         $cc = Auth::user()->center_cost_id;
+        $sc = "jefeoperativo@sigpeconsultores.com.co";
         $ccc = 9;
+        $tsa = 3;
 
         if($cc == $ccc){
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+        }elseif($user->email == $sc){
+            return Employee::where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         }else{
           return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
         }
