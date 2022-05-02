@@ -210,11 +210,14 @@ $date = $date->format('m');
 
         $sc = "jefeoperativo@sigpeconsultores.com.co";
         $tsa = 3;
-        $ccc = 9;
+
+        $admin = 9;
+        $administrativo = 6;
+        $p_admin = 1;
 
         $user = Auth::user();
 
-        if($user->center_cost_id == $ccc){
+        if($user->center_cost_id == $admin || ($user->center_cost_id == $administrativo AND $user->profile_id == $p_admin )){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
                   return $value != "Otro";
           });
@@ -227,6 +230,8 @@ $date = $date->format('m');
         }
 
     }
+
+   
 
     public function boss(User $user){
         $cc = Auth::user()->center_cost_id;
