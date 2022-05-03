@@ -19,7 +19,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
     public $operacional = 1;
     public $do = 8;
 
-    public $p_editor = 2;
+    public $p_visor = 2;
     public $p_admin = 1;
     public $c_admin = 9;
 
@@ -35,7 +35,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         $date = Carbon::now();
         $date = $date->format('m');
 
-        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == $this->p_admin ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_admin) ){
+        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == $this->p_admin ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_visor) ){
 
         $notification =  DB::table('notifications as n')
         ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')

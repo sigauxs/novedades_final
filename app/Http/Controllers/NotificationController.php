@@ -31,7 +31,7 @@ class NotificationController extends Controller
     public $operacional = 1;
     public $do = 8;
 
-    public $p_editor = 2;
+    public $p_visor = 2;
     public $p_admin = 1;
     public $c_admin = 9;
 
@@ -63,7 +63,7 @@ $date = $date->format('m');
       $ad = 9;
       $administrativo = 6;
 
-        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == 1 ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_editor)){
+        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == 1 ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_visor)){
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -73,7 +73,7 @@ $date = $date->format('m');
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
           ->whereMonth('started_date',$date)
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -86,7 +86,7 @@ $date = $date->format('m');
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
           ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status')
           ->orderBy('started_date','desc')
           ->get();
 

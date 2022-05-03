@@ -80,14 +80,15 @@
                                 {{\Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y h:i:s A')}}
                             </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{$notification->finish_date}}
+                                {{\Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A')}}
                             </td>
-
-
-
-                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}     text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                       
+                           
+                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || $user_model->id == $notification->user_id ) ? '' : 'none' }}     text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a class="" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
                             </td>
+                       
+                          
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a href="{{ route('notifications.show', $notification->id ) }}"><span class="material-icons" style="color:green; font-size:26px">preview</span></a>

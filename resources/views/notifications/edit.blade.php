@@ -2,6 +2,65 @@
 
         {!! Form::model($notification, ['route' => ['notifications.update', $notification->id],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
+
+        <div class="flex flex-wrap  mb-6 mx-auto ">
+          <div class="w-full px-3">
+             {!! Form::label("employee_id", "Empleados", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+             {!! Form::select("employee_id", $employees, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona un empleado...']) !!}
+
+             @error('employee_id')
+             <small class="text-red-600 font-bold text-base">
+              *{{$message}}
+             </small>
+             <br>
+             @enderror
+          </div>
+        </div>
+
+        <div class="flex flex-wrap  mb-6 mx-auto">
+          <div class="w-full px-3">
+             {!! Form::label("notifications_type_id", "Tipos de novedades", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+             {!! Form::select("notifications_type_id", $notifications, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el tipo de novedad']) !!}
+
+             @error('notifications_type_id')
+             <small class="text-red-600 font-bold text-base">
+              *{{$message}}
+             </small>
+             <br>
+             @enderror
+          </div>
+        </div>
+
+        <div class="flex flex-wrap  mb-6 mx-auto">
+          <div class="w-full px-3">
+             {!! Form::label("center_cost_id", "Centro de costos", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+             {!! Form::select("center_cost_id", $center_costs, null , ["class"=>"form-control",'placeholder' => 'Selecciona un empleado...']) !!}
+
+             @error('center_cost_id')
+             <small class="text-red-600 font-bold text-base">
+              *{{$message}}
+             </small>
+             <br>
+             @enderror
+          </div>
+        </div>
+
+
+        <div class="flex flex-wrap  mb-6 mx-auto">
+          <div class="w-full px-3">
+             {!! Form::label("boss_id", "Jefes", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+             {!! Form::select("boss_id", $bosses, null , ["class"=>"form-control",'placeholder' => 'Selecciona Jefe de area']) !!}
+
+             @error('boss_id')
+             <small class="text-red-600 font-bold text-base">
+              *{{$message}}
+             </small>
+             <br>
+             @enderror
+          </div>
+        </div>
+
+
         <div class="flex flex-wrap  mb-6 mx-auto">
             <div class="w-full px-3">
                {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
@@ -47,63 +106,8 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap  mb-6 mx-auto ">
-          <div class="w-full px-3">
-             {!! Form::label("employee_id", "Empleados", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-             {!! Form::select("employee_id", $employees, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona un empleado...']) !!}
 
-             @error('employee_id')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
-        </div>
-
-        <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("center_cost_id", "Centro de costos", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-             {!! Form::select("center_cost_id", $center_costs, null , ["class"=>"form-control",'placeholder' => 'Selecciona un empleado...']) !!}
-
-             @error('center_cost_id')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
-        </div>
-
-        <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("boss_id", "Jefes", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-             {!! Form::select("boss_id", $bosses, null , ["class"=>"form-control",'placeholder' => 'Selecciona Jefe de area']) !!}
-
-             @error('boss_id')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
-        </div>
-
-
-        <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("notifications_type_id", "Tipos de novedades", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-             {!! Form::select("notifications_type_id", $notifications, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el tipo de novedad']) !!}
-
-             @error('notifications_type_id')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
-        </div>
-
+    
 
         <div class="flex flex-wrap  mb-6 mx-auto">
             <div class="w-full px-3">
@@ -129,9 +133,7 @@
         </div>
 
         <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3 ">
-
-         </div>
+      
 
          <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
             <div class="">
