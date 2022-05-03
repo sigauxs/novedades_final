@@ -85,7 +85,7 @@
 
 
 
-                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}      text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}     text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a class="" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
                             </td>
 
@@ -108,9 +108,23 @@
             </div>
           </div>
 
-        <button class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-            <a href="{{ url("/excel") }}">Generar Excel </a>
+
+          <div class="grid grid-cols-2 text-center">
+
+          <div>
+            <button class="bg-transparent mt-10 hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                <a href="{{ url("/excel") }}">Generar Excel </a>
+            </button>
+          </div>
+          <div>    <button class="bg-transparent mt-10 hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
+            <a href="{{ route('notifications.create') }}">Crear novedad </a>
         </button>
+    </div>
+          </div>
+
+
+
+
     </div>
 
 
