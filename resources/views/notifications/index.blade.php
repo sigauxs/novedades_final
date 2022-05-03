@@ -19,10 +19,12 @@
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                           Empleados
                         </th>
-                        <th scope="col" class="{{ $user_model->centerCost->name == "Otro"  ? '' : 'none'  }} text-sm font-medium text-white px-4 py-2">
+                        <th scope="col"
+                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none'  }} text-sm font-medium text-white px-4 py-2">
                           Centro de costos
                         </th>
-                        <th scope="col" class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm font-medium text-white px-4 py-2">
+                        <th scope="col"
+                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }} text-sm font-medium text-white px-4 py-2">
                             Jefe de inmediato
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
@@ -63,10 +65,12 @@
                             </td>
 
 
-                          <td class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                          <td class="
+                           {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}
+                           text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                             {{$notification->centro_costo}}
                           </td>
-                            <td class="{{ $user_model->centerCost->name == "Otro" ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            <td class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               {{$notification->jefe_inmediato}}
                             </td>
                           <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
@@ -81,8 +85,8 @@
 
 
 
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              <a href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
+                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}      text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                              <a class="" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
                             </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">

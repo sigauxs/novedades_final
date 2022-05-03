@@ -27,6 +27,15 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
 
+    public $administrativo = 6;
+    public $operacional = 1;
+    public $do = 8;
+
+    public $p_editor = 2;
+    public $p_admin = 1;
+    public $c_admin = 9;
+
+
     public function index(Request $request)
     {
 /*
@@ -53,8 +62,8 @@ $date = $date->format('m');
 
       $ad = 9;
       $administrativo = 6;
-      $do = 8;
-        if($user_model->center_cost_id == $ad || ($user_model->center_cost_id == $administrativo AND $user_model->profile_id == 1 ) || $user_model->center_cost_id == $do){
+
+        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == 1 ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_editor)){
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -190,39 +199,36 @@ $date = $date->format('m');
 
     public function employee(User $user){
 
-        $cc = Auth::user()->center_cost_id;
-        $sc = "jefeoperativo@sigpeconsultores.com.co";
-        $ccc = 9;
         $tsa = 3;
 
-        if($cc == $ccc){
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
+
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
-        }elseif($user->email == $sc){
+
+        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_editor){
+
             return Employee::where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+
         }else{
+
           return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+
         }
 
     }
 
     public function center(User $user){
 
-
-        $sc = "jefeoperativo@sigpeconsultores.com.co";
         $tsa = 3;
-
-        $admin = 9;
-        $administrativo = 6;
-        $p_admin = 1;
 
         $user = Auth::user();
 
-        if($user->center_cost_id == $admin || ($user->center_cost_id == $administrativo AND $user->profile_id == $p_admin )){
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
                   return $value != "Otro";
           });
 
-        }elseif($user->email == $sc){
+        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_editor){
             return CenterCost::where('id', $tsa)->orWhere('id', '=', $user->center_cost_id)->pluck('name', 'id');
         }
         else{
@@ -231,12 +237,11 @@ $date = $date->format('m');
 
     }
 
-   
+
 
     public function boss(User $user){
-        $cc = Auth::user()->center_cost_id;
-        $ccc = 9;
-        if($cc == $ccc){
+
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == $this->p_admin ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
           return Boss::all()->pluck('fullname', 'id');
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');

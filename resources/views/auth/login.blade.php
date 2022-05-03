@@ -28,19 +28,15 @@
             <div class="block mt-4">
                 <label for="remember_me" class="flex items-center">
                     <x-jet-checkbox id="remember_me" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                    <span class="ml-2 text-sm text-gray-600">{{ __('Recuerdame') }}</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
+
 
                 <x-jet-button class="ml-4">
-                    {{ __('Log in') }}
+                    {{ __('Ingresar') }}
                 </x-jet-button>
             </div>
         </form>
@@ -48,26 +44,26 @@
     @push('scripts')
     <script>
  let email = document.querySelector("#email");
- 
+
      email.addEventListener('change',chargeEmail);
 
 
 function chargeEmail(e) {
 
-   
+
     const  si = "@sigpeconsultores.com.co";
            email.value += si;
-           
-        
+
+
 
         let str = email.value;
         let regex = /@/gi, result, indices = [];
             while ( (result = regex.exec(str)) ) {
                     indices.push(result.index);
                     }
-       
+
        if(indices.length > 1){
-           
+
          let cut = email.value.slice(0,indices[1]);
          email.value = cut;
        }

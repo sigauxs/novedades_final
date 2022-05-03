@@ -2,36 +2,40 @@
 
 namespace App\Exports;
 
-use App\Models\Notification;
-use App\Models\Position;
+
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Carbon\Carbon;
-Use App\Models\CenterCost;
-use PhpOffice\PhpSpreadsheet\Style\NUM;
+
 
 use Illuminate\Support\Facades\Auth;
 
 class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
+    public $administrativo = 6;
+    public $operacional = 1;
+    public $do = 8;
+
+    public $p_editor = 2;
+    public $p_admin = 1;
+    public $c_admin = 9;
+
     public function collection()
     {
-        $user = Auth::user()->email;
+
+
+
+
         $user_model = Auth::user();
-        $ad = 9;
-        $administrativo = 6;
-        $do = 8;
+
 
         $date = Carbon::now();
         $date = $date->format('m');
 
-        if($user_model->center_cost_id == $ad || ($user_model->center_cost_id == $administrativo AND $user_model->profile_id == 1 ) || $user_model->center_cost_id == $do ){
+        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == $this->p_admin ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_admin) ){
 
         $notification =  DB::table('notifications as n')
         ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -81,7 +85,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             'Fecha de finalizacion',
             'Total de dias',
             'Total de horas por fechas',
-            'Horas laborales',
+            'Horas No laborales',
             'Observaciones',
             'Soporte'
         ];
@@ -90,15 +94,6 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
     public function map($notification): array
     {
 
-        foreach($notification as $key => $value) {
-            if(is_bool($value)) {
-                if($value) {
-                    $object[$key] = "Verdadero";
-                } else {
-                    $object[$key] = "falso";
-                }
-            }
-        }
 
 
         return [
@@ -121,7 +116,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
 
 
-            /*'idt.name as tipo_identificacion','em.identification as identificacion','em.first_name','em.last_name','pos.name as cargo','cc.name as centro de costo','boss.fullname as jefe inmediato','nt.name as tipo de novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion'*/
+
 
         ];
     }
