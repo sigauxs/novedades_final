@@ -225,7 +225,7 @@ $date = $date->format('m');
 
         if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
-                  return $value != "Otro";
+                  return $value != "admin";
           });
 
         }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_editor){
