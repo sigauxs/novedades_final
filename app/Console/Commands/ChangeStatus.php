@@ -32,7 +32,7 @@ class ChangeStatus extends Command
         $date = Carbon::now();
         $date = $date->format('m');
 
-        $notification = Notification::('starte_date',$date);
+      
 
     }
 }
