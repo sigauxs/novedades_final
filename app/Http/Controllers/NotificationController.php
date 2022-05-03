@@ -201,11 +201,11 @@ $date = $date->format('m');
 
         $tsa = 3;
 
-        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_visor)){
 
           return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
 
-        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_editor){
+        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_visor){
 
             return Employee::where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
 
@@ -223,12 +223,12 @@ $date = $date->format('m');
 
         $user = Auth::user();
 
-        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_visor)){
           return CenterCost::all()->pluck('name', 'id')->filter(function ($value, $key) {
                   return $value != "admin";
           });
 
-        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_editor){
+        }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_visor){
             return CenterCost::where('id', $tsa)->orWhere('id', '=', $user->center_cost_id)->pluck('name', 'id');
         }
         else{
@@ -241,7 +241,7 @@ $date = $date->format('m');
 
     public function boss(User $user){
 
-        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == $this->p_admin ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_editor)){
+        if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == $this->p_admin ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_visor)){
           return Boss::all()->pluck('fullname', 'id');
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
