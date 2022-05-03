@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Notification;
+use Carbon\Carbon;
 
 class ChangeStatus extends Command
 {
@@ -11,14 +13,14 @@ class ChangeStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'exec:change';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Cambiar de estado las novedades';
 
     /**
      * Execute the console command.
@@ -27,6 +29,10 @@ class ChangeStatus extends Command
      */
     public function handle()
     {
-        return 0;
+        $date = Carbon::now();
+        $date = $date->format('m');
+
+        $notification = Notification::('starte_date',$date);
+
     }
 }

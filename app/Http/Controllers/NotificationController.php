@@ -58,7 +58,7 @@ $date = $date->format('m');
 
       $user = Auth::user()->email;
       $user_model = Auth::user();
-      $ccc = 9;
+      $do = 8;
 
       $ad = 9;
       $administrativo = 6;
@@ -95,7 +95,7 @@ $date = $date->format('m');
 
 
 
-      return view('notifications.index', compact('notifications','user_model','user','date'));
+      return view('notifications.index', compact('notifications','user_model','user','date','do'));
 
 
 

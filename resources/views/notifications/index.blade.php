@@ -14,17 +14,14 @@
                           #
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                          Identificación
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                           Empleados
                         </th>
                         <th scope="col"
-                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none'  }} text-sm font-medium text-white px-4 py-2">
+                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do AND $user_model->profile_id == 2) ) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                           Centro de costos
                         </th>
                         <th scope="col"
-                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }} text-sm font-medium text-white px-4 py-2">
+                        class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do AND $user_model->profile_id == 2) ) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                             Jefe de inmediato
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
@@ -57,20 +54,18 @@
 
 
                             <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              {{$notification->identificacion}}
-                            </td>
+                         
                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                             {{$notification->nombres}}  {{$notification->apellidos}}
                             </td>
 
 
                           <td class="
-                           {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }}
+                           {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do AND $user_model->profile_id == 2) ) ? '' : 'none' }}
                            text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                             {{$notification->centro_costo}}
                           </td>
-                            <td class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 ) ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                            <td class="{{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do AND $user_model->profile_id == 2) ) ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               {{$notification->jefe_inmediato}}
                             </td>
                           <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
@@ -82,13 +77,17 @@
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                 {{\Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A')}}
                             </td>
+
+
                        
-                           
-                            <td class="  {{ ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || $user_model->id == $notification->user_id ) ? '' : 'none' }}     text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              <a class="" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
+                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                              @if($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || $user_model->id == $notification->user_id )
+                                <a class="" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>     
+                              @else
+                              <a class="none" href="{{ route('notifications.edit', $notification->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>     
+                              @endif
+                              
                             </td>
-                       
-                          
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a href="{{ route('notifications.show', $notification->id ) }}"><span class="material-icons" style="color:green; font-size:26px">preview</span></a>
