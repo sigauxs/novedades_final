@@ -2,6 +2,8 @@
 <x-app-layout>
 
     <div class="container mx-auto">
+
+     {{ diffBusinessHours() }}
       {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
 

@@ -23,6 +23,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use PeriodInterval;
 
 class NotificationController extends Controller
 {
@@ -95,9 +96,7 @@ $date = $date->format('m');
         }
 
 
-
-
-      return view('notifications.index', compact('notifications','user_model','user','date','do'));
+      return view('notifications.index', compact('notifications','user_model','user','date','do','date'));
 
 
 
