@@ -35,6 +35,8 @@ class NotificationController extends Controller
     public $p_admin = 1;
     public $c_admin = 9;
 
+    public $jefe_facturacion = ["facturacion@sigpeconsultores.com.co",7];
+    
 
     public function index(Request $request)
     {
@@ -243,10 +245,17 @@ $date = $date->format('m');
 
         if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == $this->p_admin ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_visor)){
           return Boss::all()->pluck('fullname', 'id');
+
+        }elseif($user->email == $this->jefe_facturacion[0]){
+
+          return Boss::where('center_cost_id', $user->center_cost_id)
+                      ->where('id',$this->jefe_facturacion[1])
+                      ->pluck('fullname', 'id');
+
         }else{
             return Boss::where('center_cost_id', $user->center_cost_id)->pluck('fullname', 'id');
         }
     }
 
-
+ 
 }
