@@ -83,7 +83,7 @@
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                          {{$notification->centerCost->name}}
                         </td>
-                    </tr class="bg-white border-b">
+                    </tr>
 
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tipo de novedad</td>
@@ -111,7 +111,7 @@
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de dias</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                        {{ $notification->total_days }}
-                      </td>
+                    </td>
                     </tr class="bg-white border-b">
 
 
@@ -120,7 +120,14 @@
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                        {{ $notification->total_hours }}
                       </td>
-                    </tr class="bg-white border-b">
+                    </tr>
+
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de Horas</td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                         {{ $notification->business_days }}
+                        </td>
+                      </tr>
 
                     <tr class="bg-white border-b">
                       <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Observaciones</td>

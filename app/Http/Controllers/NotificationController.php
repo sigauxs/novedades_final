@@ -37,7 +37,7 @@ class NotificationController extends Controller
     public $c_admin = 9;
 
     public $jefe_facturacion = ["facturacion@sigpeconsultores.com.co",7];
-    
+
 
     public function index(Request $request)
     {
@@ -183,7 +183,7 @@ $date = $date->format('m');
        $notification =  Notification::find($notification->id);
         $fechaInicio = Carbon::parse($request->started_date);
         $fechafinalizacion = Carbon::parse($request->finish_date);
-        $request['total_days'] = $fechaInicio->diffInDays($fechafinalizacion);
+        $request['total_days'] = $fechaInicio->floatDiffInDays($fechafinalizacion);
         $request['total_hours'] = $fechaInicio->floatDiffInHours($fechafinalizacion);
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
         $request['business_days'] = $request->total_days * 8;
@@ -256,5 +256,5 @@ $date = $date->format('m');
         }
     }
 
- 
+
 }
