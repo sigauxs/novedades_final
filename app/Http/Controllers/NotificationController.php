@@ -132,7 +132,7 @@ $date = $date->format('m');
         $notification_object->user_id = $user;
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
-        $notification_object->total_days = $fechaInicio->diffInDays($fechafinalizacion);
+        $notification_object->total_days = diffBusinessHours($fechaInicio,$fechafinalizacion);
         $notification_object->total_hours = $fechaInicio->floatDiffInHours($fechafinalizacion);
 
 
@@ -143,7 +143,8 @@ $date = $date->format('m');
 
 
        $notification = Notification::create($notification_array);
-       return redirect()->route('notifications.show',compact('notification'));
+       return redirect()->route('notifications.show',compact('notification'))->with('success', 'Novedad creada');
+       
 
     }
 
@@ -183,18 +184,21 @@ $date = $date->format('m');
        $notification =  Notification::find($notification->id);
         $fechaInicio = Carbon::parse($request->started_date);
         $fechafinalizacion = Carbon::parse($request->finish_date);
-        $request['total_days'] = $fechaInicio->floatDiffInDays($fechafinalizacion);
+        $request['total_days'] = diffBusinessHours($fechaInicio,$fechafinalizacion);
         $request['total_hours'] = $fechaInicio->floatDiffInHours($fechafinalizacion);
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
         $request['business_days'] = $request->total_days * 8;
         $notification->update($request->all());
-        return redirect()->route('notifications.show',compact('notification'));
+        return redirect()->route('notifications.show',compact('notification'))->with('success', 'Novedad Actualizada');
     }
 
 
     public function destroy($id)
     {
+       $notification = Notification::find($id);
 
+       $notification->delete();
+       return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
     }
 
 
