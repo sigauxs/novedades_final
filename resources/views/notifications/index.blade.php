@@ -41,7 +41,7 @@
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                             Fecha de finalizacion
                         </th>
-                        <th scope="col" colspan="2" class="text-sm font-medium text-white px-4 py-2">
+                        <th scope="col" colspan="3" class="text-sm font-medium text-white px-4 py-2">
 
                         </th>
                       </tr>
@@ -53,13 +53,6 @@
                     <tbody>
                      @foreach ($notifications as $notification)
                         <tr class="bg-white border-b {{$notification->support ? '' : 'bg-red-200'}}">
-
-
-
-
-
-
-
 
                             <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
                          
@@ -93,7 +86,7 @@
                               <form action="{{ route('notifications.destroy', $notification->id)}}" method="POST">
                                 @csrf
                                 @method("DELETE")
-                                <button type="submit">Borrar</button>
+                                <button type="submit"><span class="material-icons" style="color:red; font-size:26px">delete</span></button>
                               </form>
                               
                              

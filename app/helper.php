@@ -17,24 +17,12 @@ use App\Models\NotificationType;
         $dias_total+=1;        
        }else{
         $dias_total =  $fecha_final_completa->floatDiffInDays($fecha_inicio_completa);
-       $dias_total+=1; 
+       
        }
       
       return (int)$dias_total;
-
-
-    
-
-        
-       /*
-        if(){}
-
-        $days = Carbon::parse("2022-05-04 07:00:00")->floatDiffInDays("2022-05-04 17:00:00");
-        $days_f = Carbon::parse("2022-05-04 17:00:00");
-        $days_b =  
-        $total =
-        $hour = Carbon::parse("2022-05-04 07:00:00")->floatDiffInHours("2022-05-04 17:00:00");
-        return $hour - 2;*/
+   
+  
      }
 
 
@@ -43,6 +31,46 @@ use App\Models\NotificationType;
     function current_user()
     {
         return auth()->user();
+    }
+
+    function recorrer(){
+
+        /*$comienzo = new DateTime('19-03-2019');
+        $final = new DateTime('22-03-2019');
+        // Necesitamos modificar la fecha final en 1 día para que aparezca en el bucle
+        $final = $final->modify('+1 day');
+        
+        $intervalo = DateInterval::createFromDateString('1 day');
+        $periodo = new DatePeriod($comienzo, $intervalo, $final);
+        
+        foreach ($periodo as $dt) {
+           $dt = Carbon::parse($dt->format("Y-m-d\n"))->isWeekend();
+           echo $dt."<br/>";
+        }*/
+
+        /*function number_of_working_days($from, $to) {
+            $workingDays = [1, 2, 3, 4, 5, 6]; # date format = N (1 = Monday, ...)
+            $holidayDays = ['*-12-25', '*-01-01', '2013-12-23']; # variable and fixed holidays
+        
+            $from = new DateTime($from);
+            $to = new DateTime($to);
+            $to->modify('+1 day');
+            $interval = new DateInterval('P1D');
+            $periods = new DatePeriod($from, $interval, $to);
+        
+            $days = 0;
+            foreach ($periods as $period) {
+                if (!in_array($period->format('N'), $workingDays)) continue;
+                if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+                if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+                $days++;
+            }
+            
+            return $days;
+        }*/
+
+
+      
     }
 
 

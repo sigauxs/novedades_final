@@ -175,6 +175,7 @@ $date = $date->format('m');
         $notification->started_date = Carbon::parse($notification->started_date);
         $notification->finish_date = Carbon::parse($notification->finish_date);
 
+
          return view('notifications.edit',compact('center_costs','employees','types','positions','bosses','notifications','notification'));
     }
 
@@ -189,6 +190,7 @@ $date = $date->format('m');
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
         $request['business_days'] = $request->total_days * 8;
         $notification->update($request->all());
+
         return redirect()->route('notifications.show',compact('notification'))->with('success', 'Novedad Actualizada');
     }
 
