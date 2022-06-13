@@ -88,7 +88,7 @@ $date = $date->format('m');
           ->join('center_costs as cc','n.center_cost_id','=','cc.id')
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-          ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
+          ->where('n.user_id',$user_model->id)->where('em.status'.'true')->whereMonth('started_date',$date)
           ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status')
           ->orderBy('started_date','desc')
           ->get();
@@ -210,15 +210,15 @@ $date = $date->format('m');
 
         if($user->center_cost_id == $this->c_admin || ($user->center_cost_id == $this->administrativo AND $user->profile_id == 1 ) || ($user->center_cost_id == $this->do AND $user->profile_id == $this->p_visor)){
 
-          return Employee::select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+          return Employee::where('status',true)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
 
         }elseif($user->center_cost_id == $this->operacional AND $user->profile_id == $this->p_visor){
 
-            return Employee::where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+            return Employee::where('status',true)->where('center_cost_id', $tsa)->orWhere('center_cost_id', '=', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
 
         }else{
 
-          return Employee::where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
+          return Employee::where('status',true)->where('center_cost_id', $user->center_cost_id)->select(DB::raw("CONCAT(first_name,' ',last_name) AS name"),'id')->pluck('name', 'id');
 
         }
 
