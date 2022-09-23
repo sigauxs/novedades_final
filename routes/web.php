@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ApplicationFormController;
 
 use App\Exports\NotificationExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -37,5 +38,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
 Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/create'); });
 
+Route::resource('applicationForms', ApplicationFormController::class)->names('applicationForms');
 
 

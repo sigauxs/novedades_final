@@ -1,17 +1,23 @@
 
-<x-app-layout>
+   <div class="flex flex-wrap  mb-6 mx-auto" style="display: none">
+    <div class="w-full px-3">
+       {!! Form::label("type_identification_id", "Tipo de identificación", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+       {!! Form::select("type_identification_id", $types, null , ["class"=>"form-control",'']) !!}
 
-    <div class="container mx-auto">
-
-  
-      {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
-
-
-
-      <div class="flex flex-wrap  mb-6 mx-auto ">
+       @error('type_identification_id')
+       <small class="text-red-600 font-bold text-base">
+        *{{$message}}
+       </small>
+       <br>
+       @enderror
+    </div>
+</div>
+     
+    <div class="flex flex-wrap  mb-6 mx-auto ">
         <div class="w-full px-3">
+
            {!! Form::label("employee_id", "Empleados", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("employee_id", $employees, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona un empleado...']) !!}
+           {!! Form::select("employee_id", $employee, null , ["style"=>"width:100%;"]) !!}
 
            @error('employee_id')
            <small class="text-red-600 font-bold text-base">
@@ -24,8 +30,9 @@
 
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
+
            {!! Form::label("notifications_type_id", "Tipos de novedades", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("notifications_type_id", $notifications, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el tipo de novedad']) !!}
+           {!! Form::select("notifications_type_id", $type_notifications , null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el tipo de novedad']) !!}
 
            @error('notifications_type_id')
            <small class="text-red-600 font-bold text-base">
@@ -50,7 +57,6 @@
         </div>
       </div>
 
-
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
            {!! Form::label("boss_id", "Jefes", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
@@ -64,11 +70,6 @@
            @enderror
         </div>
       </div>
-
-
-   
-
-
 
       <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">
@@ -101,19 +102,14 @@
       </div>
 
 
-      <div class="flex flex-wrap  mb-6 mx-auto" style="display: none">
-          <div class="w-full px-3">
-             {!! Form::label("type_identification_id", "Tipo de identificación", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-             {!! Form::select("type_identification_id", $types, null , ["class"=>"form-control",'']) !!}
-
-             @error('type_identification_id')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
-      </div>
+   
+      <div class="flex flex-wrap  mb-6 mx-auto">
+         <div class="w-full px-3">
+             {!! Form::label("support", "Soporte Entregado", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+         <div class="text-center">
+                 {!! Form::checkbox('support',null ,null,['class'=>'form-check-input inline-block appearance-none w-24 rounded-full  h-8 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm'] ) !!}
+         </div>
+       </div>
 
      
       {{-- <div class="flex flex-wrap  mb-6 mx-auto">
@@ -132,17 +128,11 @@
 
 
 
-      <div class="flex flex-wrap  mb-6 mx-auto">
-        <div class="w-full px-3">
-            {!! Form::label("support", "Soporte Entregado", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-        <div class="text-center">
-                {!! Form::checkbox('support',null ,null,['class'=>'form-check-input inline-block appearance-none w-24 rounded-full  h-8 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm'] ) !!}
-        </div>
-      </div>
+   
 
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
-            {!! Form::label("observation", "observation", ['class'=>'label-control inline-block mb-2']) !!}
+            {!! Form::label("observation", "Observación", ['class'=>'label-control inline-block mb-2']) !!}
             {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
 
            @error('observation')
@@ -160,16 +150,14 @@
        <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
         <div class="">
             {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
-         </div>
+        </div>
         <div class="">
             <a href="/notifications"> <button type="button" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> Regresar </button></a>
         </div>
-
-
        </div>
       </div>
 
-        {!!Form::close() !!}
+       
     </div>
 
 
@@ -186,10 +174,3 @@
       });
     </script>
   @endpush
-  </x-app-layout>
-
-
-
-
-
-
