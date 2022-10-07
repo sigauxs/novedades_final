@@ -101,61 +101,43 @@
         </div>
       </div>
 
-
-   
       <div class="flex flex-wrap  mb-6 mx-auto">
+         <div class="w-full px-3">
+             {!! Form::label("observation", "Observación", ['class'=>'label-control inline-block mb-2']) !!}
+             {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
+ 
+            @error('observation')
+            <small class="text-red-600 font-bold text-base">
+             *{{$message}}
+            </small>
+            <br>
+            @enderror
+         </div>
+       </div>
+ 
+       <div class="flex flex-wrap  mb-6 mx-auto">
+ 
+ 
+        <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
+         <div class="">
+             {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
+         </div>
+         <div class="">
+             <a href="/notifications"> <button type="button" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> Regresar </button></a>
+         </div>
+        </div>
+       </div>
+   
+      <div class="flex flex-wrap  mb-6 mx-auto d-none" >
          <div class="w-full px-3">
              {!! Form::label("support", "Soporte Entregado", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
          <div class="text-center">
                  {!! Form::checkbox('support',null ,null,['class'=>'form-check-input inline-block appearance-none w-24 rounded-full  h-8 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm'] ) !!}
          </div>
-       </div>
+      </div>
 
      
-      {{-- <div class="flex flex-wrap  mb-6 mx-auto">
-        <div class="w-full px-3">
-           {!! Form::label("position_id", "Cargo", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("position_id", $positions, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el cargo correspondiente..']) !!}
-
-           @error('position_id')
-           <small class="text-red-600 font-bold text-base">
-            *{{$message}}
-           </small>
-           <br>
-           @enderror
-        </div>
-      </div>--}}
-
-
-
-   
-
-      <div class="flex flex-wrap  mb-6 mx-auto">
-        <div class="w-full px-3">
-            {!! Form::label("observation", "Observación", ['class'=>'label-control inline-block mb-2']) !!}
-            {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
-
-           @error('observation')
-           <small class="text-red-600 font-bold text-base">
-            *{{$message}}
-           </small>
-           <br>
-           @enderror
-        </div>
-      </div>
-
-      <div class="flex flex-wrap  mb-6 mx-auto">
-
-
-       <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
-        <div class="">
-            {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
-        </div>
-        <div class="">
-            <a href="/notifications"> <button type="button" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> Regresar </button></a>
-        </div>
-       </div>
-      </div>
+ 
 
        
     </div>

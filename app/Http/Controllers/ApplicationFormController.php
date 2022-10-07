@@ -83,11 +83,11 @@ class ApplicationFormController extends Controller
         $notification->user_id = 8;
         $notification->started_date = $request->started_date;
         $notification->finish_date = $request->finish_date;
-        $notification->total_days = diffBusinessHours($fechaInicio,$fechafinalizacion);
-        $notification->total_hours = $fechaInicio->floatDiffInHours($fechafinalizacion); 
+        $notification->total_days = $this->diasTrabajados((string)$request->started_date,(string)$request->finish_date)[1];
+        $notification->total_hours = $this->diasTrabajados((string)$request->started_date,(string)$request->finish_date)[0]; 
         $notification->observation = $request->observation;
         $notification->support = $request->support;
-        $notification->business_days = $notification->total_days * 8;
+      
         
         if($notification->save()){
             return redirect()->action(
@@ -147,5 +147,85 @@ class ApplicationFormController extends Controller
 
     public function type_identification(){
         return IdentificationType::where('id',1)->pluck('name','id');
+    }
+
+
+    public function diasTrabajados($inicio,$final){
+
+        $data = [];
+        
+        $datetimeStart = new \DateTime($inicio);
+        $datetimeFinish = new \DateTime($final);
+        
+        $break_time_start = "12:00";
+        $break_time_final = "12:59";
+        
+        $interval = $datetimeStart->diff($datetimeFinish);
+        
+        $fecha_inicio_acomparar = $datetimeStart->format('Y-m-d');
+        $fecha_final_acomparar = $datetimeFinish->format('Y-m-d');
+        
+        $horas_descanso_acumulada = 0;
+        $horas_reales= 0;
+        $horas_transcurridas = [];
+        $countWeekend = 0;
+        $dias = 0;
+        
+        if($fecha_final_acomparar == $fecha_final_acomparar){
+        
+            $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
+            $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
+        
+            $date_obj = new \DateTime($inicio_recorrido);
+            $date_incr = $inicio_recorrido;
+            $incr = 1;
+            
+        
+            while($date_incr < $final_recorrido) {
+                $date_incr = $date_obj->format('Y-m-d H:i:s');
+                $time = $date_obj->format('H:i');  
+                $date_obj->modify('+'.$incr.' minutes');
+            
+                array_push($horas_transcurridas,$time);
+            
+               if($time == $break_time_start || $time == $break_time_final){
+                  $horas_descanso_acumulada+=1;
+               }
+                         
+            }
+        
+            
+            if($horas_descanso_acumulada == 2){
+               $horas_reales = (int)$interval->format('%H') - 1; 
+            }else {
+                $hora =(int)$interval->format('%H');   
+                $horas_reales =  $hora;
+            }
+            
+            $dias = 1;
+        }
+        
+        if($fecha_inicio_acomparar != $fecha_final_acomparar){
+        
+            $fechaInicio=strtotime($inicio);
+            $fechaFin=strtotime($final);
+            
+            $interval = $datetimeStart->diff($datetimeFinish);
+        
+            for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+                if(date("w",$i) == 0){
+                    $countWeekend+=1;
+                }
+            }
+        
+            if($countWeekend != 0){
+               $dias = (int)$interval->format('%a') - 1;
+            }
+         
+        }
+        
+        return $data = [$horas_reales,$dias];
+        
+        
     }
 }

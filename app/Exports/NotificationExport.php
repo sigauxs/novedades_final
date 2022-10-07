@@ -45,7 +45,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
         ->whereMonth('started_date',$date)
-        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','business_days as dias_laborales','observation as observacion','support as soporte')
+        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
         ->orderBy('started_date','desc')
         ->get();
 
@@ -58,7 +58,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
         ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
-        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','business_days as dias_laborales','observation as observacion','support as soporte')
+        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
         ->orderBy('started_date','desc')
         ->get();
        }
@@ -85,7 +85,6 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             'Fecha de finalizacion',
             'Total de dias',
             'Total de horas por fechas',
-            'Horas No laborales',
             'Observaciones',
             'Soporte'
         ];
@@ -110,12 +109,8 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A'),
             $notification->total_dias,
             $notification->total_horas,
-            $notification->dias_laborales,
             $notification->observacion,
             $notification->soporte ? 'Si' : 'No'
-
-
-
 
 
         ];

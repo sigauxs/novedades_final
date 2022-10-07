@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('applicationForms.index');
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
