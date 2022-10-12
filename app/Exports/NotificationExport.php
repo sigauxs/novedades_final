@@ -27,8 +27,6 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
     {
 
 
-
-
         $user_model = Auth::user();
 
 
@@ -44,11 +42,11 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->whereMonth('started_date',$date)
         ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
         ->orderBy('started_date','desc')
         ->get();
 
+        // ->whereMonth('started_date',$date)
         }else{
         $notification =  DB::table('notifications as n')
         ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -57,10 +55,11 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
         ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
         ->orderBy('started_date','desc')
         ->get();
+
+        // ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
        }
 
 
