@@ -127,6 +127,18 @@ class ApplicationFormController extends Controller
         //
     }
 
+    /* Vista de Informes */
+
+
+    public function summary(){
+
+
+        $total_horas_mensuales = DB::table('notifications')->select('*')->whereMonth('started_date',9)->sum('total_hours');
+        $tiempo_perdidos_por_enfermades = "";
+        return view('applicationForms.statisticsNotification');
+    }
+
+
     /* Menu desplegado de centro de costo */
 
     public function center($center_cost_id){

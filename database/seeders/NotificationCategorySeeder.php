@@ -46,5 +46,10 @@ class NotificationCategorySeeder extends Seeder
         $category_8 = new NotificationCategory();
         $category_8->name = "Licencias Remuneradas";
         $category_8->save();
+
+        $category_9 = new NotificationCategory();
+        $category_9->name = "Vacaciones";
+        $category_9->save();
+
     }
 }

@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Notification;
+
+
+
 class IdentificationType extends Model
 {
     use HasFactory;
@@ -16,5 +19,7 @@ class IdentificationType extends Model
     {
         return $this->belongsTo(Notification::class);
     }
+
+
 }
 

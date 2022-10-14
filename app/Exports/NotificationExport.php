@@ -55,7 +55,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
+        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soportes')
         ->orderBy('started_date','desc')
         ->get();
 
@@ -91,8 +91,6 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
     public function map($notification): array
     {
-
-
 
         return [
 
