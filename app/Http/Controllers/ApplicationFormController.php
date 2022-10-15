@@ -19,6 +19,7 @@ use App\Models\Notification;
 
 /* Validaciones */
 use App\Http\Requests\StoreNotificationRequest;
+use App\Models\NotificationCategory;
 
 class ApplicationFormController extends Controller
 {
@@ -130,12 +131,66 @@ class ApplicationFormController extends Controller
     /* Vista de Informes */
 
 
-    public function summary(){
+    public function summary(Request $request){
 
+        /* 
+        tpm  = Tiempo perdido mensual
+        tpe  = Tiempo por perdido por enfermedades comun.
+        tpa  = Tiempo perdido por incapacidades de Accidentes laborales.
+        tpo  = Tiempo perdido por otras licencias.
+        tpnr =  Tiempo perdido por licencias no remuneradas
 
-        $total_horas_mensuales = DB::table('notifications')->select('*')->whereMonth('started_date',9)->sum('total_hours');
-        $tiempo_perdidos_por_enfermades = "";
-        return view('applicationForms.statisticsNotification');
+        1 Incapacidades enfermedad común	
+        2 Incapacidades de Accidentes laborales	
+        3 Licencias no remuneradas	
+        4 Otras licencias		
+        5 Retiro 	
+        6 Ingreso		
+        7 Pagos extras		
+        8 Licencias remuneradas	
+        9 vacaciones
+        	
+
+        */
+        $meses = $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
+        $mes = (int)$request->mes;
+        $category = $request->notificationCategory_id;
+
+        $notificationCategories = $this->notification_category();
+ 
+        if($category == 99){
+
+           
+
+        }else{
+
+        }
+
+      
+
+        $tpm = DB::table('notifications')->select('*')->whereMonth('started_date',$mes)->sum('total_hours');
+        $tpe = DB::table('notifications as n')
+                                         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+                                         ->join('notification_categories as nc','nt.notification_category_id','=','nc.id')
+                                         ->select('*')->where('nc.id',$category)->whereMonth('started_date',$mes)->sum('total_hours');
+
+        $tpa = DB::table('notifications as n')
+                                         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+                                         ->join('notification_categories as nc','nt.notification_category_id','=','nc.id')
+                                         ->select('*')->where('nc.id',$category)->whereMonth('started_date',$mes)->sum('total_hours');
+
+        $tpo = DB::table('notifications as n')
+                                         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+                                         ->join('notification_categories as nc','nt.notification_category_id','=','nc.id')
+                                         ->select('*')->where('nc.id',$category)->whereMonth('started_date',$mes)->sum('total_hours');
+
+        $tpnr = DB::table('notifications as n')
+                                        ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+                                        ->join('notification_categories as nc','nt.notification_category_id','=','nc.id')
+                                        ->select('*')->where('nc.id',$category)->whereMonth('started_date',$mes)->sum('total_hours');
+
+        
+        return view('applicationForms.statisticsNotification',compact('notificationCategories','mes','category','meses','tpm'));
     }
 
 
@@ -159,6 +214,14 @@ class ApplicationFormController extends Controller
 
     public function type_identification(){
         return IdentificationType::where('id',1)->pluck('name','id');
+    }
+
+    public function notification_category(){
+       $c =  NotificationCategory::select('name','id')->limit(4)->pluck('name','id');
+       $c[99] = 'Tiempo perdido mensual';
+
+       return $c;
+
     }
 
 

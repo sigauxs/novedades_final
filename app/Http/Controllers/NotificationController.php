@@ -57,8 +57,7 @@ $date_i = Carbon::now()->startOfMonth()->month($mes);
         $date = Carbon::now();
 
 $date = $date->format('m');
-        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))
-        ->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
+        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
 
       $user = Auth::user()->email;
       $user_model = Auth::user();
