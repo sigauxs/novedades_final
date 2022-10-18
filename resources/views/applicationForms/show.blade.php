@@ -97,7 +97,7 @@
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Fecha de inicio</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                       {{\Carbon\Carbon::parse($applicationForm->started_date )->translatedFormat('j F, Y h:i:s A')}}
+                       {{\Carbon\Carbon::parse($applicationForm->started_date )->translatedFormat('j F, Y ')}} {{\Carbon\Carbon::parse($applicationForm->started_time )->translatedFormat('h:i:s A') }}
                       </td>
                     </tr class="bg-white border-b">
 
@@ -105,38 +105,28 @@
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Fecha de Finalizacion</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                       {{  \Carbon\Carbon::parse($applicationForm->finish_date )->translatedFormat('j F, Y h:i:s A') }}
+                       {{  \Carbon\Carbon::parse($applicationForm->finish_date )->translatedFormat('j F, Y') }} {{\Carbon\Carbon::parse($applicationForm->finish_time)->translatedFormat('h:i:s A') }}
                       </td>
                     </tr class="bg-white border-b">
 
-                    @if($applicationForm->total_hours > 8)
+                    
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de dias</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                       {{ round($applicationForm->total_days,0) }}
+                       {{ $applicationForm->total_days }}
                     </td>
                     </tr class="bg-white border-b">
-                    @endif
-                   
+                                    
 
-                    @if($applicationForm->total_hours <= 8)
+                 
                     <tr class="bg-white border-b">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de horas permisos</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                       {{ $applicationForm->total_hours >= 8 ? $applicationForm->total_hours - 1 : $applicationForm->total_hours }}
+                       {{ $applicationForm->total_hours }}
                       </td>
                     </tr>
-                    @endif
+         
                    
-
-                    @if($applicationForm->total_hours > 8)
-                    <tr class="bg-white border-b">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total de Horas laboradas</td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                         {{ round($applicationForm->business_days,0) }}
-                        </td>
-                      </tr>
-                    @endif
 
                     <tr class="bg-white border-b">
                       <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Observaciones</td>
