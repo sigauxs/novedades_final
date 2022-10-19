@@ -233,9 +233,9 @@ class ApplicationFormController extends Controller
     }
 
 
-    public function diasTrabajados($inicio, $final,$tipoNovedad)
+    public function diasTrabajados($inicio, $final)
     {
-        
+
 
 
 
@@ -391,7 +391,7 @@ class ApplicationFormController extends Controller
 
                 $horas_reales = $week;
 
-                
+
             } else if ($horaFinal <= $horarioFijoSalida) {
 
 
@@ -544,5 +544,5 @@ class ApplicationFormController extends Controller
         return $data = [$horas_reales, $dias];
     }
 
- 
+
 }

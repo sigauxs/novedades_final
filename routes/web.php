@@ -5,6 +5,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ApplicationFormController;
 
 use App\Exports\NotificationExport;
+use App\Http\Controllers\EmployeeController;
+use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/excel', function () {
         return Excel::download(new NotificationExport, 'novedades.xlsx');
     });
+
+    Route::resource('employees', EmployeeController::class)->names('employees');
 });
 
 
