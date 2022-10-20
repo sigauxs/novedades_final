@@ -16,4 +16,9 @@ class CenterCost extends Model
     {
         return $this->belongsTo(Notification::class);
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

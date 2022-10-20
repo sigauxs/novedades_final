@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,9 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $notifications = Notification::where('employee_id',$id)->get();
+        $employee = Employee::where('id',$id)->get();
+        return view('employees.show',compact('notifications','employee'));
     }
 
     /**

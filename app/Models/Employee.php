@@ -21,4 +21,8 @@ class Employee extends Model
         return $this->hasOne(Position::class,'id','position_id');
     }
 
+    public function centercost(){
+        return $this->hasOne(CenterCost::class,'id','center_cost_id');
+    }
+
 }
