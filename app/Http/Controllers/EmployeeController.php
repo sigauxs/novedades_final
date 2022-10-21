@@ -58,12 +58,14 @@ class EmployeeController extends Controller
         return view('employees.show',compact('notifications','employee'));
     }
 
-    public function createPDF($id){
+    public function createPDF(Request $request){
         //Recuperar todos los productos de la db
-        $employee = Employee::find($id);
-        $notifications = Notification::where('employee_id',$id)->get();
-                $pdf = PDF::loadView('show', compact('employee'));
-        return $pdf->download('archivo-pdf.pdf');
+        Notification::where('employee_id',$request->id)->paginate(5);
+        $employee = Employee::find($request->id);
+        $notifications = Notification::paginate(10);
+        $pdf = PDF::loadView('employees.reportepdf', compact('employee','notifications'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream();
+       
     }
 
     public function imprimirtest(Employee $employee){

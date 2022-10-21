@@ -42,7 +42,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::resource('employees', EmployeeController::class)->names('employees');
 });
 
-Route::get('/employeepdf/{id}', [EmployeeController::class, 'createPDF'])->name('employee.pdf');
+Route::get('/employeepdf', [EmployeeController::class, 'createPDF'])->name('employeepdf');
 
 Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
 Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/create'); });

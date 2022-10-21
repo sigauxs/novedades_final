@@ -14,12 +14,16 @@
 
    <div>
 
-    /report/employee
 
-    <button class="bg-transparent mt-10 hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-        <a href="{{ route('employee.pdf', $employee->id ) }}">Generar Excel </a>
-    </button>
 
-    <a href={{ url("/pdf/{$employee->id}") }}>pdf</a>
+    {!! Form::open(['url' => '/employeepdf', 'method' => 'get','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+      <div class="max-w-lg mx-auto text-center">
+        <div style="display:none">
+            {!! Form::text("id",$employee->id,["class"=>"form-control"]) !!}
+        </div>
+
+        {!! Form::button("<span class='material-icons'>search</span>", ['type' => 'submit', 'class' => 'rounded bg-indigo-600 text-white py-2  px-6 w-1/5'] )  !!}
+     </div>
+    {!! Form::close() !!}
     </div>
 </x-app-layout>
