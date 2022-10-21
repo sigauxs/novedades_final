@@ -50,3 +50,4 @@ Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/
 Route::resource('applicationForms', ApplicationFormController::class)->names('applicationForms');
 
 
+Route::get('/pdf/{$id}',[EmployeeController::class,'imprimirtest'])->name('imprimir');

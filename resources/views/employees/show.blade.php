@@ -20,5 +20,6 @@
         <a href="{{ route('employee.pdf', $employee->id ) }}">Generar Excel </a>
     </button>
 
+    <a href={{ url("/pdf/{$employee->id}") }}>pdf</a>
     </div>
 </x-app-layout>
