@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ApplicationFormController;
+use App\Http\Controllers\EmployeeController;
 
 use App\Exports\NotificationExport;
-use App\Http\Controllers\EmployeeController;
+
 use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,6 +42,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::resource('employees', EmployeeController::class)->names('employees');
 });
 
+Route::get('/employeepdf/{id}', [EmployeeController::class, 'createPDF'])->name('employee.pdf');
 
 Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
 Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/create'); });

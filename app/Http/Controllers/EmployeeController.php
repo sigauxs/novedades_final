@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
+use Barryvdh\DomPDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmployeeController extends Controller
 {
@@ -52,8 +54,16 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $notifications = Notification::where('employee_id',$id)->get();
-        $employee = Employee::where('id',$id)->get();
+        $employee = Employee::find($id);
         return view('employees.show',compact('notifications','employee'));
+    }
+
+    public function createPDF($id){
+        //Recuperar todos los productos de la db
+        $employee = Employee::find($id);
+        $notifications = Notification::where('employee_id',$id)->get();
+                $pdf = PDF::loadView('employees.show', compact('employee'));
+        return $pdf->download('archivo-pdf.pdf');
     }
 
     /**
