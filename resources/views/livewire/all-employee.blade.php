@@ -2,7 +2,7 @@
     <div class="container mx-auto">
 
 
-        <select wire:model="centerCostFilter">
+        <select wire:model="centerCostFilter" class="mt-4">
             <option value="">Selecciona el area</option>
              @foreach ($centerCosts as $centerCost)
                  <option value="{{ $centerCost->id }}">{{ $centerCost->name }}</option>
