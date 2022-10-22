@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
         return view('notifications.create');
     });
 
-    Route::get('/statistics',[ApplicationFormController::class,'summary']);
+    Route::get('/statistics',[ApplicationFormController::class,'summary'])->name('statistics');
 
     Route::resource('notifications',NotificationController::class)->names('notifications');
 

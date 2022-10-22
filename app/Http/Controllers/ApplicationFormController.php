@@ -171,15 +171,10 @@ class ApplicationFormController extends Controller
 
 
         $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_days');
-        $tple = DB::table('notifications as n')
-            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
-            ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
-            ->select('*')->where('nc.id', CTPE)->whereMonth('started_date', $mes)->sum('total_hours');
 
-        $tpal = DB::table('notifications as n')
-            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
-            ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
-            ->select('*')->where('nc.id', CTPA)->whereMonth('started_date', $mes)->sum('total_hours');
+
+        $tple = $this->respond(CTPE,$mes);
+        $tpal =  $this->respond(CTPA,$mes);
 
         $tpol = DB::table('notifications as n')
             ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
@@ -272,17 +267,6 @@ class ApplicationFormController extends Controller
 
         $horarioFijoSalida = strtotime("17:00:00");
 
-        switch ($tipoNovedad) {
-            case '6':
-                # code...
-                break;
-            case 'value':
-                    # code...
-                break;
-            default:
-                # code...
-                break;
-        }
 
 
         if ($fecha_inicio_acomparar == $fecha_final_acomparar) {
@@ -516,25 +500,8 @@ class ApplicationFormController extends Controller
         }
 
 
-        /*if($fecha_inicio_acomparar != $fecha_final_acomparar){
 
-            $fechaInicio=strtotime($inicio);
-            $fechaFin=strtotime($final);
 
-            $interval = $datetimeStart->diff($datetimeFinish);
-
-            for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-                if(date("w",$i) == 0){
-                    $countWeekend+=1;
-                }
-            }
-
-            if($countWeekend != 0){
-               $dias = (int)$interval->format('%a') - 1;
-            }
-
-        }
-       */
 
 
 
@@ -543,6 +510,16 @@ class ApplicationFormController extends Controller
 
         return $data = [$horas_reales, $dias];
     }
+
+    public function respond($categoriaNovedad,$mes) {
+
+      return DB::table('notifications as n')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
+            ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
+            ->select('*')->where('nc.id', $categoriaNovedad)->whereMonth('started_date', $mes)->sum('total_days');
+
+    }
+
 
 
 }
