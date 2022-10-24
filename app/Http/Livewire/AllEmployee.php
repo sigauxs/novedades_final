@@ -18,7 +18,7 @@ class AllEmployee extends Component
 
 
     public $search = '';
-    public $centerCostFilter;
+    public $identification;
     public $fullname;
 
 
@@ -37,17 +37,12 @@ class AllEmployee extends Component
     public function render()
     {
 
+        $employees = Employee::query()
+        ->when($this->search, fn($query, $search) => $query->WhereRaw('LOWER("first_name") LIKE ?',['%'.trim(strtolower($this->search)).'%']))
+        ->when($this->search, fn($query, $search) => $query->orWhereRaw('LOWER("last_name") LIKE ?',['%'.trim(strtolower($this->search)).'%']))
+        ->when($this->identification,function($query){ return $query->where('identification',$this->identification);})
+        ->paginate(10);
 
-
-        $employees = Employee::whereRaw('LOWER("first_name") LIKE ?',['%'.trim(strtolower($this->search)).'%'])
-                    ->orWhereRaw('LOWER("last_name") LIKE ? ', ['%'.trim(strtolower($this->search)).'%'])->where(function (Builder $query) {
-                        return $query->where('center_cost_id', $this->centerCostFilter);
-                    })->paginate(10);
-
-        /*$employees =  Employee::query()
-        ->when($this->centerCostFilter, function($query){
-          $query->where('center_cost_id',$this->centerCostFilter);
-        })->paginate(10);*/
 
         return view('livewire.all-employee', compact('employees'));
     }

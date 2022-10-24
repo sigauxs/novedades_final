@@ -7,17 +7,21 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+
+
+    public $filters = [
+        'mes' => '',
+        'id' => '',
+    ];
+
     public function index()
     {
 
@@ -51,21 +55,51 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-        $notifications = Notification::where('employee_id',$id)->get();
+
+        $date = Carbon::now();
+        $date = $date->format('m');
+        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
+
+        $request->mes ? $this->filters['mes'] = $request->mes : $this->filters['mes'] = $date;
+
+        $this->filters['id'] = $id;
+        $mes = $this->filters['mes'];
+
+         $notifications = Notification::query()
+         ->when($this->filters,function($query){
+            return $query
+            ->where('employee_id',$this->filters['id'])
+            ->whereMonth('started_date',$this->filters['mes']);
+        })
+         ->orderBy('created_at', 'desc')->get();
+
+
         $employee = Employee::find($id);
-        return view('employees.show',compact('notifications','employee'));
+        $sumaDias =  Notification::query()
+        ->when($this->filters,function($query){
+           return $query
+           ->where('employee_id',$this->filters['id'])
+           ->whereMonth('started_date',$this->filters['mes']);
+         })->sum('total_days');
+        $sumaHoras =   Notification::query()
+        ->when($this->filters,function($query){
+           return $query
+           ->where('employee_id',$this->filters['id'])
+           ->whereMonth('started_date',$this->filters['mes']);
+         })->sum('total_hours');
+        return view('employees.show',compact('notifications','employee','sumaDias','sumaHoras','month','mes'));
     }
 
     public function createPDF(Request $request){
         //Recuperar todos los productos de la db
-        Notification::where('employee_id',$request->id)->paginate(5);
+
         $employee = Employee::find($request->id);
-        $notifications = Notification::paginate(10);
+        $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();
         $pdf = PDF::loadView('employees.reportepdf', compact('employee','notifications'))->setOptions(['defaultFont' => 'sans-serif']);
-        return $pdf->stream();
-       
+        return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
+
     }
 
     public function imprimirtest(Employee $employee){

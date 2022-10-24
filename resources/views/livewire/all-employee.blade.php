@@ -2,18 +2,14 @@
     <div class="container mx-auto">
 
 
-        <select wire:model="centerCostFilter" class="mt-4">
-            <option value="">Selecciona el area</option>
-             @foreach ($centerCosts as $centerCost)
-                 <option value="{{ $centerCost->id }}">{{ $centerCost->name }}</option>
-             @endforeach
-        </select>
-        
+
+
         <input type="text" wire:model="search">
+        <input type="text" wire:model="identification">
 
 
         <div class="flex flex-col">
-        
+
             <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="py-2 inline-block min-w-full sm:px-4 lg:px-8">
                 <div class="overflow-hidden">
@@ -40,8 +36,8 @@
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                             Estados
                         </th>
-                       
-                      
+
+
                         <th scope="col" colspan="3" class="text-sm font-medium text-white px-4 py-2">
 
                         </th>
@@ -55,8 +51,8 @@
                      @foreach ($employees  as $employee)
                         <tr class="bg-white border-b ">
 
-                            <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
-                         
+                            <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $employee->identification  }}</td>
+
                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                              {{ $employee->first_name}}
                             </td>
@@ -74,17 +70,17 @@
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                {{ $employee->status ? "Activo" : "Inactivo" }}
                             </td>
-                                               
-                        
-                          
-                       
-                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                         
-                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>     
-                            
 
-                              
-                              
+
+
+
+                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+
+                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
+
+
+
+
                             </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
@@ -105,14 +101,14 @@
               </div>
             </div>
           </div>
-            
-            
-          {{ $employees->links()}}
-            
-    
-            
-            
-   
+
+
+        {{ $employees->links()}}
+
+
+
+
+
         </div>
     </div>
 
