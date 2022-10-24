@@ -5,11 +5,14 @@
 <!-- change emploeyye-->
 
 <label for="">
-    <input type="text" wire:model="search">
+    Nombres
+    <input type="text" wire:model="search" placeholder="John Doe">
 </label>
 
+<label for="">
+    Identification
         <input type="text" wire:model="identification">
-
+ </label>
 
         <div class="flex flex-col">
 
