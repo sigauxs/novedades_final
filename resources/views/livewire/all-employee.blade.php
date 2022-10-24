@@ -2,9 +2,12 @@
     <div class="container mx-auto">
 
 
+<!-- change emploeyye-->
 
+<label for="">
+    <input type="text" wire:model="search">
+</label>
 
-        <input type="text" wire:model="search">
         <input type="text" wire:model="identification">
 
 
