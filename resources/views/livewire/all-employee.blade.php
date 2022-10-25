@@ -82,8 +82,7 @@
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
 
-                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:blue; font-size:26px">edit</span></a>
-
+                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:red; font-size:26px"> picture_as_pdf</span></a>
 
 
 

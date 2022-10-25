@@ -171,24 +171,34 @@ class ApplicationFormController extends Controller
 
 
         $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_days');
+        $htpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_hours');
 
 
-        $tple = $this->respond(CTPE,$mes);
-        $tpal =  $this->respond(CTPA,$mes);
+        /* days */
+        $tple = $this->respondays(CTPE,$mes);
+        $tpal =  $this->respondays(CTPA,$mes);
+        $tplnr = $this->respondays(CTPNR,$mes);
+
+        /* Hours */
+
+        $thple = $this->respondHours(CTPE,$mes);
+        $thpal =  $this->respondHours(CTPA,$mes);
+        $thplnr = $this->respondHours(CTPNR,$mes);
+
 
         $tpol = DB::table('notifications as n')
             ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
             ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
             ->select('*')->whereIn('nc.id', [4, 8])
-            ->whereMonth('started_date', $mes)->sum('total_hours');
+            ->whereMonth('started_date', $mes)->sum('total_days');
 
-        $tplnr = DB::table('notifications as n')
+        $thpol = DB::table('notifications as n')
             ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
             ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
-            ->select('*')->where('nc.id', CTPNR)->whereMonth('started_date', $mes)->sum('total_hours');
+            ->select('*')->whereIn('nc.id', [4, 8])
+            ->whereMonth('started_date', $mes)->sum('total_hours');
 
-
-        return view('applicationForms.statisticsNotification', compact('mes', 'meses', 'tpm', 'tpal', 'tpol', 'tple', 'tplnr'));
+        return view('applicationForms.statisticsNotification', compact('mes', 'meses', 'tpm', 'tpal', 'tpol', 'tple', 'tplnr','htpm', 'thpal', 'thpol', 'thple', 'thplnr'));
     }
 
 
@@ -511,7 +521,7 @@ class ApplicationFormController extends Controller
         return $data = [$horas_reales, $dias];
     }
 
-    public function respond($categoriaNovedad,$mes) {
+    public function respondays($categoriaNovedad,$mes) {
 
       return DB::table('notifications as n')
             ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
@@ -519,6 +529,15 @@ class ApplicationFormController extends Controller
             ->select('*')->where('nc.id', $categoriaNovedad)->whereMonth('started_date', $mes)->sum('total_days');
 
     }
+
+    public function respondHours($categoriaNovedad,$mes) {
+
+        return DB::table('notifications as n')
+        ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
+        ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
+        ->select('*')->where('nc.id', $categoriaNovedad)->whereMonth('started_date', $mes)->sum('total_hours');
+
+      }
 
 
 

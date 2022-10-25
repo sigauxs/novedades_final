@@ -14,6 +14,9 @@
     margin-right: auto;
 }
 
+body{
+    font-size: 15px;
+}
     </style>
 
 </head>
@@ -33,26 +36,26 @@
                   #
                 </th>
                 <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                  Nombres
+                   Fecha de inicio
                 </th>
                 <th scope="col"
                 class="  text-sm font-medium text-white px-4 py-2">
-               Apellidos
+                    Fecha final
                 </th>
                 <th scope="col"
                 class=" text-sm font-medium text-white px-4 py-2">
-                    Cargo
+                    Total de dias
                 </th>
                 <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                  Area
+                 Total de horas
                 </th>
                 <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                    Estados
+                    Observacion
                 </th>
 
 
                 <th scope="col" colspan="3" class="text-sm font-medium text-white px-4 py-2">
-
+                      Soporte
                 </th>
               </tr>
             </thead class="border-b">
@@ -60,14 +63,14 @@
 
 
 
-            <tbody>
+            <tbody style="text-align: center">
              @foreach ($notifications as $notification)
                 <tr class="bg-white border-b ">
 
                     <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
 
                    <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                     {{ $notification->started_date}}
+                     {{ \Carbon\Carbon::parse($notification->started_date) ->translatedFormat('j F, Y')}}
                     </td>
 
 
@@ -83,9 +86,9 @@
                 <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                        {{ $notification->observation  }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                    {{ $notification->support ? "Entregado":"No entregado" }}
-             </td>
+                <td style ="text-center" class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                    {{ $notification->support ? "Entregado":" No entregado" }}
+                </td>
 
 
 
@@ -95,7 +98,7 @@
 
 
 
-                  </tr class="bg-white border-b">
+                  </tr >
                 @endforeach
             </tbody>
 
