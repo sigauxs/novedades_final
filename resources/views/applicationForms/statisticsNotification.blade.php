@@ -25,13 +25,13 @@
 
 {!! Form::close() !!}
 
-<div class="w-4/6 mx-auto">
-    <div class="grid grid-cols-1">
+ <div class="w-4/6 mx-auto">
+        <div class="grid grid-cols-1">
             <div class="text-center">
                 {{$mes}}
             </div>
-    </div>
-    <div class="grid grid-cols-2 gap-4">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
 
         <div class="text-center bg-white outline-4 outline-red-600 outline-double rounded-xl">
 
@@ -67,8 +67,27 @@
 
         </div>
 
-      </div>
-      </div>
+        </div>
+</div>
+
+<a href="/estadisticapdf"> Descargar </a>
+
+
+
+{!! Form::open(['url' => '/estadisticapdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
+<div class="max-w-lg mx-auto text-center">
+    <div style="display:none">
+        {!! Form::text('mes', $mes , ['class' => 'form-control']) !!}
+    </div>
+
+    {!! Form::button("<span class='material-icons'>search</span>", [
+        'type' => 'submit',
+        'class' => 'rounded bg-indigo-600 text-white py-2  px-6 w-1/5',
+        'formtarget' => '_blank',
+    ]) !!}
+</div>
+{!! Form::close() !!}
+
 </div>
 
 

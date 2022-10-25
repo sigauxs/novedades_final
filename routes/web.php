@@ -44,6 +44,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
 Route::get('/employeepdf', [EmployeeController::class, 'createPDF'])->name('employeepdf');
 
+Route::get('/estadisticapdf', [ApplicationFormController::class, 'estadisticasPDF'])->name('estadisticapdf');
+
 Route::match(['get', 'post'], 'register', function(){ return redirect('/login'); });
 Route::match(['get'], '/dashboard', function(){ return redirect('/notifications/create'); });
 

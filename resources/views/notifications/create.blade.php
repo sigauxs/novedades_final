@@ -70,34 +70,45 @@
 
 
 
-      <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+      <div class="grid grid-cols-2 mb-6 mx-auto">
+        <div class="px-3">
+          {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
 
-             {!! Form::datetimeLocal("started_date", null ,['class'=>'form-control']) !!}
+    {!! Form::date("started_date", null ,['class'=>'form-control']) !!}
 
-             @error('started_date')
-             <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-          </div>
+    @error('started_date')
+    <small class="text-red-600 font-bold text-base">
+     *{{$message}}
+    </small>
+    <br>
+    @enderror
+ </div>
+
+
+
+ <div class="px-3">
+    {!! Form::label("started_time", "Hora de inicio", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+    {!! Form::time("started_time", null ,['class'=>'form-control']) !!}
+ </div>
+
       </div>
 
-      <div class="flex flex-wrap  mb-6 mx-auto">
-        <div class="w-full px-3">
-           {!! Form::label("finish_date", "Fecha de finalización", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+      <div class="grid grid-cols-2 mb-6 mx-auto">
+          <div class="px-3">
+            {!! Form::label("finish_date", "Fecha de finalización", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+            {!! Form::date("finish_date", null ,['class'=>'form-control']) !!}
+          @error('finish_date')
+          <small class="text-red-600 font-bold text-base">
+             *{{$message}}
+            </small>
+            <br>
+            @enderror
+         </div>
 
-           {!! Form::datetimeLocal("finish_date", null ,['class'=>'form-control']) !!}
-
-           @error('finish_date')
-           <small class="text-red-600 font-bold text-base">
-              *{{$message}}
-             </small>
-             <br>
-             @enderror
-        </div>
+         <div class="px-3">
+           {!! Form::label("finish_time", "Hora de final", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+           {!! Form::time("finish_time", "" ,['class'=>'form-control']) !!}
+          </div>
       </div>
 
 
@@ -114,21 +125,6 @@
              @enderror
           </div>
       </div>
-
-     
-      {{-- <div class="flex flex-wrap  mb-6 mx-auto">
-        <div class="w-full px-3">
-           {!! Form::label("position_id", "Cargo", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-           {!! Form::select("position_id", $positions, null , ["style"=>"width:100%;",'placeholder' => 'Selecciona el cargo correspondiente..']) !!}
-
-           @error('position_id')
-           <small class="text-red-600 font-bold text-base">
-            *{{$message}}
-           </small>
-           <br>
-           @enderror
-        </div>
-      </div>--}}
 
 
 
@@ -175,6 +171,89 @@
 
 
     @push('scripts')
+
+
+    <script>
+
+let started_date = document.getElementById("started_date");
+    let finish_date =  document.getElementById("finish_date");
+
+    let maternidad = 6;
+    let partenidad = 7;
+    let fecha = "";
+
+
+
+    started_date.addEventListener("change",function(){
+ 
+     var tmpDate = new Date(started_date.value); 
+
+     if(document.getElementById("notifications_type_id").value == maternidad ){
+      fecha = addDaysToDate(tmpDate,126);
+
+      let day = fecha.getDate().toString().padStart(2, "0");
+     let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
+     let year = fecha.getFullYear();
+     
+     finish_date.value = year + '-' + month + '-' + day
+
+     }else if(document.getElementById("notifications_type_id").value == partenidad){
+      fecha = addDaysToDate(tmpDate,15);
+
+      let day = fecha.getDate().toString().padStart(2, "0");
+     let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
+     let year = fecha.getFullYear();
+     
+     finish_date.value = year + '-' + month + '-' + day
+     }
+
+
+
+    });
+
+
+    function addDaysToDate(date, days){
+    var res = new Date(date);
+    res.setDate(res.getDate() + days);
+    return res;
+    }
+
+  
+      </script>
+  
+      <script>
+  
+  
+  
+  
+  
+          let dayCurrent = new Date();
+          let isDay = dayCurrent.getDay();
+          let finish_time = document.getElementById("finish_time");
+          let started_time = document.getElementById("started_time");
+  
+          switch (isDay) {
+              case 0:
+                  started_time.value = "07:00";
+                  finish_time.value = "17:00";
+                  break;
+              case 6:
+                  started_time.value = "08:00";
+                  finish_time.value = "12:00";
+                  break;
+              case 5:
+                  started_time.value = "07:00";
+                  finish_time.value = "16:00";
+                  break;
+              default:
+                  started_time.value = "07:00";
+                  finish_time.value = "17:00";
+                  break;
+          }
+      </script>
+
+
+
     <script type="text/javascript">
         $(document).ready(function() {
           $('#cost_center_id').select2({ });

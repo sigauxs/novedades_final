@@ -21,9 +21,13 @@ use App\Models\Notification;
 /* Validaciones */
 use App\Http\Requests\StoreNotificationRequest;
 use App\Models\NotificationCategory;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class ApplicationFormController extends Controller
 {
+
+
 
     public function index()
     {
@@ -86,8 +90,8 @@ class ApplicationFormController extends Controller
         $notification->finish_date = $request->finish_date;
         $notification->started_time = $request->started_time;
         $notification->finish_time = $request->finish_time;
-        $notification->total_days = $this->diasTrabajados((string)$inicio, (string)$final)[1];
-        $notification->total_hours = $this->diasTrabajados((string)$inicio, (string)$final)[0];
+        $notification->total_days = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
+        $notification->total_hours = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];
         $notification->observation = $request->observation;
         $notification->support = $request->support;
 
@@ -137,11 +141,12 @@ class ApplicationFormController extends Controller
     public function summary(Request $request)
     {
 
-        define("CTPE", 1);
-        define("CTPA", 2);
-        define("CTPNR", 3);
-        define("CTPO", 4);
-        define("CTPR", '8');
+        $CTPE =  1;
+        $CTPA =  2;
+        $CTPNR =  3 ;
+        $CTPO =  4;
+        $CTPR =  8;
+     
 
         /*
         tpm  = Tiempo perdido mensual
@@ -175,15 +180,15 @@ class ApplicationFormController extends Controller
 
 
         /* days */
-        $tple = $this->respondays(CTPE,$mes);
-        $tpal =  $this->respondays(CTPA,$mes);
-        $tplnr = $this->respondays(CTPNR,$mes);
+        $tple = $this->respondays($CTPE,$mes);
+        $tpal =  $this->respondays($CTPA,$mes);
+        $tplnr = $this->respondays($CTPNR,$mes);
 
         /* Hours */
 
-        $thple = $this->respondHours(CTPE,$mes);
-        $thpal =  $this->respondHours(CTPA,$mes);
-        $thplnr = $this->respondHours(CTPNR,$mes);
+        $thple = $this->respondHours($CTPE,$mes);
+        $thpal =  $this->respondHours($CTPA,$mes);
+        $thplnr = $this->respondHours($CTPNR,$mes);
 
 
         $tpol = DB::table('notifications as n')
@@ -221,7 +226,7 @@ class ApplicationFormController extends Controller
 
     public function bosses($center_cost_id)
     {
-        return Boss::where('center_cost_id', $center_cost_id)->pluck('fullname', 'id');
+        return Boss::whereIn('center_cost_id', [$center_cost_id,4,7])->pluck('fullname', 'id');
     }
 
     public function type_identification()
@@ -238,7 +243,7 @@ class ApplicationFormController extends Controller
     }
 
 
-    public function diasTrabajados($inicio, $final)
+    public function diasTrabajados($inicio,$final,$novedades)
     {
 
 
@@ -278,8 +283,21 @@ class ApplicationFormController extends Controller
         $horarioFijoSalida = strtotime("17:00:00");
 
 
+        if($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $maternidad){
 
-        if ($fecha_inicio_acomparar == $fecha_final_acomparar) {
+            $interval = $datetimeStart->diff($datetimeFinish);
+            $dias = 126;
+            $horas_reales = (126*8) - 16*8;
+           
+        }else if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $paternidad){
+
+            $dias = 15;
+            $horas_reales = (15*8) - 2*8;
+
+        }
+
+
+        if ($fecha_inicio_acomparar == $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
 
             $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
             $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
@@ -339,7 +357,7 @@ class ApplicationFormController extends Controller
         }
 
 
-        if ($fecha_inicio_acomparar != $fecha_final_acomparar) {
+        if ($fecha_inicio_acomparar != $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
 
 
             $formatDayHours = $final;
@@ -538,6 +556,60 @@ class ApplicationFormController extends Controller
         ->select('*')->where('nc.id', $categoriaNovedad)->whereMonth('started_date', $mes)->sum('total_hours');
 
       }
+
+      public function estadisticasPDF(Request $request){
+
+
+      
+
+        $CTPE =  1;
+        $CTPA =  2;
+        $CTPNR =  3 ;
+        $CTPO =  4;
+        $CTPR =  8;
+
+
+        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
+
+
+
+        $mes = $request->mes;
+            
+
+        $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_days');
+        $htpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_hours');
+
+
+        /* days */
+        $tple = $this->respondays($CTPE,$mes);
+        $tpal =  $this->respondays($CTPA,$mes);
+        $tplnr = $this->respondays($CTPNR,$mes);
+
+        /* Hours */
+
+        $thple = $this->respondHours($CTPE,$mes);
+        $thpal =  $this->respondHours($CTPA,$mes);
+        $thplnr = $this->respondHours($CTPNR,$mes);
+
+
+        $tpol = DB::table('notifications as n')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
+            ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
+            ->select('*')->whereIn('nc.id', [4, 8])
+            ->whereMonth('started_date', $mes)->sum('total_days');
+
+        $thpol = DB::table('notifications as n')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')
+            ->join('notification_categories as nc', 'nt.notification_category_id', '=', 'nc.id')
+            ->select('*')->whereIn('nc.id', [4, 8])
+            ->whereMonth('started_date', $mes)->sum('total_hours');
+
+        /*$employee = Employee::find($request->id);
+        $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();*/
+        $pdf = PDF::loadView('applicationForms.reportepdf',compact('mes','tpm', 'tpal', 'tpol', 'tple', 'tplnr','htpm', 'thpal', 'thpol', 'thple', 'thplnr'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
+
+    }
 
 
 

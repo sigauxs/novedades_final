@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
+
 use Carbon\Carbon;
 
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -93,8 +92,7 @@ class EmployeeController extends Controller
     }
 
     public function createPDF(Request $request){
-        //Recuperar todos los productos de la db
-
+  
         $employee = Employee::find($request->id);
         $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();
         $pdf = PDF::loadView('employees.reportepdf', compact('employee','notifications'))->setOptions(['defaultFont' => 'sans-serif']);
@@ -108,13 +106,7 @@ class EmployeeController extends Controller
         return $pdf->download('archivo-pdf.pdf');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+     public function edit($id)
     {
         //
     }

@@ -166,34 +166,45 @@
     let started_date = document.getElementById("started_date");
     let finish_date =  document.getElementById("finish_date");
 
+    let maternidad = 6;
+    let partenidad = 7;
+    let fecha = "";
+
+
+
     started_date.addEventListener("change",function(){
+ 
+     var tmpDate = new Date(started_date.value); 
+
+     if(document.getElementById("notifications_type_id").value == maternidad ){
+      fecha = addDaysToDate(tmpDate,126);
+
+      let day = fecha.getDate().toString().padStart(2, "0");
+     let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
+     let year = fecha.getFullYear();
+     
+     finish_date.value = year + '-' + month + '-' + day
+
+     }else if(document.getElementById("notifications_type_id").value == partenidad){
+      fecha = addDaysToDate(tmpDate,15);
+
+      let day = fecha.getDate().toString().padStart(2, "0");
+     let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
+     let year = fecha.getFullYear();
+     
+     finish_date.value = year + '-' + month + '-' + day
+     }
+
+
+
+    });
+
 
     function addDaysToDate(date, days){
     var res = new Date(date);
     res.setDate(res.getDate() + days);
     return res;
-}
-
-
-var tmpDate = new Date(started_date.value); // Augest 20, 2020
- let fecha = addDaysToDate(tmpDate, 15);
-
-let day = fecha.getDate().toString().padStart(2, "0");
-let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
-let year = fecha.getFullYear();
-
-
-
-
-finish_date.value = year + '-' + month + '-' + day
-
-        if (document.getElementById("notifications_type_id").value == 3 ){
-
-        };
-
-
-
-    });
+    }
 
     </script>
 

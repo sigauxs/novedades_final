@@ -30,7 +30,9 @@ class StoreNotificationRequest extends FormRequest
             'boss_id' => 'required',
             'center_cost_id' => 'required',
             'type_identification_id' => 'required',
-            'notifications_type_id' => 'required'
+            'notifications_type_id' => 'required',
+            'started_time' => 'required',
+            'finish_time' => 'required'
         ];
     }
 
@@ -43,7 +45,9 @@ class StoreNotificationRequest extends FormRequest
               'boss_id' => 'Jefe inmediato',
               'center_cost_id' => 'Centro de costo',
               'type_identification_id' => 'Tipo de identificación',
-              'notifications_type_id' => 'Tipo de novedades'
+              'notifications_type_id' => 'Tipo de novedades',
+              'finish_time' => 'Hora de finalizacion',
+              'started_time' => 'Hora de inicio',
              ];
         }
 }

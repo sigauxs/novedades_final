@@ -73,10 +73,10 @@
                             {{$notification->tipo_novedad}}
                           </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{\Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y h:i:s A')}}
+                                {{\Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y')}} {{\Carbon\Carbon::parse($notification->started_time)->translatedFormat('h:i:s A')}}
                             </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{\Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A')}}
+                                {{\Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y')}} {{\Carbon\Carbon::parse($notification->finish_time)->translatedFormat('h:i:s A')}}
                             </td>
 
                             @if($user_model->center_cost_id == 9 && $user_model->profile_id == 1 )

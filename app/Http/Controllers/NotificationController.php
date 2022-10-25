@@ -76,7 +76,7 @@ $date = $date->format('m');
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
           ->whereMonth('started_date',$date)
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status','n.started_time','n.finish_time')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -89,7 +89,7 @@ $date = $date->format('m');
           ->join('bosses as boss','n.boss_id','=','boss.id')
           ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
           ->where('n.user_id',$user_model->id)->where('em.status'.'true')->whereMonth('started_date',$date)
-          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status','n.started_time','n.finish_time')
           ->orderBy('started_date','desc')
           ->get();
 
@@ -123,6 +123,8 @@ $date = $date->format('m');
     public function store(StoreNotificationRequest $request)
     {
 
+        $inicio = $request->started_date." ".$request->started_time;
+        $final = $request->finish_date." ".$request->finish_time;
 
         $request->validated();
 
@@ -132,8 +134,8 @@ $date = $date->format('m');
         $notification_object->user_id = $user;
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
-        $notification_object->total_days = $this->diasTrabajados((string)$request->started_date,(string)$request->finish_date)[1];
-        $notification_object->total_hours = $this->diasTrabajados((string)$request->started_date,(string)$request->finish_date)[0];
+        $notification_object->total_days = $this->diasTrabajados((string)$inicio, (string)$final)[1];
+        $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final)[0];;
 
         $notification_array = (array)$notification_object;
 
@@ -179,7 +181,7 @@ $date = $date->format('m');
     public function update(Request $request,Notification $notification)
     {
 
-       $notification =  Notification::find($notification->id);
+        $notification =  Notification::find($notification->id);
         $fechaInicio = Carbon::parse($request->started_date);
         $fechafinalizacion = Carbon::parse($request->finish_date);
         $request['total_days'] = diffBusinessHours($fechaInicio,$fechafinalizacion);
@@ -259,83 +261,276 @@ $date = $date->format('m');
     }
 
 
-    public function diasTrabajados($inicio,$final){
+    public function diasTrabajados($inicio, $final)
+    {
 
-      $data = [];
-
-      $datetimeStart = new \DateTime($inicio);
-      $datetimeFinish = new \DateTime($final);
-
-      $break_time_start = "12:00";
-      $break_time_final = "12:59";
-
-      $interval = $datetimeStart->diff($datetimeFinish);
-
-      $fecha_inicio_acomparar = $datetimeStart->format('Y-m-d');
-      $fecha_final_acomparar = $datetimeFinish->format('Y-m-d');
-
-      $horas_descanso_acumulada = 0;
-      $horas_reales= 0;
-      $horas_transcurridas = [];
-      $countWeekend = 0;
-      $dias = 0;
-
-      if($fecha_final_acomparar == $fecha_final_acomparar){
-
-          $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
-          $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
-
-          $date_obj = new \DateTime($inicio_recorrido);
-          $date_incr = $inicio_recorrido;
-          $incr = 1;
+        $maternidad = 6;
+        $paternidad = 7;
 
 
-          while($date_incr < $final_recorrido) {
-              $date_incr = $date_obj->format('Y-m-d H:i:s');
-              $time = $date_obj->format('H:i');
-              $date_obj->modify('+'.$incr.' minutes');
+        $data = [];
 
-              array_push($horas_transcurridas,$time);
+        $datetimeStart = new \DateTime($inicio);
+        $datetimeFinish = new \DateTime($final);
 
-             if($time == $break_time_start || $time == $break_time_final){
-                $horas_descanso_acumulada+=1;
-             }
+        $break_time_start = "12:00";
+        $break_time_final = "12:59";
 
-          }
+        $interval = $datetimeStart->diff($datetimeFinish);
 
+        $fecha_inicio_acomparar = $datetimeStart->format('Y-m-d');
+        $fecha_final_acomparar = $datetimeFinish->format('Y-m-d');
 
-          if($horas_descanso_acumulada == 2){
-             $horas_reales = (int)$interval->format('%H') - 1;
-          }else {
-              $hora =(int)$interval->format('%H');
-              $horas_reales =  $hora;
-          }
+        $horas_descanso_acumulada = 0;
+        $horas_reales = 0;
+        $horas_transcurridas = [];
+        $countWeekend = 0;
+        $dias = 0;
+        $week = 0;
 
-          $dias = 1;
-      }
-
-      if($fecha_inicio_acomparar != $fecha_final_acomparar){
-
-          $fechaInicio=strtotime($inicio);
-          $fechaFin=strtotime($final);
-
-          $interval = $datetimeStart->diff($datetimeFinish);
-
-          for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-              if(date("w",$i) == 0){
-                  $countWeekend+=1;
-              }
-          }
-
-          if($countWeekend != 0){
-             $dias = (int)$interval->format('%a') - 1;
-          }
-
-      }
-
-      return $data = [$horas_reales,$dias];
+        /* Horarios */
 
 
+        $HORARIOSABADO =  4;
+        $HORARIOVIERNES =  8;
+        $HORARIONORMAL = 9;
+
+        $horarioFijoSalida = strtotime("17:00:00");
+
+
+
+        if ($fecha_inicio_acomparar == $fecha_final_acomparar) {
+
+            $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
+            $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
+
+            $date_obj = new \DateTime($inicio_recorrido);
+            $date_incr = $inicio_recorrido;
+            $incr = 1;
+
+
+            while ($date_incr < $final_recorrido) {
+                $date_incr = $date_obj->format('Y-m-d H:i:s');
+                $time = $date_obj->format('H:i');
+                $date_obj->modify('+' . $incr . ' minutes');
+
+                array_push($horas_transcurridas, $time);
+
+                if ($time == $break_time_start || $time == $break_time_final) {
+                    $horas_descanso_acumulada += 1;
+                }
+            }
+
+
+            if ($horas_descanso_acumulada == 2) {
+                $horas_reales = (int)$interval->format('%H') - 1;
+            } else {
+                $hora = (int)$interval->format('%H');
+                $horas_reales =  $hora;
+            }
+
+            $determinarDia = strtotime($inicio);
+
+            $day = date("w", $determinarDia);
+
+            switch ($day) {
+                case '6':
+                    if ($horas_reales == $HORARIOSABADO) {
+                        $dias = 1;
+                    } else {
+                        $dias = 0;
+                    }
+                    break;
+                case '5':
+                    if ($horas_reales == $HORARIOVIERNES) {
+                        $dias = 1;
+                    } else {
+                        $dias = 0;
+                    }
+                    break;
+                default:
+                    if ($horas_reales == $HORARIONORMAL) {
+                        $dias = 1;
+                    } else {
+                        $dias = 0;
+                    }
+                    break;
+            }
+        }
+
+
+        if ($fecha_inicio_acomparar != $fecha_final_acomparar) {
+
+
+            $formatDayHours = $final;
+            $fechafinalMasHora = new \DateTime($formatDayHours);
+            $horaFinal = strtotime($fechafinalMasHora->format('H:i:s'));
+
+            if ($horaFinal == $horarioFijoSalida) {
+                $fechaInicio = strtotime($inicio);
+                $fechaFin = strtotime($final);
+
+                $interval = $datetimeStart->diff($datetimeFinish);
+
+                $week = 0;
+
+                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
+                    echo date("D", $i) . " " . date("w", $i) . "<br>";
+                    if (date("w", $i) == 0) {
+                        $countWeekend += 1;
+                    }
+
+                    switch (date("w", $i)) {
+                        case '0':
+                            $week += 0;
+                            break;
+                        case '5':
+                            $week += 8;
+                            break;
+                        case '6':
+                            $week += 4;
+                            break;
+                        default:
+                            $week += 9;
+                    }
+                }
+
+                $diasExactos =  (int)$interval->format('%a') +  1;
+
+                if ($countWeekend != 0) {
+                    $dias = $diasExactos - $countWeekend;
+                } else {
+                    $dias = $diasExactos;
+                }
+
+                $horas_reales = $week;
+
+
+            } else if ($horaFinal <= $horarioFijoSalida) {
+
+
+
+                $horarioAperturaSabado = "08:00";
+                $horarioCierreSabado = "12:00";
+
+                $horarioAperturaViernes = "07:00";
+                $horarioCierreViernes = "16:00";
+
+                $fechaInicio = strtotime($inicio);
+                $fechaFin = strtotime($final);
+
+                $horasParcialesReales = 0;
+                $week = 0;
+
+                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
+                    echo date("D", $i) . " " . date("w", $i) . "<br>";
+                    if (date("w", $i) == 0) {
+                        $countWeekend += 1;
+                    }
+
+                    switch (date("w", $i)) {
+                        case '0':
+                            $week += 0;
+                            break;
+                        case '5':
+                            $week += 8;
+                            break;
+                        case '6':
+                            $week += 4;
+                            break;
+                        default:
+                            $week += 9;
+                    }
+                }
+
+                $diasExactos =  (int)$interval->format('%a') +  1;
+
+                if ($countWeekend != 0) {
+                    $dias = $diasExactos - $countWeekend;
+                } else {
+                    $dias = $diasExactos;
+                }
+
+                $horas_reales = $week;
+
+                $final_recorrido = $datetimeFinish->format('Y-m-d');
+                $final_recorrido_date = strtotime($final_recorrido);
+
+
+
+                if (date("w", $final_recorrido_date) == 6) {
+                    $inicio_recorridoHora = $final_recorrido . " " . "08:00:00";
+                } else {
+                    $inicio_recorridoHora = $final_recorrido . " " . "07:00:00";
+                }
+
+                $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
+
+                $datetimeStartHour = new \DateTime($inicio_recorridoHora);
+                $datetimeFinishHour = new \DateTime($final_recorridoHora);
+
+                $interval = $datetimeStartHour->diff($datetimeFinishHour);
+
+
+                $date_obj = new \DateTime($inicio_recorridoHora);
+                $date_incr = $inicio_recorridoHora;
+                $incr = 1;
+
+
+                while ($date_incr < $final_recorridoHora) {
+                    $date_incr = $date_obj->format('Y-m-d H:i:s');
+                    $time = $date_obj->format('H:i');
+                    $date_obj->modify('+' . $incr . ' minutes');
+
+                    array_push($horas_transcurridas, $time);
+
+                    if ($time == $break_time_start || $time == $break_time_final) {
+                        $horas_descanso_acumulada += 1;
+                    }
+                }
+
+                if ($horas_descanso_acumulada == 2) {
+                    $horasParcialesReales = (int)$interval->format('%H') - 1;
+                } else {
+                    $horasParcialesReales =  (int)$interval->format('%H');
+                }
+
+                $determinarDia = strtotime($inicio_recorridoHora);
+
+                $day = date("w", $determinarDia);
+
+                switch ($day) {
+                    case '6':
+                        if ($horas_reales == $HORARIOSABADO) {
+                            $dias = 1;
+                        } else {
+                            $dias -= 1;
+                            $horas_reales = $horas_reales - ($HORARIOSABADO - $horasParcialesReales);
+                            echo $HORARIOSABADO - $horasParcialesReales;
+                        }
+                        break;
+                    case '5':
+                        if ($horas_reales == $HORARIOVIERNES) {
+                            $dias = 1;
+                        } else {
+                            $dias -= 1;
+                            $horas_reales = $horas_reales - ($HORARIOVIERNES - $horasParcialesReales);
+                        }
+                        break;
+                    default:
+                        if ($horas_reales == $HORARIONORMAL) {
+                            $dias = 1;
+                        } else {
+                            $dias -= 1;
+                            $horas_reales = $horas_reales - ($HORARIONORMAL - $horasParcialesReales);
+                        }
+                        break;
+                }
+            }
+        }
+
+
+        return $data = [$horas_reales, $dias];
     }
 
 
