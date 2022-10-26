@@ -146,37 +146,24 @@ class ApplicationFormController extends Controller
         $CTPNR =  3 ;
         $CTPO =  4;
         $CTPR =  8;
-     
-
-        /*
-        tpm  = Tiempo perdido mensual
-        tpe  = Tiempo por perdido por enfermedades comun.
-        tpa  = Tiempo perdido por incapacidades de Accidentes laborales.
-        tpo  = Tiempo perdido por otras licencias.
-        tpnr =  Tiempo perdido por licencias no remuneradas
-
-        1 Incapacidades enfermedad común
-        2 Incapacidades de Accidentes laborales
-        3 Licencias no remuneradas
-        4 Otras licencias
-        5 Retiro
-        6 Ingreso
-        7 Pagos extras
-        8 Licencias remuneradas
-        9 vacaciones
 
 
-        */
+
+        $meses_show = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+
+
         $meses = $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
         $mes = (int)$request->mes;
+
         //$category = $request->notificationCategory_id;
 
         //$notificationCategories = $this->notification_category();
 
 
 
-        $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_days');
-        $htpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_hours');
+        $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->whereNot('notifications_type_id',6)->whereNot('notifications_type_id',7)->sum('total_days');
+        $htpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->whereNot('notifications_type_id',6)->whereNot('notifications_type_id',7)->sum('total_hours');
 
 
         /* days */
@@ -288,7 +275,7 @@ class ApplicationFormController extends Controller
             $interval = $datetimeStart->diff($datetimeFinish);
             $dias = 126;
             $horas_reales = (126*8) - 16*8;
-           
+
         }else if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $paternidad){
 
             $dias = 15;
@@ -560,7 +547,7 @@ class ApplicationFormController extends Controller
       public function estadisticasPDF(Request $request){
 
 
-      
+
 
         $CTPE =  1;
         $CTPA =  2;
@@ -568,13 +555,16 @@ class ApplicationFormController extends Controller
         $CTPO =  4;
         $CTPR =  8;
 
-
+        $meses_show = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
 
 
 
+
         $mes = $request->mes;
-            
+
+        $month_digit_show = $meses_show[$mes-1];
+
 
         $tpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_days');
         $htpm = DB::table('notifications')->select('*')->whereMonth('started_date', $mes)->sum('total_hours');
@@ -606,7 +596,7 @@ class ApplicationFormController extends Controller
 
         /*$employee = Employee::find($request->id);
         $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();*/
-        $pdf = PDF::loadView('applicationForms.reportepdf',compact('mes','tpm', 'tpal', 'tpol', 'tple', 'tplnr','htpm', 'thpal', 'thpol', 'thple', 'thplnr'))->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('applicationForms.reportepdf',compact('month_digit_show','mes','tpm', 'tpal', 'tpol', 'tple', 'tplnr','htpm', 'thpal', 'thpol', 'thple', 'thplnr'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
 
     }

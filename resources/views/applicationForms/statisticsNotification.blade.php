@@ -15,8 +15,8 @@
 
 
              {!! Form::label("mes", "Meses", ['class'=>'label-control mb-2']) !!}
-             {!! Form::select("mes", $meses, $mes , ["style"=>"width:60%;"]) !!}
-             <button class="rounded bg-indigo-600 text-white py-2 px-3" type="submit"><span class="material-icons md-18">search</span></button>
+             {!! Form::select("mes", $meses, $mes , ["style"=>"width:60%;border: 1px solid beige; border-radius: 5px;"]) !!}
+             <button style="position:relative; top:8px;"class="rounded bg-green-600 text-white btn-base" type="submit"><span class="material-icons md-18">search</span></button>
         </div>
 
     </div>
@@ -26,11 +26,7 @@
 {!! Form::close() !!}
 
  <div class="w-4/6 mx-auto">
-        <div class="grid grid-cols-1">
-            <div class="text-center">
-                {{$mes}}
-            </div>
-        </div>
+
         <div class="grid grid-cols-2 gap-4">
 
         <div class="text-center bg-white outline-4 outline-red-600 outline-double rounded-xl">
@@ -70,19 +66,20 @@
         </div>
 </div>
 
-<a href="/estadisticapdf"> Descargar </a>
+
 
 
 
 {!! Form::open(['url' => '/estadisticapdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
 <div class="max-w-lg mx-auto text-center">
     <div style="display:none">
+        {{ $mes ? $mes : $mes = 3 }}
         {!! Form::text('mes', $mes , ['class' => 'form-control']) !!}
     </div>
 
-    {!! Form::button("<span class='material-icons'>search</span>", [
+    {!! Form::button("<span style='color:white; font-size:20px' class='material-icons'>picture_as_pdf</span>", [
         'type' => 'submit',
-        'class' => 'rounded bg-indigo-600 text-white py-2  px-6 w-1/5',
+        'class' => 'rounded bg-red-600 text-white btn-base',
         'formtarget' => '_blank',
     ]) !!}
 </div>

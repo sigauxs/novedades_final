@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 });
 
 Route::get('/employeepdf', [EmployeeController::class, 'createPDF'])->name('employeepdf');
+Route::get('/allemployeepdf', [EmployeeController::class, 'allPDF'])->name('allemployeepdf');
 
 Route::get('/estadisticapdf', [ApplicationFormController::class, 'estadisticasPDF'])->name('estadisticapdf');
 

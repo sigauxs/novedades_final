@@ -27,7 +27,7 @@ body{
   <div class="w-4/6 mx-auto">
     <div class="grid grid-cols-1">
         <div class="text-center">
-
+{{ $month_digit_show}}
         </div>
     </div>
     <div class="grid grid-cols-2 gap-4">
@@ -71,7 +71,7 @@ body{
 
 
     <div>
-   
+
     </div>
 
 

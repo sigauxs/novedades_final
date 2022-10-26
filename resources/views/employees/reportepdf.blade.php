@@ -70,12 +70,12 @@ body{
                     <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1  }}</td>
 
                    <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                     {{ \Carbon\Carbon::parse($notification->started_date) ->translatedFormat('j F, Y')}}
+                     {{ \Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y')}}
                     </td>
 
 
                   <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                    {{ $notification->finish_date}}
+                    {{ \Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y')}}
                   </td>
                     <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                    {{ $notification->total_days }}
@@ -100,6 +100,12 @@ body{
 
                   </tr >
                 @endforeach
+                <tr class="bg-white border-b ">
+                    <td colspan="3">total</td>
+                    <td>{{ $sumaDias }}</td>
+                    <td>{{ $sumaHoras }}</td>
+                    <td colspan="2"></td>
+                </tr>
             </tbody>
 
 

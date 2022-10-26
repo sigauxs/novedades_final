@@ -134,8 +134,8 @@ $date = $date->format('m');
         $notification_object->user_id = $user;
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
-        $notification_object->total_days = $this->diasTrabajados((string)$inicio, (string)$final)[1];
-        $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final)[0];;
+        $notification_object->total_days = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
+        $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];;
 
         $notification_array = (array)$notification_object;
 
@@ -261,7 +261,7 @@ $date = $date->format('m');
     }
 
 
-    public function diasTrabajados($inicio, $final)
+    public function diasTrabajados($inicio,$final,$novedades)
     {
 
         $maternidad = 6;
@@ -297,9 +297,21 @@ $date = $date->format('m');
 
         $horarioFijoSalida = strtotime("17:00:00");
 
+        if($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $maternidad){
+
+            $interval = $datetimeStart->diff($datetimeFinish);
+            $dias = 126;
+            $horas_reales = (126*8) - 16*8;
+
+        }else if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $paternidad){
+
+            $dias = 15;
+            $horas_reales = (15*8) - 2*8;
+
+        }
 
 
-        if ($fecha_inicio_acomparar == $fecha_final_acomparar) {
+        if ($fecha_inicio_acomparar == $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
 
             $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
             $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
@@ -359,7 +371,7 @@ $date = $date->format('m');
         }
 
 
-        if ($fecha_inicio_acomparar != $fecha_final_acomparar) {
+        if ($fecha_inicio_acomparar != $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
 
 
             $formatDayHours = $final;

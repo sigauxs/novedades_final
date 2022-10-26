@@ -92,19 +92,37 @@ class EmployeeController extends Controller
     }
 
     public function createPDF(Request $request){
-  
+
         $employee = Employee::find($request->id);
-        $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();
-        $pdf = PDF::loadView('employees.reportepdf', compact('employee','notifications'))->setOptions(['defaultFont' => 'sans-serif']);
+        $mes = $request->mes;
+
+        $notifications =  Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)
+        ->orderBy('created_at', 'desc')->get();
+
+        $sumaHoras = Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)->sum('total_hours');
+        $sumaDias = Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)->sum('total_days');
+
+        $pdf = PDF::loadView('employees.reportepdf', compact('sumaHoras','sumaDias','employee','notifications','mes'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
 
     }
 
-    public function imprimirtest(Employee $employee){
-        $employee = Employee::find($employee->id);
-        $pdf = PDF::loadView('employees.test',compact('employee'));
-        return $pdf->download('archivo-pdf.pdf');
+    public function allPDF(Request $request){
+
+        $employee = Employee::find($request->id);
+        $mes = $request->mes;
+
+        $notifications =  Notification::where('employee_id',$request->id)->orderBy('created_at', 'desc')->get();
+
+        $sumaHoras = Notification::where('employee_id',$request->id)->sum('total_hours');
+        $sumaDias = Notification::where('employee_id',$request->id)->sum('total_days');
+
+        $pdf = PDF::loadView('employees.reportepdf', compact('sumaHoras','sumaDias','employee','notifications','mes'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
+
     }
+
+
 
      public function edit($id)
     {

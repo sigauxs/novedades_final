@@ -11,9 +11,15 @@
             </div>
 
           @endif
-        <div class="max-w-lg mx-auto text-center">
-              {!! Form::text("identification","",["class"=>"form-control",'']) !!}
-              {!! Form::button("<span class='material-icons'>search</span>", ['type' => 'submit', 'class' => 'rounded bg-indigo-600 text-white py-2  px-6 w-1/5'] )  !!}
+        <div class="grid grid-cols-2 mx-auto ">
+            <div>
+                {!! Form::text("identification","",["class"=>"form-control",'placeholder'=>'Ej:1042344444']) !!}
+            </div>
+
+<div>
+    {!! Form::button("<span class='material-icons' style='font-size:30px; color:white'>confirmation_number</span>", ['type' => 'submit', 'class' => 'rounded bg-indigo-600 text-white btn-base','style'=>'padding-top: 4px;  padding-bottom: 4px;  position: relative; top: 0px;'] )  !!}
+</div>
+
         </div>
         </div>
         <div class="flex flex-wrap  mb-6 mx-auto">

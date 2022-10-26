@@ -138,7 +138,7 @@
              {!! Form::submit("Registrar", ["class"=>"rounded bg-indigo-600 text-white py-2  px-8"]) !!}
          </div>
          <div class="">
-             <a href="/notifications"> <button type="button" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> Regresar </button></a>
+             <a href="/"> <button type="button" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded w-40"> Regresar </button></a>
          </div>
         </div>
        </div>
@@ -173,8 +173,8 @@
 
 
     started_date.addEventListener("change",function(){
- 
-     var tmpDate = new Date(started_date.value); 
+
+     var tmpDate = new Date(started_date.value);
 
      if(document.getElementById("notifications_type_id").value == maternidad ){
       fecha = addDaysToDate(tmpDate,126);
@@ -182,7 +182,7 @@
       let day = fecha.getDate().toString().padStart(2, "0");
      let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
      let year = fecha.getFullYear();
-     
+
      finish_date.value = year + '-' + month + '-' + day
 
      }else if(document.getElementById("notifications_type_id").value == partenidad){
@@ -191,7 +191,7 @@
       let day = fecha.getDate().toString().padStart(2, "0");
      let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
      let year = fecha.getFullYear();
-     
+
      finish_date.value = year + '-' + month + '-' + day
      }
 

@@ -82,14 +82,14 @@
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
 
-                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:red; font-size:26px"> picture_as_pdf</span></a>
+                                <a class="" href="{{ route('employees.show', $employee->id ) }}"><span class="material-icons" style="color:green; font-size:26px">preview </span></a>
 
 
 
                             </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                              <a href=""><span class="material-icons" style="color:green; font-size:26px">preview</span></a>
+                              <a><span class="material-icons" style="color:red; font-size:26px">picture_as_pdf</span></a>
                             </td>
 
 

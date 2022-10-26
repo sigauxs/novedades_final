@@ -7,10 +7,10 @@
             <div class="grid grid-cols-2 mb-6 mx-auto ">
                 <div>
                     {!! Form::label("mes", "Mes", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-                    {!! Form::select("mes", $month, $mes, ["style"=>"width:100%;",'placeholder' => 'Selecciona un empleado...']) !!}
+                    {!! Form::select("mes", $month, $mes, ["style"=>"width:100%;border: 1px solid beige;border-radius: 5px;",'placeholder' => 'Selecciona un empleado...']) !!}
                 </div>
                 <div>
-<button type="submit"> consultar </button>
+                <button type="submit" class="bg-green-500 btn-search mt-7 "> <span class='material-icons' style='color:white; font-size:26px'> search </span> </button>
                 </div>
             </div>
             {!! Form::close() !!}
@@ -120,18 +120,47 @@
 
 
 
-        {!! Form::open(['url' => '/employeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
-        <div class="max-w-lg mx-auto text-center">
-            <div style="display:none">
-                {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
-            </div>
 
-            {!! Form::button("<span class='material-icons'>search</span>", [
-                'type' => 'submit',
-                'class' => 'rounded bg-indigo-600 text-white py-2  px-6 w-1/5',
-                'formtarget' => '_blank',
-            ]) !!}
+
+
+<div class="container mx-auto">
+    <div class="grid grid-cols-2 gap-2 mb-10">
+        <div>
+            {!! Form::open(['url' => '/employeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
+            <div class="max-w-lg mx-auto text-center">
+                <div style="display:none">
+                    {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
+                    {!! Form::text('mes', $mes, ['class' => 'form-control']) !!}
+                </div>
+
+                {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
+                    'type' => 'submit',
+                    'class' => 'rounded bg-red-600 text-white btn-base',
+                    'formtarget' => '_blank',
+                ]) !!}
+            </div>
+            {!! Form::close() !!}
         </div>
-        {!! Form::close() !!}
+
+        <div>
+            {!! Form::open(['url' => '/allemployeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
+            <div class="max-w-lg mx-auto text-center">
+                <div style="display:none">
+                    {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
+                    {!! Form::text('mes', $mes, ['class' => 'form-control']) !!}
+                </div>
+
+                {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
+                    'type' => 'submit',
+                    'class' => 'rounded bg-indigo-600 text-white btn-base',
+                    'formtarget' => '_blank',
+                ]) !!}
+            </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+
+
     </div>
 </x-app-layout>
