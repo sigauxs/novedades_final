@@ -203,7 +203,7 @@ class ApplicationFormController extends Controller
 
     public function type_notification()
     {
-        return NotificationType::select('name', 'id')->orderBy('name', 'asc')->pluck('name', 'id');
+        return NotificationType::select('name', 'id')->whereNot('notification_category_id',7)->orderBy('name', 'asc')->pluck('name', 'id');
     }
 
     public function employee($identification)

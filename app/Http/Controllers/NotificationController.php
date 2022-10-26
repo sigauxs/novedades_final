@@ -114,7 +114,7 @@ $date = $date->format('m');
         $employees = $this->employee($user_model);
         $types = IdentificationType::all()->pluck('name','id');
         $bosses = $this->boss($user_model);
-        $notifications = NotificationType::select('name','id')->orderBy('name','asc')->pluck('name','id');
+        $notifications = NotificationType::select('name','id')->whereNot('notification_category_id',7)->orderBy('name','asc')->pluck('name','id');
 
         return view('notifications.create', compact('center_costs','employees','types','bosses','notifications','user'));
     }

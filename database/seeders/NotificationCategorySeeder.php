@@ -51,5 +51,13 @@ class NotificationCategorySeeder extends Seeder
         $category_9->name = "Vacaciones";
         $category_9->save();
 
+        $category_10 = new NotificationCategory();
+        $category_10->name = "Paternidad";
+        $category_10->save();
+
+        $category_11 = new NotificationCategory();
+        $category_11->name = "Maternidad";
+        $category_11->save();
+
     }
 }
