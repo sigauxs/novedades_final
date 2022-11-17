@@ -135,8 +135,7 @@ $date = $date->format('m');
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
         $notification_object->total_days = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
-        $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];;
-
+        $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];
         $notification_array = (array)$notification_object;
 
 
@@ -181,11 +180,19 @@ $date = $date->format('m');
     public function update(Request $request,Notification $notification)
     {
 
+        $inicio = $request->started_date." ".$request->started_time;
+        $final = $request->finish_date." ".$request->finish_time;
+
         $notification =  Notification::find($notification->id);
+
+
         $fechaInicio = Carbon::parse($request->started_date);
         $fechafinalizacion = Carbon::parse($request->finish_date);
-        $request['total_days'] = diffBusinessHours($fechaInicio,$fechafinalizacion);
-        $request['total_hours'] = $request->total_days * 8;
+
+        $request['total_days'] = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
+        $request['total_hours'] = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];
+
+
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
         $notification->update($request->all());
 
@@ -345,6 +352,7 @@ $date = $date->format('m');
 
             $day = date("w", $determinarDia);
 
+            /* Checking if the number of hours worked is equal to the number of hours in a day. */
             switch ($day) {
                 case '6':
                     if ($horas_reales == $HORARIOSABADO) {
@@ -423,7 +431,7 @@ $date = $date->format('m');
 
 
                 $horarioAperturaSabado = "08:00";
-                $horarioCierreSabado = "12:00";
+                $horarioCierreSabado = "12:00:00";
 
                 $horarioAperturaViernes = "07:00";
                 $horarioCierreViernes = "16:00";
@@ -435,7 +443,7 @@ $date = $date->format('m');
                 $week = 0;
 
                 for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-                    echo date("D", $i) . " " . date("w", $i) . "<br>";
+               
                     if (date("w", $i) == 0) {
                         $countWeekend += 1;
                     }
@@ -455,7 +463,10 @@ $date = $date->format('m');
                     }
                 }
 
+              
                 $diasExactos =  (int)$interval->format('%a') +  1;
+
+
 
                 if ($countWeekend != 0) {
                     $dias = $diasExactos - $countWeekend;
@@ -469,6 +480,10 @@ $date = $date->format('m');
                 $final_recorrido_date = strtotime($final_recorrido);
 
 
+                if(date("w", $final_recorrido_date) == 6){
+
+                }
+
 
                 if (date("w", $final_recorrido_date) == 6) {
                     $inicio_recorridoHora = $final_recorrido . " " . "08:00:00";
@@ -477,6 +492,12 @@ $date = $date->format('m');
                 }
 
                 $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
+
+                if(date("w", $final_recorrido_date) == 6 && ($fechafinalMasHora->format('H:i:s') == $horarioCierreSabado) ){
+                    
+                    $dias = $dias+=1;
+                }
+
 
                 $datetimeStartHour = new \DateTime($inicio_recorridoHora);
                 $datetimeFinishHour = new \DateTime($final_recorridoHora);
@@ -518,7 +539,6 @@ $date = $date->format('m');
                         } else {
                             $dias -= 1;
                             $horas_reales = $horas_reales - ($HORARIOSABADO - $horasParcialesReales);
-                            echo $HORARIOSABADO - $horasParcialesReales;
                         }
                         break;
                     case '5':
@@ -538,6 +558,7 @@ $date = $date->format('m');
                         }
                         break;
                 }
+
             }
         }
 

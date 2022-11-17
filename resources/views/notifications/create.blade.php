@@ -138,7 +138,7 @@
 
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
-            {!! Form::label("observation", "observation", ['class'=>'label-control inline-block mb-2']) !!}
+            {!! Form::label("observation", "observación", ['class'=>'label-control inline-block mb-2']) !!}
             {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
 
            @error('observation')

@@ -61,34 +61,47 @@
         </div>
 
 
-        <div class="flex flex-wrap  mb-6 mx-auto">
-            <div class="w-full px-3">
-               {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-
-               {!! Form::datetimeLocal('started_date', (isset($notification)) ? $notification->started_date : null, ['class' => 'form-control']) !!}
-
-
-               @error('started_date')
-               <small class="text-red-600 font-bold text-base">
+      
+    
+          <div class="grid grid-cols-2 mb-6 mx-auto">
+              <div class="px-3">
+                {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+                {!! Form::date("started_date",  (isset($notification)) ? $notification->started_date : null ,['class'=>'form-control']) !!}
+      
+              @error('started_date')
+              <small class="text-red-600 font-bold text-base">
                 *{{$message}}
-               </small>
+                </small>
                <br>
-               @enderror
+              @enderror
             </div>
+      
+            <div class="px-3">
+               {!! Form::label("started_time", "Hora de inicio", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+               {!! Form::time("started_time", (isset($notification)) ? $notification->started_time : null  ,['class'=>'form-control']) !!}
+            </div>
+
+
         </div>
 
-        <div class="flex flex-wrap  mb-6 mx-auto">
-          <div class="w-full px-3">
-             {!! Form::label("finish_date", "Fecha de finalización", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+        <div class="grid grid-cols-2 mb-6 mx-auto">
+          <div class="px-3">
+            {!! Form::label("finish_date", "Fecha de finalización", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+            {!! Form::date("finish_date", (isset($notification)) ? $notification->finish_date : null ,['class'=>'form-control']) !!}
+          @error('finish_date')
+          <small class="text-red-600 font-bold text-base">
+             *{{$message}}
+            </small>
+            <br>
+            @enderror
+         </div>
 
-             {!! Form::datetimeLocal('finish_date', (isset($notification)) ? $notification->finish_date : null, ['class' => 'form-control']) !!}
-             @error('finish_date')
-             <small class="text-red-600 font-bold text-base">
-                *{{$message}}
-               </small>
-               <br>
-               @enderror
+         <div class="px-3">
+           {!! Form::label("finish_time", "Hora de final", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
+           {!! Form::time("finish_time", (isset($notification)) ? $notification->finish_time : null,['class'=>'form-control']) !!}
           </div>
+
+          
         </div>
 
 
@@ -120,7 +133,7 @@
 </div>
         <div class="flex flex-wrap  mb-6 mx-auto">
           <div class="w-full px-3">
-              {!! Form::label("observation", "observation", ['class'=>'label-control inline-block mb-2']) !!}
+              {!! Form::label("observation", "observación", ['class'=>'label-control inline-block mb-2']) !!}
               {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
 
              @error('observation')
