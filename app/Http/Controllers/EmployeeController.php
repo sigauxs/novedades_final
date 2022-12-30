@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Employee;
 use App\Models\Notification;
+use App\Models\IdentificationType;
+use App\Models\Position;
+
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
-
 use Barryvdh\DomPDF\Facade\Pdf;
+
+use App\Http\Requests\StoreEmployeeRequest;
+
 
 class EmployeeController extends Controller
 {
@@ -27,33 +33,24 @@ class EmployeeController extends Controller
             return view('employees.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function create()
     {
-        //
+        $type_identification = $this->type_identification();
+        $positions = $this->positions();
+        $centerCost = $this->centerCost();
+
+        return view('employees.create', compact('type_identification','positions','centerCost'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+ 
+    public function store(StoreEmployeeRequest $request)
     {
-        //
+        
+        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id,Request $request)
     {
 
@@ -126,16 +123,10 @@ class EmployeeController extends Controller
 
      public function edit($id)
     {
-        //
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         //
@@ -151,4 +142,19 @@ class EmployeeController extends Controller
     {
         //
     }
+
+
+    public function type_identification(){
+        return IdentificationType::all()->pluck('name','id');
+    }
+
+    public function positions(){
+        return Position::all()->pluck('name','id');
+    }
+
+
+    public function centerCost(){
+        return Position::all()->pluck('name','id');
+    }
+
 }
