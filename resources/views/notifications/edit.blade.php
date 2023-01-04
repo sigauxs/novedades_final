@@ -1,8 +1,8 @@
 <x-app-layout>
 
-        {!! Form::model($notification, ['route' => ['notifications.update', $notification->id],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+        {!! Form::model($notification, ['route' => ['notifications.update', $notification->id ],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
-       
+
         <div class="flex flex-wrap  mb-6 mx-auto ">
           <div class="w-full px-3">
              {!! Form::label("employee_id", "Empleados", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
@@ -61,13 +61,13 @@
         </div>
 
 
-      
-    
+
+
           <div class="grid grid-cols-2 mb-6 mx-auto">
               <div class="px-3">
                 {!! Form::label("started_date", "Fecha de inicio", ['class'=> 'label-control inline-block mb-2']) !!}<span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
                 {!! Form::date("started_date",  (isset($notification)) ? $notification->started_date : null ,['class'=>'form-control']) !!}
-      
+
               @error('started_date')
               <small class="text-red-600 font-bold text-base">
                 *{{$message}}
@@ -75,7 +75,7 @@
                <br>
               @enderror
             </div>
-      
+
             <div class="px-3">
                {!! Form::label("started_time", "Hora de inicio", ['class'=>'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
                {!! Form::time("started_time", (isset($notification)) ? $notification->started_time : null  ,['class'=>'form-control']) !!}
@@ -101,7 +101,7 @@
            {!! Form::time("finish_time", (isset($notification)) ? $notification->finish_time : null,['class'=>'form-control']) !!}
           </div>
 
-          
+
         </div>
 
 
@@ -120,7 +120,7 @@
         </div>
 
 
-    
+
 
         <div class="flex flex-wrap  mb-6 mx-auto">
             <div class="w-full px-3">
@@ -146,7 +146,7 @@
         </div>
 
         <div class="flex flex-wrap  mb-6 mx-auto">
-      
+
 
          <div class="grid grid-cols-2 max-w-lg mx-auto text-center">
             <div class="">

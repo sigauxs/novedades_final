@@ -47,6 +47,7 @@
                         <th scope="col" colspan="3" class="text-sm font-medium text-white px-4 py-2">
 
                         </th>
+
                       </tr>
                     </thead class="border-b">
 
@@ -87,6 +88,10 @@
 
 
                             </td>
+
+                            <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                                <a class="" href="{{ route('employees.edit', $employee->id ) }}"><span class="material-icons" style="color:purple; font-size:26px">edit </span></a>
+                              </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                               <a><span class="material-icons" style="color:red; font-size:26px">picture_as_pdf</span></a>

@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Notification;
 use App\Models\IdentificationType;
 use App\Models\Position;
+use App\Models\CenterCost;
 
 use Illuminate\Http\Request;
 
@@ -33,24 +34,28 @@ class EmployeeController extends Controller
             return view('employees.index');
     }
 
-   
+
     public function create()
     {
+
+        $status = ['1' => 'Activo','0' => 'Inactivo'];
         $type_identification = $this->type_identification();
         $positions = $this->positions();
         $centerCost = $this->centerCost();
 
-        return view('employees.create', compact('type_identification','positions','centerCost'));
+        return view('employees.create', compact('type_identification','positions','centerCost','status'));
     }
 
- 
+
     public function store(StoreEmployeeRequest $request)
     {
-        
-        
+
+        $employee = Employee::create($request->all());
+
+       return redirect()->route('employees.show',compact('employee'))->with('success', 'Empleado creado exitosamente');
     }
 
-   
+
     public function show($id,Request $request)
     {
 
@@ -123,13 +128,23 @@ class EmployeeController extends Controller
 
      public function edit($id)
     {
-        
+
+        $employee = Employee::find($id);
+        $status = ['1' => 'Activo','0' => 'Inactivo'];
+        $type_identification = $this->type_identification();
+        $positions = $this->positions();
+        $centerCost = $this->centerCost();
+
+        return view('employees.edit', compact('employee','type_identification','positions','centerCost','status'));
+
     }
 
-    
+
     public function update(Request $request, $id)
     {
-        //
+        $employee =  Employee::find($id);
+        $employee->update($request->all());
+        return redirect()->route('employees.show',compact('employee'))->with('success', 'Empleado actualizado');
     }
 
     /**
@@ -154,7 +169,7 @@ class EmployeeController extends Controller
 
 
     public function centerCost(){
-        return Position::all()->pluck('name','id');
+        return CenterCost::all()->pluck('name','id');
     }
 
 }

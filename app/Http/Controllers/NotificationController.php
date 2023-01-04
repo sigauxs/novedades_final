@@ -42,7 +42,12 @@ class NotificationController extends Controller
 
     public function index(Request $request)
     {
-/*
+
+        $birth_years = collect(range(-1, 1))->map(function ($item) {
+            return (string) date('Y') + $item;
+        });
+
+        /*
 $mes = $request['mes'];
 $dias = $request['dias'];
 $quince_dias = 15;
@@ -54,9 +59,13 @@ if($dias == $quince_dias){
 }
 $date_i = Carbon::now()->startOfMonth()->month($mes);
         $inicio_mes = Carbon::now()->month($mes)->day($dias);*/
+
+        $year = $request->year;
+        $mes = $request->mes;
+
         $date = Carbon::now();
 
-$date = $date->format('m');
+        $date = $date->format('m');
         $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
 
       $user = Auth::user()->email;
@@ -66,7 +75,33 @@ $date = $date->format('m');
       $ad = 9;
       $administrativo = 6;
 
-        if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == 1 ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_visor)){
+      if( isset($year)&& isset($mes)){
+
+        $notifications = DB::table('notifications as n')
+        ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+        ->join('employees as em', 'n.employee_id','=','em.id')
+        ->join('positions as pos','em.position_id','=','pos.id')
+        ->join('center_costs as cc','n.center_cost_id','=','cc.id')
+        ->join('bosses as boss','n.boss_id','=','boss.id')
+        ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+        ->whereMonth('started_date',$mes)->whereYear('started_date',$year)
+        ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status','n.started_time','n.finish_time')
+        ->orderBy('started_date','desc')
+        ->get();
+
+      }else{
+        $notifications = DB::table('notifications as n')
+          ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+          ->join('employees as em', 'n.employee_id','=','em.id')
+          ->join('center_costs as cc','n.center_cost_id','=','cc.id')
+          ->join('bosses as boss','n.boss_id','=','boss.id')
+          ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+          ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status','n.started_time','n.finish_time')
+          ->orderBy('started_date','desc')
+          ->paginate(15);
+      }
+
+       /* if($user_model->center_cost_id == $this->c_admin || ($user_model->center_cost_id == $this->administrativo AND $user_model->profile_id == 1 ) || ($user_model->center_cost_id == $this->do AND $user_model->profile_id == $this->p_visor)){
 
           $notifications = DB::table('notifications as n')
           ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -93,10 +128,12 @@ $date = $date->format('m');
           ->orderBy('started_date','desc')
           ->get();
 
-        }
+        }*/
 
 
-      return view('notifications.index', compact('notifications','user_model','user','date','do','date'));
+
+
+      return view('notifications.index', compact('notifications','user_model','user','date','do','date','birth_years','month','mes'));
 
 
 
@@ -443,7 +480,7 @@ $date = $date->format('m');
                 $week = 0;
 
                 for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-               
+
                     if (date("w", $i) == 0) {
                         $countWeekend += 1;
                     }
@@ -463,7 +500,7 @@ $date = $date->format('m');
                     }
                 }
 
-              
+
                 $diasExactos =  (int)$interval->format('%a') +  1;
 
 
@@ -494,7 +531,7 @@ $date = $date->format('m');
                 $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
 
                 if(date("w", $final_recorrido_date) == 6 && ($fechafinalMasHora->format('H:i:s') == $horarioCierreSabado) ){
-                    
+
                     $dias = $dias+=1;
                 }
 

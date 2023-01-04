@@ -40,9 +40,10 @@ class AllEmployee extends Component
         $employees = Employee::query()
         ->when($this->search, fn($query, $search) => $query->WhereRaw('LOWER("first_name") LIKE ?',['%'.trim(strtolower($this->search)).'%']))
         ->when($this->search, fn($query, $search) => $query->orWhereRaw('LOWER("last_name") LIKE ?',['%'.trim(strtolower($this->search)).'%']))
-        ->when($this->identification,function($query){ return $query->where('identification',$this->identification);})
+        ->when($this->identification, fn($query, $identification) => $query->orWhereRaw('identification::text LIKE ?',['%'.trim($this->identification).'%']))
         ->paginate(10);
 
+        //->when($this->identification,function($query){ return $query->whereRaw('identification LIKE ?',['%'.trim(strtolower($this->search)).'%']})
 
         return view('livewire.all-employee', compact('employees'));
     }
