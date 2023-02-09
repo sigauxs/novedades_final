@@ -42,7 +42,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
+        ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','started_time','finish_time','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
         ->orderBy('started_date','desc')
         ->get();
 
@@ -81,7 +81,9 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             'Jefe de inmediato',
             'Tipo de novedad',
             'Fecha de inicio',
+            'Hora de inicio',
             'Fecha de finalizacion',
+            'Hora de finalizacion',
             'Total de dias',
             'Total de horas por fechas',
             'Observaciones',
@@ -102,8 +104,10 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
             $notification->center_costo,
             $notification->jefe_inmediato,
             $notification->tipo_novedad,
-            Carbon::parse($notification->started_date)->translatedFormat('j F, Y h:i:s A'),
-            Carbon::parse($notification->finish_date)->translatedFormat('j F, Y h:i:s A'),
+            Carbon::parse($notification->started_date),
+            $notification->started_time,
+            Carbon::parse($notification->finish_date),
+            $notification->finish_time,
             $notification->total_dias,
             $notification->total_horas,
             $notification->observacion,
