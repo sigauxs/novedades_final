@@ -24,7 +24,7 @@
                     <select id="year" class="birth_day" name="year"
                         style="width:100%;border: 1px solid beige;border-radius: 5px;">
                         @foreach ($birth_years as $birth_year)
-                            <option value="{{ $birth_year }}" {{ date('Y') == $birth_year ? 'selected' : '' }}>
+                            <option value="{{ $birth_year }}" {{old('year' , $birth_year == $year) ? 'selected' : ''}}>
                                 {{ $birth_year }}</option>
                         @endforeach
                     </select>
@@ -78,10 +78,10 @@
                                         class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                                         Centro de costos
                                     </th>
-                                    <th scope="col"
+                                   <!-- <th scope="col"
                                         class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                                         Jefe de inmediato
-                                    </th>
+                                    </th>-->
                                     <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                                         Novedad
                                     </th>
@@ -118,10 +118,10 @@
                            text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                             {{ $notification->centro_costo }}
                                         </td>
-                                        <td
+                                       <!--<td
                                             class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                             {{ $notification->jefe_inmediato }}
-                                        </td>
+                                        </td>-->
                                         <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                             {{ $notification->tipo_novedad }}
                                         </td>
@@ -192,7 +192,22 @@
 
 
         <div class="grid  text-center">
-            {{ $notifications ->links()}}
+
+            @if (count($notifications)>0)
+
+             {{  count($notifications)>0 ?? $notifications->links()}}
+
+            @else
+
+               @livewire('alert')
+
+            @endif
+
+
+
+
+
+
         </div>
 
 

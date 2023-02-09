@@ -113,7 +113,16 @@
           </div>
 
 
-        {{ $employees->links()}}
+
+          @if (count($employees)>0)
+
+          {{  count($employees)>0 ?? $notifications->links()}}
+
+         @else
+
+            @livewire('alert')
+
+         @endif
 
 
 
