@@ -57,17 +57,23 @@ if($dias == $quince_dias){
 }else{
     $dias = $treinta_dias;
 }
+
+->whereMonth('started_date',$mes)->whereYear('started_date',$year);
+
+'birth_years','month','mes','year'
+
+
 $date_i = Carbon::now()->startOfMonth()->month($mes);
         $inicio_mes = Carbon::now()->month($mes)->day($dias);*/
 
-        $year = $request->year;
-        $mes = $request->mes;
+        $b_fecha_inicio = $request->b_fecha_inicio;
+        $b_fecha_final = $request->b_fecha_final;
 
         $date = Carbon::now();
 
         $date = $date->format('m');
         $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
-
+        $month = $month->push("Seleccionar un mes");
       $user = Auth::user()->email;
       $user_model = Auth::user();
       $do = 8;
@@ -75,7 +81,7 @@ $date_i = Carbon::now()->startOfMonth()->month($mes);
       $ad = 9;
       $administrativo = 6;
 
-      if( isset($year)&& isset($mes)){
+      if( isset($b_fecha_inicio)&& isset($b_fecha_final)){
 
         $notifications = DB::table('notifications as n')
         ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
@@ -84,10 +90,10 @@ $date_i = Carbon::now()->startOfMonth()->month($mes);
         ->join('center_costs as cc','n.center_cost_id','=','cc.id')
         ->join('bosses as boss','n.boss_id','=','boss.id')
         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-        ->whereMonth('started_date',$mes)->whereYear('started_date',$year)
+        ->whereDate('started_date','>=',$b_fecha_inicio)->whereDate('started_date','<=',$b_fecha_final)
         ->select('n.id as id','idt.name as tipo_identificacion','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','em.position_id as cargo','pos.name as cargo','cc.name as centro_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','total_days as total de dias','total_hours as total de horas','observation as observacion','n.support','n.user_id','n.status','n.started_time','n.finish_time')
         ->orderBy('started_date','desc')
-        ->get(15);
+        ->paginate(10);
 
       }else{
         $notifications = DB::table('notifications as n')
@@ -133,7 +139,7 @@ $date_i = Carbon::now()->startOfMonth()->month($mes);
 
 
 
-      return view('notifications.index', compact('notifications','user_model','user','date','do','date','birth_years','month','mes','year'));
+      return view('notifications.index', compact('notifications','user_model','user','date','do','date','b_fecha_inicio','b_fecha_final'));
 
 
 

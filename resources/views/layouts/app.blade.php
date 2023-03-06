@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"      rel="stylesheet">
-        
+
         @livewireStyles
 
         <!-- Scripts -->
@@ -38,7 +38,9 @@
         @stack('modals')
 
         @livewireScripts
+        @stack('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
 
-    @stack('scripts')
+
 </html>

@@ -12,30 +12,34 @@
 
         <div class="w-11/12 mx-auto mt-5">
 
-            <div class="grid grid-cols-1 mb-6 mx-auto w-1/2">
-                {!! Form::open(['route' => ['notifications.index'], 'method' => 'get']) !!}
-                <div>
-                    {!! Form::label('mes', 'Mes', ['class' => 'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base"
-                        title="Campo obligatorio">*</span>
-                    {!! Form::select('mes', $month, $mes, ['style' => 'width:100%;border: 1px solid beige;border-radius: 5px;']) !!}
+            <div class=" mb-6 mx-auto w-4/5">
+                {!! Form::open(['route' => ['notifications.index'], 'method' => 'get', 'id' => 'formSearch']) !!}
 
-                    {!! Form::label('year', 'Año', ['class' => 'label-control inline-block mb-2']) !!} <span class="text-red-600 font-bold text-base"
-                        title="Campo obligatorio">*</span>
-                    <select id="year" class="birth_day" name="year"
-                        style="width:100%;border: 1px solid beige;border-radius: 5px;">
-                        @foreach ($birth_years as $birth_year)
-                            <option value="{{ $birth_year }}" {{old('year' , $birth_year == $year) ? 'selected' : ''}}>
-                                {{ $birth_year }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
+                <div class="grid grid-cols-3 gap-x-2">
 
+                    <div>
+
+
+                        {!! Form::label('b_fecha_inicio', 'De', ['class' => 'label-control-search mb-2']) !!} <span class="text-red-600 font-bold text-base"
+                            title="Campo obligatorio">*</span>
+                        {!! Form::date('b_fecha_inicio', $b_fecha_inicio, ['class' => 'form-control-search']) !!}
+
+
+
+                    </div>
+                    <div>
+                        {!! Form::label('b_fecha_final', 'Hasta', ['class' => 'label-control-search inline mb-2']) !!} <span class="text-red-600 font-bold text-base"
+                            title="Campo obligatorio">*</span>
+                        {!! Form::date('b_fecha_final', $b_fecha_final, ['class' => 'form-control-search']) !!}
+                    </div>
+
+                    <div>
+                        <button id="buscar" type="submit" class="bg-green-500 btn-search mt-7 "> <span
+                                class='material-icons' style='color:white; font-size:26px'> search </span> </button>
+                    </div>
                 </div>
-                <div>
-                    <button type="submit" class="bg-green-500 btn-search mt-7 "> <span class='material-icons'
-                            style='color:white; font-size:26px'> search </span> </button>
-                </div>
+
+
                 {!! Form::close() !!}
             </div>
 
@@ -78,7 +82,7 @@
                                         class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                                         Centro de costos
                                     </th>
-                                   <!-- <th scope="col"
+                                    <!-- <th scope="col"
                                         class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }}  text-sm font-medium text-white px-4 py-2">
                                         Jefe de inmediato
                                     </th>-->
@@ -118,7 +122,7 @@
                            text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                             {{ $notification->centro_costo }}
                                         </td>
-                                       <!--<td
+                                        <!--<td
                                             class="{{ $user_model->center_cost_id == 9 || $user_model->profile_id == 1 || ($user_model->center_cost_id == $do and $user_model->profile_id == 2) ? '' : 'none' }} text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                             {{ $notification->jefe_inmediato }}
                                         </td>-->
@@ -152,9 +156,7 @@
                                         @endif
 
                                         <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                            @if ($user_model->center_cost_id == 9 ||
-                                                $user_model->profile_id == 1 ||
-                                                $user_model->id == $notification->user_id)
+                                            @if ($user_model->center_cost_id == 9 || $user_model->profile_id == 1 || $user_model->id == $notification->user_id)
                                                 <a class=""
                                                     href="{{ route('notifications.edit', $notification->id) }}"><span
                                                         class="material-icons"
@@ -190,18 +192,14 @@
         </div>
 
 
+        @if (count($notifications) > 0)
+            {{ count($notifications) > 0 ? $notifications->appends(['b_fecha_inicio' => $b_fecha_inicio, 'b_fecha_final' => $b_fecha_final])->links() : '' }}
+        @else
+            @livewire('alert')
+        @endif
 
         <div class="grid  text-center">
 
-            @if (count($notifications)>0)
-
-             {{  count($notifications)>0 ?? $notifications->links()}}
-
-            @else
-
-               @livewire('alert')
-
-            @endif
 
 
 
@@ -217,9 +215,17 @@
             <div>
                 <button
                     class="bg-transparent mt-10 hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                    <a href="{{ url('/excel') }}">Generar Excel </a>
+                    <a href='{{ url("/excel/{$b_fecha_inicio}/{$b_fecha_final}") }}'>Generar Excel </a>
                 </button>
             </div>
+
+            <div>
+                <button
+                    class="bg-transparent mt-10 hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                    <a href='{{ url("/excel/") }}'>Generar Reporte </a>
+                </button>
+            </div>
+
             <div> <button
                     class="bg-transparent mt-10 hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
                     <a href="{{ route('notifications.create') }}">Crear novedad </a>
@@ -231,7 +237,30 @@
 
 
     </div>
+    @push('scripts')
+        <script>
+            let submit = document.getElementById("formSearch");
+            submit.addEventListener("submit",
+                function(event) {
+                    let f_inicio = document.getElementById("b_fecha_inicio").value;
+                    let f_final = document.getElementById("b_fecha_final").value;
+                    console.log(f_inicio)
 
+                    if (Date.parse(f_inicio) > Date.parse(f_final)) {
+
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'La fecha de inicio es mayor que la de final.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        console.log(f_inicio)
+                        event.preventDefault();
+                    }
+                });
+        </script>
+    @endpush
 
 
 

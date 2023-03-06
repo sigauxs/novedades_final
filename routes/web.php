@@ -35,8 +35,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
     Route::resource('notifications',NotificationController::class)->names('notifications');
 
-    Route::get('/excel', function () {
-        return Excel::download(new NotificationExport, 'novedades.xlsx');
+    Route::get('/excel/{f_inicio?}/{f_fecha?}', function ($f_inicio = "",$f_final = "") {
+        return Excel::download(new NotificationExport($f_inicio,$f_final), 'novedades.xlsx');
     });
 
     Route::resource('employees', EmployeeController::class)->names('employees');
