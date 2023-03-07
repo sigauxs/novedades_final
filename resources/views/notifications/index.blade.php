@@ -210,12 +210,12 @@
 
 
 
-        <div class="grid grid-cols-2 text-center">
+        <div class="grid grid-cols-3 text-center mb-5">
 
             <div>
                 <button
-                    class="bg-transparent mt-10 hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                    <a href='{{ url("/excel/{$b_fecha_inicio}/{$b_fecha_final}") }}'>Generar Excel </a>
+                    class="bg-transparent mt-10 hover:bg-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded">
+                    <a href='{{ url("/excel/{$b_fecha_inicio}/{$b_fecha_final}") }}'>Generar reporte por fechas </a>
                 </button>
             </div>
 
