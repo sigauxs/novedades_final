@@ -3,7 +3,7 @@
 
     <div class="container mx-auto">
 
-  
+
       {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
 
@@ -66,7 +66,7 @@
       </div>
 
 
-   
+
 
 
 
@@ -185,8 +185,8 @@ let started_date = document.getElementById("started_date");
 
 
     started_date.addEventListener("change",function(){
- 
-     var tmpDate = new Date(started_date.value); 
+
+     var tmpDate = new Date(started_date.value);
 
      if(document.getElementById("notifications_type_id").value == maternidad ){
       fecha = addDaysToDate(tmpDate,126);
@@ -194,16 +194,16 @@ let started_date = document.getElementById("started_date");
       let day = fecha.getDate().toString().padStart(2, "0");
      let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
      let year = fecha.getFullYear();
-     
+
      finish_date.value = year + '-' + month + '-' + day
 
      }else if(document.getElementById("notifications_type_id").value == partenidad){
-      fecha = addDaysToDate(tmpDate,15);
+      fecha = addDaysToDate(tmpDate,14);
 
       let day = fecha.getDate().toString().padStart(2, "0");
      let month = (fecha.getMonth() + 1).toString().padStart(2, "0");
      let year = fecha.getFullYear();
-     
+
      finish_date.value = year + '-' + month + '-' + day
      }
 
@@ -218,20 +218,20 @@ let started_date = document.getElementById("started_date");
     return res;
     }
 
-  
+
       </script>
-  
+
       <script>
-  
-  
-  
-  
-  
+
+
+
+
+
           let dayCurrent = new Date();
           let isDay = dayCurrent.getDay();
           let finish_time = document.getElementById("finish_time");
           let started_time = document.getElementById("started_time");
-  
+
           switch (isDay) {
               case 0:
                   started_time.value = "07:00";
