@@ -6,7 +6,7 @@ use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeeController;
 
 use App\Exports\NotificationExport;
-
+use App\Http\Controllers\ExtraHourController;
 use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -34,12 +34,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/statistics',[ApplicationFormController::class,'summary'])->name('statistics');
 
     Route::resource('notifications',NotificationController::class)->names('notifications');
+    Route::resource('employees', EmployeeController::class)->names('employees');
+    Route::resource('extraHours',ExtraHourController::class)->names('extrahours');
 
     Route::get('/excel/{f_inicio?}/{f_fecha?}', function ($f_inicio = "",$f_final = "") {
         return Excel::download(new NotificationExport($f_inicio,$f_final), 'novedades.xlsx');
     });
 
-    Route::resource('employees', EmployeeController::class)->names('employees');
+
 });
 
 Route::get('/employeepdf', [EmployeeController::class, 'createPDF'])->name('employeepdf');

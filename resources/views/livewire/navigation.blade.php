@@ -129,7 +129,7 @@
                                 <button type="button" @click="open = true"
                                     class="inline-flex justify-center w-full rounded-md shadow-sm  px-3 py-2 text-sm font-medium text-gray-300 hover:bg-cyan-700 hover:text-white"
                                     id="menu-button" aria-expanded="true" aria-haspopup="true">
-                                    Configuración
+                                    Horas Extras
                                     <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd"
@@ -144,14 +144,14 @@
                                 class="o-left origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('employees.index') }}"
+                                    <a href="{{ route('extrahours.index') }}"
                                         class="text-gray-300 hover:bg-cyan-700 block px-4 py-2 text-sm" role="menuitem"
-                                        tabindex="-1" id="menu-item-0"> Lista de empleados </a>
+                                        tabindex="-1" id="menu-item-0"> Listados de Horas Extras </a>
                                 </div>
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('employees.create') }}"
+                                    <a href="{{ route('extrahours.create') }}"
                                         class="text-gray-300 hover:bg-cyan-700 block px-4 py-2 text-sm" role="menuitem"
-                                        tabindex="-1" id="menu-item-0"> Registrar empleado </a>
+                                        tabindex="-1" id="menu-item-0"> Registrar Horas Extras </a>
                                 </div>
                             </div>
 
