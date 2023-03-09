@@ -171,7 +171,7 @@
                                         </td>
 
                                         <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                            <a href="{{ route('notifications.show', $notification->id) }}"><span
+                                            <a href="{{ route('extrahours.show', $notification->id) }}"><span
                                                     class="material-icons"
                                                     style="color:green; font-size:26px">preview</span></a>
                                         </td>

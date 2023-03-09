@@ -2,7 +2,7 @@
 
 
 
-    {!! Form::model($extraHour, ['route' => ['notifications.update', $extraHour->id ],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+    {!! Form::model($extraHour, ['route' => ['extrahours.update', $extraHour->id ],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
     <div class="flex flex-wrap  mb-6 mx-auto ">
       <div class="w-full px-3">
          {!! Form::label("employee_id", "Empleados", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>

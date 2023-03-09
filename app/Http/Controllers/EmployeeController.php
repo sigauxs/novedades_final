@@ -24,8 +24,11 @@ class EmployeeController extends Controller
 
 
     public $filters = [
-        'mes' => '',
+
+        'b_fecha_inicio' => '',
+        'b_fecha_final' => '',
         'id' => '',
+        'mes' => ''
     ];
 
     public function index()
@@ -59,38 +62,38 @@ class EmployeeController extends Controller
     public function show($id,Request $request)
     {
 
-        $date = Carbon::now();
-        $date = $date->format('m');
-        $month = collect(today()->startOfMonth()->subMonths(12)->monthsUntil(today()->startOfMonth()))->mapWithKeys(fn ($month) => [$month->month => $month->monthName]);
 
-        $request->mes ? $this->filters['mes'] = $request->mes : $this->filters['mes'] = $date;
-
-        $this->filters['id'] = $id;
-        $mes = $this->filters['mes'];
-
-         $notifications = Notification::query()
-         ->when($this->filters,function($query){
-            return $query
-            ->where('employee_id',$this->filters['id'])
-            ->whereMonth('started_date',$this->filters['mes']);
-        })
-         ->orderBy('created_at', 'desc')->get();
-
-
+        
         $employee = Employee::find($id);
-        $sumaDias =  Notification::query()
-        ->when($this->filters,function($query){
-           return $query
-           ->where('employee_id',$this->filters['id'])
-           ->whereMonth('started_date',$this->filters['mes']);
-         })->sum('total_days');
-        $sumaHoras =   Notification::query()
-        ->when($this->filters,function($query){
-           return $query
-           ->where('employee_id',$this->filters['id'])
-           ->whereMonth('started_date',$this->filters['mes']);
-         })->sum('total_hours');
-        return view('employees.show',compact('notifications','employee','sumaDias','sumaHoras','month','mes'));
+
+    
+
+        $b_fecha_inicio = $request->b_fecha_inicio;
+        $b_fecha_final = $request->b_fecha_final;
+        $id = $request->id;
+     
+   
+
+        if(isset($b_fecha_inicio)&& isset($b_fecha_final)){
+
+          $notifications = Notification::where('employee_id',$employee->id)
+                          ->whereDate('started_date','>=',$b_fecha_inicio)->whereDate('started_date','<=',$b_fecha_final)->get();
+                         
+          $sumaDias      = Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
+                                                                           ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_days');
+
+          $sumaHoras     = Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
+                                                                           ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_hours');
+
+
+        }else{
+
+            $notifications = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get();
+            $sumaDias      = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get()->sum('total_days');
+            $sumaHoras     = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get()->sum('total_hours');
+        }
+
+        return view('employees.show',compact('notifications','employee','sumaDias','sumaHoras','b_fecha_inicio','b_fecha_final'));
     }
 
     public function createPDF(Request $request){

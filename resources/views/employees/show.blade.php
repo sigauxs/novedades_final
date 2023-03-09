@@ -3,14 +3,29 @@
 
 
         <div class="w-11/12 mx-auto mt-5">
-            {!! Form::open(['route' => ['employees.show', $employee->id],'method'=>'get','class'=>'mx-auto mt-10']) !!}
-            <div class="grid grid-cols-2 mb-6 mx-auto ">
+            {!! Form::open(['route' => ['employees.show', $employee->id ],'method'=>'get','class'=>'mx-auto mt-10']) !!}
+     
+            <div class="grid grid-cols-3 gap-x-2">
+
                 <div>
-                    {!! Form::label("mes", "Mes", ['class'=>'label-control inline-block mb-2']) !!}  <span class="text-red-600 font-bold text-base" title="Campo obligatorio">*</span>
-                    {!! Form::select("mes", $month, $mes, ["style"=>"width:100%;border: 1px solid beige;border-radius: 5px;",'placeholder' => 'Selecciona un empleado...']) !!}
+
+
+                    {!! Form::label('b_fecha_inicio', 'De', ['class' => 'label-control-search mb-2']) !!} <span class="text-red-600 font-bold text-base"
+                        title="Campo obligatorio">*</span>
+                    {!! Form::date('b_fecha_inicio', $b_fecha_inicio, ['class' => 'form-control-search']) !!}
+
+
+
                 </div>
                 <div>
-                <button type="submit" class="bg-green-500 btn-search mt-7 "> <span class='material-icons' style='color:white; font-size:26px'> search </span> </button>
+                    {!! Form::label('b_fecha_final', 'Hasta', ['class' => 'label-control-search inline mb-2']) !!} <span class="text-red-600 font-bold text-base"
+                        title="Campo obligatorio">*</span>
+                    {!! Form::date('b_fecha_final', $b_fecha_final, ['class' => 'form-control-search']) !!}
+                </div>
+
+                <div>
+                    <button id="buscar" type="submit" class="bg-green-500 btn-search mt-7 "> <span
+                            class='material-icons' style='color:white; font-size:26px'> search </span> </button>
                 </div>
             </div>
             {!! Form::close() !!}
@@ -138,8 +153,7 @@
             {!! Form::open(['url' => '/employeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
             <div class="max-w-lg mx-auto text-center">
                 <div style="display:none">
-                    {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
-                    {!! Form::text('mes', $mes, ['class' => 'form-control']) !!}
+                 
                 </div>
 
                 {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
@@ -155,8 +169,7 @@
             {!! Form::open(['url' => '/allemployeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
             <div class="max-w-lg mx-auto text-center">
                 <div style="display:none">
-                    {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
-                    {!! Form::text('mes', $mes, ['class' => 'form-control']) !!}
+                   
                 </div>
 
                 {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [

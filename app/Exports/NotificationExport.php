@@ -31,6 +31,7 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
     {
         $this->f_inicio = $inicio;
         $this->f_final  = $final;
+        
     }
 
     public function collection()

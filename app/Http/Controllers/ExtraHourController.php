@@ -139,20 +139,21 @@ class ExtraHourController extends Controller
 
 
 
-       $notification = Notification::create($notification_array);
-       return redirect()->route('extrahours.show',compact('notification'))->with('success', 'Novedad creada');
+       $extraHour = Notification::create($notification_array);
+
+       return redirect()->route('extrahours.show',compact('extraHour'))->with('success', 'Novedad creada');
 
 
     }
 
 
-    public function show(Notification $notification)
+    public function show(Notification $extraHour)
     {
 
-        $notification =  Notification::find($notification->id);
+        $extraHour=  Notification::find($extraHour->id);
 
 
-        return view('notifications.show',compact('notification'));
+        return view('extrahours.show',compact('extraHour'));
     }
 
 
@@ -177,13 +178,13 @@ class ExtraHourController extends Controller
          return view('extrahours.edit',compact('center_costs','employees','types','positions','bosses','notifications','extraHour'));
     }
 
-    public function update(Request $request,Notification $notification)
+    public function update(Request $request,Notification $extraHour)
     {
 
         $inicio = $request->started_date." ".$request->started_time;
         $final = $request->finish_date." ".$request->finish_time;
 
-        $notification =  Notification::find($notification->id);
+        $extraHour=  Notification::find($extraHour->id);
 
 
         $fechaInicio = Carbon::parse($request->started_date);
@@ -194,18 +195,18 @@ class ExtraHourController extends Controller
 
 
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
-        $notification->update($request->all());
+        $extraHour->update($request->all());
 
-        return redirect()->route('notifications.show',compact('notification'))->with('success', 'Novedad Actualizada');
+        return redirect()->route('extrahours.show',compact('extraHour'))->with('success', 'Novedad Actualizada');
     }
 
 
     public function destroy($id)
     {
-       $notification = Notification::find($id);
+       $extraHour = Notification::find($id);
 
-       $notification->delete();
-       return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
+       $extraHour->delete();
+       return redirect()->route('extraHours.index')->with('success', 'Novedad Eliminada');
     }
 
 
@@ -308,211 +309,12 @@ class ExtraHourController extends Controller
         $HORARIOSABADO =  4;
         $HORARIOVIERNES =  8;
         $HORARIONORMAL = 9;
+        $horarioDF = 8;
 
         $horarioFijoSalida = strtotime("17:00:00");
 
 
-        if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $eps || $fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $arl) {
-
-            $formatDayHours = $final;
-            $fechafinalMasHora = new \DateTime($formatDayHours);
-            $horaFinal = strtotime($fechafinalMasHora->format('H:i:s'));
-
-            if ($horaFinal == $horarioFijoSalida) {
-
-
-                $fechaInicio = strtotime($inicio);
-                $fechaFin = strtotime($final);
-
-                $interval = $datetimeStart->diff($datetimeFinish);
-
-                $week = 0;
-
-                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-
-                    switch (date("w", $i)) {
-                        case '0':
-                            $week += 0;
-                            break;
-                        case '5':
-                            $week += 8;
-                            break;
-                        case '6':
-                            $week += 4;
-                            break;
-                        default:
-                            $week += 9;
-                    }
-                }
-
-                $diasExactos =  (int)$interval->format('%a') +  1;
-
-                $dias = $diasExactos;
-
-                $horas_reales = $week;
-
-                return $data = [$horas_reales, $dias];
-
-            }
-            else if ($horaFinal <= $horarioFijoSalida) {
-
-                $horarioAperturaSabado = "08:00";
-                $horarioCierreSabado = "12:00:00";
-
-                $horarioAperturaViernes = "07:00";
-                $horarioCierreViernes = "16:00";
-
-                $fechaInicio = strtotime($inicio);
-                $fechaFin = strtotime($final);
-
-                $horasParcialesReales = 0;
-                $week = 0;
-
-                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-
-                    switch (date("w", $i)) {
-                        case '0':
-                            $week += 0;
-                            break;
-                        case '5':
-                            $week += 8;
-                            break;
-                        case '6':
-                            $week += 4;
-                            break;
-                        default:
-                            $week += 9;
-                    }
-                }
-
-
-                $diasExactos =  (int)$interval->format('%a') +  1;
-
-                $dias = $diasExactos;
-
-                $horas_reales = $week;
-
-                $final_recorrido = $datetimeFinish->format('Y-m-d');
-                $final_recorrido_date = strtotime($final_recorrido);
-
-
-
-                if (date("w", $final_recorrido_date) == 6) {
-                    $inicio_recorridoHora = $final_recorrido . " " . "08:00:00";
-                } else {
-                    $inicio_recorridoHora = $final_recorrido . " " . "07:00:00";
-                }
-
-                $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
-
-                if (date("w", $final_recorrido_date) == 6 && ($fechafinalMasHora->format('H:i:s') == $horarioCierreSabado)) {
-
-                    $dias = $dias += 1;
-                }
-
-
-                $datetimeStartHour = new \DateTime($inicio_recorridoHora);
-                $datetimeFinishHour = new \DateTime($final_recorridoHora);
-
-                $interval = $datetimeStartHour->diff($datetimeFinishHour);
-
-
-                $date_obj = new \DateTime($inicio_recorridoHora);
-                $date_incr = $inicio_recorridoHora;
-                $incr = 1;
-
-
-                while ($date_incr < $final_recorridoHora) {
-                    $date_incr = $date_obj->format('Y-m-d H:i:s');
-                    $time = $date_obj->format('H:i');
-                    $date_obj->modify('+' . $incr . ' minutes');
-
-                    array_push($horas_transcurridas, $time);
-
-
-
-                    if ($time == $break_time_start || $time == $break_time_final) {
-                        $horas_descanso_acumulada += 1;
-                    }
-                }
-
-
-
-                if ($horas_descanso_acumulada == 2) {
-                    $horasParcialesReales = (int)$interval->format('%H') - 1;
-                } else {
-                    $horasParcialesReales =  (int)$interval->format('%H');
-                }
-
-
-
-                $determinarDia = strtotime($inicio_recorridoHora);
-
-                $day = date("w", $determinarDia);
-
-                switch ($day) {
-                    case '6':
-                        if ($horas_reales == $HORARIOSABADO) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIOSABADO - $horasParcialesReales);
-                        }
-                        break;
-                    case '5':
-                        if ($horas_reales == $HORARIOVIERNES) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIOVIERNES - $horasParcialesReales);
-                        }
-                        break;
-
-                    default:
-                        if ($horas_reales == $HORARIONORMAL) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIONORMAL - $horasParcialesReales);
-                        }
-                        break;
-                }
-
-                $dias = $diasExactos;
-
-                return $data = [$horas_reales, $dias];
-            }
-
-
-
-        }
-
-
-        if($novedades == $retiro || $novedades == $ingreso ){
-            return $data = [0,1];
-        }
-
-
-
-        if($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $maternidad){
-
-            $interval = $datetimeStart->diff($datetimeFinish);
-            $dias = 126;
-            $horas_reales = (126*8) - 18*8;
-
-            return $data = [$horas_reales, $dias];
-
-        }else if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $paternidad){
-
-            $dias = 14;
-            $horas_reales = (14*8) - 2*8;
-
-            return $data = [$horas_reales, $dias];
-
-        }
-
-
-        if ($fecha_inicio_acomparar == $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
+        if ($fecha_inicio_acomparar == $fecha_final_acomparar) {
 
             $inicio_recorrido = $datetimeStart->format('Y-m-d H:i:s');
             $final_recorrido = $datetimeFinish->format('Y-m-d H:i:s');
@@ -548,6 +350,14 @@ class ExtraHourController extends Controller
 
             /* Checking if the number of hours worked is equal to the number of hours in a day. */
             switch ($day) {
+
+                case '0':
+                    if ($horas_reales == $horarioDF || $horas_reales >= $horarioDF ) {
+                        $dias = 1;
+                    } else {
+                        $dias = 0;
+                    }
+                    break;
                 case '6':
                     if ($horas_reales == $HORARIOSABADO) {
                         $dias = 1;
@@ -563,197 +373,21 @@ class ExtraHourController extends Controller
                     }
                     break;
                 default:
-                    if ($horas_reales == $HORARIONORMAL) {
+                    if ($horas_reales >= $HORARIONORMAL ) {
                         $dias = 1;
                     } else {
                         $dias = 0;
                     }
                     break;
             }
+
+            return $data = [$horas_reales, $dias];
         }
 
 
-        if ($fecha_inicio_acomparar != $fecha_final_acomparar && ($novedades != $paternidad && $novedades != $maternidad)) {
+       
 
-
-            $formatDayHours = $final;
-            $fechafinalMasHora = new \DateTime($formatDayHours);
-            $horaFinal = strtotime($fechafinalMasHora->format('H:i:s'));
-
-            if ($horaFinal == $horarioFijoSalida) {
-                $fechaInicio = strtotime($inicio);
-                $fechaFin = strtotime($final);
-
-                $interval = $datetimeStart->diff($datetimeFinish);
-
-                $week = 0;
-
-                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-                    echo date("D", $i) . " " . date("w", $i) . "<br>";
-                    if (date("w", $i) == 0) {
-                        $countWeekend += 1;
-                    }
-
-                    switch (date("w", $i)) {
-                        case '0':
-                            $week += 0;
-                            break;
-                        case '5':
-                            $week += 8;
-                            break;
-                        case '6':
-                            $week += 4;
-                            break;
-                        default:
-                            $week += 9;
-                    }
-                }
-
-                $diasExactos =  (int)$interval->format('%a') +  1;
-
-                if ($countWeekend != 0) {
-                    $dias = $diasExactos - $countWeekend;
-                } else {
-                    $dias = $diasExactos;
-                }
-
-                $horas_reales = $week;
-
-
-            } else if ($horaFinal <= $horarioFijoSalida) {
-
-
-
-                $horarioAperturaSabado = "08:00";
-                $horarioCierreSabado = "12:00:00";
-
-                $horarioAperturaViernes = "07:00";
-                $horarioCierreViernes = "16:00";
-
-                $fechaInicio = strtotime($inicio);
-                $fechaFin = strtotime($final);
-
-                $horasParcialesReales = 0;
-                $week = 0;
-
-                for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-
-                    if (date("w", $i) == 0) {
-                        $countWeekend += 1;
-                    }
-
-                    switch (date("w", $i)) {
-                        case '0':
-                            $week += 0;
-                            break;
-                        case '5':
-                            $week += 8;
-                            break;
-                        case '6':
-                            $week += 4;
-                            break;
-                        default:
-                            $week += 9;
-                    }
-                }
-
-
-                $diasExactos =  (int)$interval->format('%a') +  1;
-
-
-
-                if ($countWeekend != 0) {
-                    $dias = $diasExactos - $countWeekend;
-                } else {
-                    $dias = $diasExactos;
-                }
-
-                $horas_reales = $week;
-
-                $final_recorrido = $datetimeFinish->format('Y-m-d');
-                $final_recorrido_date = strtotime($final_recorrido);
-
-
-
-                if (date("w", $final_recorrido_date) == 6) {
-                    $inicio_recorridoHora = $final_recorrido . " " . "08:00:00";
-                } else {
-                    $inicio_recorridoHora = $final_recorrido . " " . "07:00:00";
-                }
-
-                $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
-
-                if(date("w", $final_recorrido_date) == 6 && ($fechafinalMasHora->format('H:i:s') == $horarioCierreSabado) ){
-
-                    $dias = $dias+=1;
-                }
-
-
-                $datetimeStartHour = new \DateTime($inicio_recorridoHora);
-                $datetimeFinishHour = new \DateTime($final_recorridoHora);
-
-                $interval = $datetimeStartHour->diff($datetimeFinishHour);
-
-
-                $date_obj = new \DateTime($inicio_recorridoHora);
-                $date_incr = $inicio_recorridoHora;
-                $incr = 1;
-
-
-                while ($date_incr < $final_recorridoHora) {
-                    $date_incr = $date_obj->format('Y-m-d H:i:s');
-                    $time = $date_obj->format('H:i');
-                    $date_obj->modify('+' . $incr . ' minutes');
-
-                    array_push($horas_transcurridas, $time);
-
-                    if ($time == $break_time_start || $time == $break_time_final) {
-                        $horas_descanso_acumulada += 1;
-                    }
-                }
-
-                if ($horas_descanso_acumulada == 2) {
-                    $horasParcialesReales = (int)$interval->format('%H') - 1;
-                } else {
-                    $horasParcialesReales =  (int)$interval->format('%H');
-                }
-
-                $determinarDia = strtotime($inicio_recorridoHora);
-
-                $day = date("w", $determinarDia);
-
-                switch ($day) {
-                    case '6':
-                        if ($horas_reales == $HORARIOSABADO) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIOSABADO - $horasParcialesReales);
-                        }
-                        break;
-                    case '5':
-                        if ($horas_reales == $HORARIOVIERNES) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIOVIERNES - $horasParcialesReales);
-                        }
-                        break;
-                    default:
-                        if ($horas_reales == $HORARIONORMAL) {
-                            $dias = 1;
-                        } else {
-                            $dias -= 1;
-                            $horas_reales = $horas_reales - ($HORARIONORMAL - $horasParcialesReales);
-                        }
-                        break;
-                }
-
-            }
-        }
-
-
-        return $data = [$horas_reales, $dias];
+        
     }
 
 

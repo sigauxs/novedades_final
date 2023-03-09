@@ -6,7 +6,7 @@
         <div class="container mx-auto">
 
 
-          {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+          {!! Form::open(['route'=>'extrahours.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
 
 

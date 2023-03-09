@@ -114,9 +114,11 @@
 
 
 
-          @if (count($employees)>0)
+          @if ( count($employees)>0 )
 
-          {{  count($employees)>0 ?? $notifications->links()}}
+       
+          {{ count($employees) > 0 ? $employees->links() : '' }}
+        
 
          @else
 
