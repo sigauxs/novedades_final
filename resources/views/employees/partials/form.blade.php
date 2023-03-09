@@ -145,9 +145,7 @@
   @push('scripts')
  <script type="text/javascript">
       $(document).ready(function() {
-
         $('#position_id').select2({});
-
     });
   </script>
 @endpush
