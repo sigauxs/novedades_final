@@ -3,8 +3,8 @@
 
 
         <div class="w-11/12 mx-auto mt-5">
-            {!! Form::open(['route' => ['employees.show', $employee->id ],'method'=>'get','class'=>'mx-auto mt-10']) !!}
-     
+            {!! Form::open(['route' => ['employees.show', $employee->id], 'method' => 'get', 'class' => 'mx-auto mt-10']) !!}
+
             <div class="grid grid-cols-3 gap-x-2">
 
                 <div>
@@ -44,14 +44,19 @@
 
         <div class="w-11/12 mx-auto">
             @if (session('success'))
-            <div class="flex p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
-              <svg class="inline flex-shrink-0 mr-3 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-              <div>
-                <span class="font-medium">{{ session('success') }}</span>
-              </div>
-            </div>
-
-          @endif
+                <div class="flex p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                    role="alert">
+                    <svg class="inline flex-shrink-0 mr-3 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                </div>
+            @endif
             <table class="min-w-full text-center">
                 <thead class="border-b bg-gray-800">
                     <tr>
@@ -59,9 +64,9 @@
                             #
                         </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                           Novedad                       </th>
+                            Novedad </th>
                         <th scope="col" class="text-sm font-medium text-white px-4 py-2">
-                            Fecha de inicio                        </th>
+                            Fecha de inicio </th>
                         <th scope="col" class="  text-sm font-medium text-white px-4 py-2">
                             Fecha de final
                         </th>
@@ -91,16 +96,18 @@
                                 {{ $loop->index + 1 }}</td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                    {{ $notification->notificationType->name}}
+                                {{ $notification->notificationType->name }}
                             </td>
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($notification->started_date )->translatedFormat('j F, Y')}} {{ \Carbon\Carbon::parse($notification->started_time )->translatedFormat('h:i:s A')}}
+                                {{ \Carbon\Carbon::parse($notification->started_date)->translatedFormat('j F, Y') }}
+                                {{ \Carbon\Carbon::parse($notification->started_time)->translatedFormat('h:i:s A') }}
                             </td>
 
 
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($notification->finish_date )->translatedFormat('j F, Y')}} {{ \Carbon\Carbon::parse($notification->finish_time )->translatedFormat('h:i:s A')}}
+                                {{ \Carbon\Carbon::parse($notification->finish_date)->translatedFormat('j F, Y') }}
+                                {{ \Carbon\Carbon::parse($notification->finish_time)->translatedFormat('h:i:s A') }}
                             </td>
                             <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                                 {{ $notification->total_days }}
@@ -147,42 +154,76 @@
 
 
 
-<div class="container mx-auto">
-    <div class="grid grid-cols-2 gap-2 mb-10">
-        <div>
-            {!! Form::open(['url' => '/employeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
-            <div class="max-w-lg mx-auto text-center">
-                <div style="display:none">
-                 
+        <div class="container mx-auto">
+            <div class="grid grid-cols-2 gap-2 mb-10">
+                <div>
+                    {!! Form::open(['url' => '/employeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
+                    <div class="max-w-lg mx-auto text-center">
+                        <div style="display:none">
+
+                            {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
+                            {!! Form::date('b_fecha_inicio', $b_fecha_inicio, ['class' => 'form-control']) !!}
+                            {!! Form::date('b_fecha_final', $b_fecha_final, ['class' => 'form-control']) !!}
+
+                        </div>
+
+                        {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
+                            'type' => 'submit',
+                            'class' => 'rounded bg-red-600 text-white btn-base',
+                            'formtarget' => '_blank',
+                            'id' => 'enviarFechas',
+                        ]) !!}
+                    </div>
+                    {!! Form::close() !!}
                 </div>
 
-                {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
-                    'type' => 'submit',
-                    'class' => 'rounded bg-red-600 text-white btn-base',
-                    'formtarget' => '_blank',
-                ]) !!}
-            </div>
-            {!! Form::close() !!}
-        </div>
+                <div>
+                    {!! Form::open(['url' => '/allemployeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
+                    <div class="max-w-lg mx-auto text-center">
+                        <div style="display:none">
 
-        <div>
-            {!! Form::open(['url' => '/allemployeepdf', 'method' => 'get', 'class' => 'w-full max-w-lg mx-auto mt-10']) !!}
-            <div class="max-w-lg mx-auto text-center">
-                <div style="display:none">
-                   
+                            {!! Form::text('id', $employee->id, ['class' => 'form-control']) !!}
+                            {!! Form::date('b_fecha_inicio', $b_fecha_inicio, ['class' => 'form-control']) !!}
+                            {!! Form::date('b_fecha_final', $b_fecha_final, ['class' => 'form-control']) !!}
+
+                        </div>
+
+                        {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
+                            'type' => 'submit',
+                            'class' => 'rounded bg-indigo-600 text-white btn-base',
+                            'formtarget' => '_blank',
+                            'id' => 'enviarTodo',
+                        ]) !!}
+                    </div>
+                    {!! Form::close() !!}
                 </div>
-
-                {!! Form::button("<span class='material-icons' style='color:white; font-size:20px'> picture_as_pdf</span>", [
-                    'type' => 'submit',
-                    'class' => 'rounded bg-indigo-600 text-white btn-base',
-                    'formtarget' => '_blank',
-                ]) !!}
             </div>
-            {!! Form::close() !!}
         </div>
-    </div>
-</div>
+
+        @if (count($notifications) > 0)
+        {{ count($notifications) > 0 ? $notifications->links() : '' }}
+    @else
+        @livewire('alert')
+    @endif
 
 
     </div>
+
+    @push('scripts')
+        <script>
+            let inicio = document.getElementById('b_fecha_inicio');
+            let final = document.getElementById('b_fecha_final');
+
+            let submitFechas = document.getElementById('enviarFechas');
+
+         submitFechas.addEventListener("click", (event) => {
+            if (inicio.value == "" && final.value == "") {
+
+
+                alert('NO has seleccionado un rango de fecha')
+                event.preventDefault();
+                }
+         })
+        </script>
+    @endpush
 </x-app-layout>

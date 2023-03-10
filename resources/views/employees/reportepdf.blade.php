@@ -26,6 +26,10 @@ body{
         <h3 class="text-lg font-medium leading-6 text-gray-900">{{$employee->first_name }}{{$employee->last_name }}</h3>
               <p class="mt-1 max-w-2xl text-sm text-gray-500">{{$employee->position->name }}</p>
               <p class="mt-1 max-w-2xl text-sm text-gray-500">C.C. {{$employee->identification }}</p>
+              <p>licencias por EPS {{$eps}}</p>
+              <p>Licencias por Arl {{$arl}}</p>
+              <p>Vacaciones {{$vacaciones}} dias</p>
+              <p>Retrasos {{$retrasos}}</p>
     </div>
 
     <div>

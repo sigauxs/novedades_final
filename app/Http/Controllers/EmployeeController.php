@@ -8,7 +8,7 @@ use App\Models\Notification;
 use App\Models\IdentificationType;
 use App\Models\Position;
 use App\Models\CenterCost;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -63,34 +63,35 @@ class EmployeeController extends Controller
     {
 
 
-        
+
         $employee = Employee::find($id);
 
-    
+
 
         $b_fecha_inicio = $request->b_fecha_inicio;
         $b_fecha_final = $request->b_fecha_final;
         $id = $request->id;
-     
-   
+
+
 
         if(isset($b_fecha_inicio)&& isset($b_fecha_final)){
 
           $notifications = Notification::where('employee_id',$employee->id)
-                          ->whereDate('started_date','>=',$b_fecha_inicio)->whereDate('started_date','<=',$b_fecha_final)->get();
-                         
+                          ->whereDate('started_date','>=',$b_fecha_inicio)->whereDate('started_date','<=',$b_fecha_final)->paginate(30);
+
           $sumaDias      = Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
-                                                                           ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_days');
+                                                                           ->whereDate('started_date','<=',$b_fecha_final)->paginate(30)->sum('total_days');
 
           $sumaHoras     = Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
-                                                                           ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_hours');
+                                                                           ->whereDate('started_date','<=',$b_fecha_final)->paginate(30)->sum('total_hours');
+
 
 
         }else{
 
-            $notifications = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get();
-            $sumaDias      = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get()->sum('total_days');
-            $sumaHoras     = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->take(10)->get()->sum('total_hours');
+            $notifications = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->paginate(30);
+            $sumaDias      = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->paginate(30)->sum('total_days');
+            $sumaHoras     = Notification::where('employee_id',$employee->id)->orderBy('created_at', 'desc')->paginate(30)->sum('total_hours');
         }
 
         return view('employees.show',compact('notifications','employee','sumaDias','sumaHoras','b_fecha_inicio','b_fecha_final'));
@@ -99,15 +100,55 @@ class EmployeeController extends Controller
     public function createPDF(Request $request){
 
         $employee = Employee::find($request->id);
-        $mes = $request->mes;
+        $b_fecha_inicio = $request->b_fecha_inicio;
+        $b_fecha_final = $request->b_fecha_final;
 
-        $notifications =  Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)
-        ->orderBy('created_at', 'desc')->get();
 
-        $sumaHoras = Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)->sum('total_hours');
-        $sumaDias = Notification::where('employee_id',$request->id)->whereMonth('started_date',$mes)->sum('total_days');
+        $notifications =  Notification::where('employee_id',$employee->id)
+                                      ->whereDate('started_date','>=',$b_fecha_inicio)
+                                      ->whereDate('started_date','<=',$b_fecha_final)
+                                      ->orderBy('created_at', 'desc')->get();
 
-        $pdf = PDF::loadView('employees.reportepdf', compact('sumaHoras','sumaDias','employee','notifications','mes'))->setOptions(['defaultFont' => 'sans-serif']);
+        $sumaDias      = Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
+                                      ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_days');
+
+        $sumaHoras     =  Notification::where('employee_id',$employee->id)->whereDate('started_date','>=',$b_fecha_inicio)
+                                      ->whereDate('started_date','<=',$b_fecha_final)->get()->sum('total_hours');
+
+
+         $eps          =  Notification::where('employee_id',$employee->id)
+                                        ->whereDate('started_date','>=',$b_fecha_inicio)
+                                        ->whereDate('started_date','<=',$b_fecha_final)
+                                        ->where('notifications_type_id',1)
+                                        ->count();
+
+         $arl         =  Notification::where('employee_id',$employee->id)
+                                        ->whereDate('started_date','>=',$b_fecha_inicio)
+                                        ->whereDate('started_date','<=',$b_fecha_final)
+                                        ->where('notifications_type_id',2)
+                                        ->count();
+
+
+         $vacaciones  =  Notification::where('employee_id',$employee->id)
+                                        ->whereDate('started_date','>=',$b_fecha_inicio)
+                                        ->whereDate('started_date','<=',$b_fecha_final)
+                                        ->where('notifications_type_id',3)
+                                        ->get()->sum('total_days');
+
+
+         $retrasos = DB::table('notifications as n')->where('employee_id',$employee->id)
+         ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
+         ->join('notification_categories as ct','nt.notification_category_id','=','ct.id')
+         ->where('ct.id','=',10)
+         ->whereDate('started_date','>=',$b_fecha_inicio)
+         ->whereDate('started_date','<=',$b_fecha_final)
+         ->count();
+
+
+
+
+
+        $pdf = PDF::loadView('employees.reportepdf', compact('retrasos','vacaciones','eps','arl','sumaHoras','sumaDias','employee','notifications','b_fecha_final','b_fecha_inicio'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
 
     }
