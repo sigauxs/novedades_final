@@ -132,12 +132,15 @@ class NotificationController extends Controller
 
         $user = Auth::user()->id;
         $notification = $request->all();
+        
         $notification_object = (object)$notification;
+
         $notification_object->user_id = $user;
         $fechaInicio = Carbon::parse($notification_object->started_date);
         $fechafinalizacion = Carbon::parse($notification_object->finish_date);
         $notification_object->total_days = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
         $notification_object->total_hours = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];
+        $notification_object->minutes = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[2];
         $notification_array = (array)$notification_object;
 
 
@@ -276,6 +279,13 @@ class NotificationController extends Controller
     public function diasTrabajados($inicio,$final,$novedades)
     {
 
+        $notificationesCategorias = NotificationType::find($novedades);
+
+        //Categorias 
+
+        $categoriaRetraso = 10;
+        
+
         $maternidad = 6;
         $paternidad = 7;
         $eps = 1;
@@ -312,6 +322,16 @@ class NotificationController extends Controller
         $HORARIONORMAL = 9;
 
         $horarioFijoSalida = strtotime("17:00:00");
+
+        if($categoriaRetraso == $notificationesCategorias->notification_category_id){
+
+            $start = Carbon::parse($inicio);
+            $end   = Carbon::parse($final);
+            $total = $end->diffInMinutes($start);
+
+            return [0,0,$total];
+
+        }
 
 
         if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $eps || $fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $arl) {
