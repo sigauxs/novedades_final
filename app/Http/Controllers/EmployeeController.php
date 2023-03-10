@@ -163,7 +163,17 @@ class EmployeeController extends Controller
         $sumaHoras = Notification::where('employee_id',$request->id)->sum('total_hours');
         $sumaDias = Notification::where('employee_id',$request->id)->sum('total_days');
 
-        $pdf = PDF::loadView('employees.reportepdf', compact('sumaHoras','sumaDias','employee','notifications','mes'))->setOptions(['defaultFont' => 'sans-serif']);
+
+        $eps=  "";
+
+$arl         =  "";
+
+
+$vacaciones  =  "";
+
+
+$retrasos = "";
+        $pdf = PDF::loadView('employees.reportepdf', compact('retrasos','vacaciones','eps','arl','sumaHoras','sumaDias','employee','notifications','mes'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
 
     }
