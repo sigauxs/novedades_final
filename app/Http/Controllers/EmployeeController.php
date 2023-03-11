@@ -103,6 +103,8 @@ class EmployeeController extends Controller
         $b_fecha_inicio = $request->b_fecha_inicio;
         $b_fecha_final = $request->b_fecha_final;
 
+       $horas_planificados = 205.7;
+
 
         $notifications =  Notification::where('employee_id',$employee->id)
                                       ->whereDate('started_date','>=',$b_fecha_inicio)
@@ -143,6 +145,12 @@ class EmployeeController extends Controller
          ->whereDate('started_date','>=',$b_fecha_inicio)
          ->whereDate('started_date','<=',$b_fecha_final)
          ->count();
+
+         $ausentimos = Notification::where('employee_id',$employee->id)
+                                    ->whereMonth('started_date', $b_fecha_inicio)
+                                    ->get()->sum('total_hours');
+
+        $ausentimos =  $ausentimos / $horas_planificados;
 
 
 

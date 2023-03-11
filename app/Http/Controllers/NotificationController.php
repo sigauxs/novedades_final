@@ -132,7 +132,7 @@ class NotificationController extends Controller
 
         $user = Auth::user()->id;
         $notification = $request->all();
-        
+
         $notification_object = (object)$notification;
 
         $notification_object->user_id = $user;
@@ -196,7 +196,7 @@ class NotificationController extends Controller
 
         $request['total_days'] = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[1];
         $request['total_hours'] = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[0];
-
+        $notification->minutes = $this->diasTrabajados((string)$inicio, (string)$final,$request->notifications_type_id)[2];
 
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
         $notification->update($request->all());
@@ -281,10 +281,10 @@ class NotificationController extends Controller
 
         $notificationesCategorias = NotificationType::find($novedades);
 
-        //Categorias 
+        //Categorias
 
         $categoriaRetraso = 10;
-        
+
 
         $maternidad = 6;
         $paternidad = 7;
@@ -339,19 +339,19 @@ class NotificationController extends Controller
             $formatDayHours = $final;
             $fechafinalMasHora = new \DateTime($formatDayHours);
             $horaFinal = strtotime($fechafinalMasHora->format('H:i:s'));
-    
+
             if ($horaFinal == $horarioFijoSalida) {
-    
-    
+
+
                 $fechaInicio = strtotime($inicio);
                 $fechaFin = strtotime($final);
-    
+
                 $interval = $datetimeStart->diff($datetimeFinish);
-    
+
                 $week = 0;
-    
+
                 for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-    
+
                     switch (date("w", $i)) {
                         case '0':
                             $week += 0;
@@ -366,32 +366,32 @@ class NotificationController extends Controller
                             $week += 9;
                     }
                 }
-    
+
                 $diasExactos =  (int)$interval->format('%a') +  1;
-    
+
                 $dias = $diasExactos;
-    
+
                 $horas_reales = $week;
-    
-                return $data = [$horas_reales, $dias];
-    
+
+                return $data = [$horas_reales, $dias, 0];
+
             }
             else if ($horaFinal <= $horarioFijoSalida) {
-    
+
                 $horarioAperturaSabado = "08:00";
                 $horarioCierreSabado = "12:00:00";
-    
+
                 $horarioAperturaViernes = "07:00";
                 $horarioCierreViernes = "16:00";
-    
+
                 $fechaInicio = strtotime($inicio);
                 $fechaFin = strtotime($final);
-    
+
                 $horasParcialesReales = 0;
                 $week = 0;
-    
+
                 for ($i = $fechaInicio; $i <= $fechaFin; $i += 86400) {
-    
+
                     switch (date("w", $i)) {
                         case '0':
                             $week += 0;
@@ -406,72 +406,72 @@ class NotificationController extends Controller
                             $week += 9;
                     }
                 }
-    
-    
+
+
                 $diasExactos =  (int)$interval->format('%a') +  1;
-    
+
                 $dias = $diasExactos;
-    
+
                 $horas_reales = $week;
-    
+
                 $final_recorrido = $datetimeFinish->format('Y-m-d');
                 $final_recorrido_date = strtotime($final_recorrido);
-    
-    
-    
+
+
+
                 if (date("w", $final_recorrido_date) == 6) {
                     $inicio_recorridoHora = $final_recorrido . " " . "08:00:00";
                 } else {
                     $inicio_recorridoHora = $final_recorrido . " " . "07:00:00";
                 }
-    
+
                 $final_recorridoHora =  $final_recorrido . " " . $fechafinalMasHora->format('H:i:s');
-    
+
                 if (date("w", $final_recorrido_date) == 6 && ($fechafinalMasHora->format('H:i:s') == $horarioCierreSabado)) {
-    
+
                     $dias = $dias += 1;
                 }
-    
-    
+
+
                 $datetimeStartHour = new \DateTime($inicio_recorridoHora);
                 $datetimeFinishHour = new \DateTime($final_recorridoHora);
-    
+
                 $interval = $datetimeStartHour->diff($datetimeFinishHour);
-    
-    
+
+
                 $date_obj = new \DateTime($inicio_recorridoHora);
                 $date_incr = $inicio_recorridoHora;
                 $incr = 1;
-    
-    
+
+
                 while ($date_incr < $final_recorridoHora) {
                     $date_incr = $date_obj->format('Y-m-d H:i:s');
                     $time = $date_obj->format('H:i');
                     $date_obj->modify('+' . $incr . ' minutes');
-    
+
                     array_push($horas_transcurridas, $time);
-    
-    
-    
+
+
+
                     if ($time == $break_time_start || $time == $break_time_final) {
                         $horas_descanso_acumulada += 1;
                     }
                 }
-    
-    
-    
+
+
+
                 if ($horas_descanso_acumulada == 2) {
                     $horasParcialesReales = (int)$interval->format('%H') - 1;
                 } else {
                     $horasParcialesReales =  (int)$interval->format('%H');
                 }
-    
-    
-    
+
+
+
                 $determinarDia = strtotime($inicio_recorridoHora);
-    
+
                 $day = date("w", $determinarDia);
-    
+
                 switch ($day) {
                     case '6':
                         if ($horas_reales == $HORARIOSABADO) {
@@ -489,7 +489,7 @@ class NotificationController extends Controller
                             $horas_reales = $horas_reales - ($HORARIOVIERNES - $horasParcialesReales);
                         }
                         break;
-    
+
                     default:
                         if ($horas_reales == $HORARIONORMAL) {
                             $dias = 1;
@@ -499,13 +499,13 @@ class NotificationController extends Controller
                         }
                         break;
                 }
-    
+
                 $dias = $diasExactos;
-    
-                return $data = [$horas_reales, $dias];
+
+                return $data = [$horas_reales, $dias, 0];
             }
-            
-    
+
+
 
         }
 
@@ -522,14 +522,14 @@ class NotificationController extends Controller
             $dias = 126;
             $horas_reales = (126*8) - 18*8;
 
-            return $data = [$horas_reales, $dias];
+            return $data = [$horas_reales, $dias, 0];
 
         }else if ($fecha_inicio_acomparar != $fecha_final_acomparar && $novedades == $paternidad){
 
             $dias = 14;
             $horas_reales = (14*8) - 2*8;
 
-            return $data = [$horas_reales, $dias];
+            return $data = [$horas_reales, $dias ,0];
 
         }
 
@@ -775,20 +775,9 @@ class NotificationController extends Controller
         }
 
 
-        return $data = [$horas_reales, $dias];
+        return $data = [$horas_reales, $dias,0];
     }
 
-    public function diasTrabajadosCalendario($inicio,$final,
-                                             $horarioFijoSalida,
-                                             $datetimeFinish,
-                                             $datetimeStart,
-                                             $HORARIOSABADO,
-                                             $HORARIOVIERNES,
-                                             $HORARIONORMAL,
-                                             $break_time_start,
-                                             $break_time_final,
-                                             $interval,$horas_descanso_acumulada)
-    {
-            }
+
 
 }
