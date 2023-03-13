@@ -4,7 +4,7 @@
     <div class="container mx-auto">
 
 
-      {!! Form::open(['route'=>'notifications.store','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+      {!! Form::open(['route'=>'notifications.store','enctype'=>'multipart/form-data','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
 
 
@@ -139,7 +139,7 @@
       <div class="flex flex-wrap  mb-6 mx-auto">
         <div class="w-full px-3">
             {!! Form::label("observation", "observación", ['class'=>'label-control inline-block mb-2']) !!}
-            {!! Form::textarea("observation", null , ["class"=>"form-control"]) !!}
+            {!! Form::textarea("observation", null , ["class"=>"form-control","maxlength" => "200"]) !!}
 
            @error('observation')
            <small class="text-red-600 font-bold text-base">
@@ -149,6 +149,23 @@
            @enderror
         </div>
       </div>
+
+      <div class="flex flex-wrap  mb-6 mx-auto">
+        @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+      @endif
+      <div class="w-full px-3">
+        {!! Form::label("file", "soporte", ['class'=>'label-control inline-block mb-2']) !!}
+        {!! Form::file('file',["class"=>"form-control"]) !!}
+    </div>
+      </div>
+
 
       <div class="flex flex-wrap  mb-6 mx-auto">
 

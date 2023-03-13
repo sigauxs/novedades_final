@@ -26,12 +26,12 @@ body{
         <h3 class="text-lg font-medium leading-6 text-gray-900">{{$employee->first_name }}{{$employee->last_name }}</h3>
               <p class="mt-1 max-w-2xl text-sm text-gray-500">{{$employee->position->name }}</p>
               <p class="mt-1 max-w-2xl text-sm text-gray-500">C.C. {{$employee->identification }}</p>
-              <p>licencias por EPS
+
                 @if ( isset($eps))
-                {{ $eps }}
+                <p> licencias por EPS {{ $eps }} </p>
 
               @endif
-            </p>
+
               <p>Licencias por Arl @if ( isset($arl))
                 {{ $arl }}
 
@@ -40,10 +40,25 @@ body{
                 {{ $vacaciones }}
 
               @endif dias</p>
-              <p>Retrasos @if ( isset($retrasos))
-                {{ $retrasos }}
+
+
+              <p>Retrasos @if ( isset($retrasosHoras) && isset($cantidadRetrasos))
+                {{ $retrasosMinutos }}
+                {{ $cantidadRetrasos }}
 
               @endif</p>
+
+              <p>Ausentimos
+                @if ( isset($ausentimos))
+                {{ round((float)$ausentimos,2)}}
+
+              @endif</p>
+
+
+
+
+
+
     </div>
 
     <div>
@@ -69,6 +84,10 @@ body{
                 </th>
                 <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                  Total de horas
+                </th>
+
+                <th scope="col" class="text-sm font-medium text-white px-4 py-2">
+                    Total de minutos
                 </th>
                 <th scope="col" class="text-sm font-medium text-white px-4 py-2">
                     Observacion
@@ -106,6 +125,10 @@ body{
                   <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                   {{ $notification->total_hours}}
                   </td>
+
+                  <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
+                    {{ $notification->minutes}}
+                    </td>
                 <td class="text-sm text-gray-900 font-light px-4 py-2 whitespace-nowrap">
                        {{ $notification->observation  }}
                 </td>

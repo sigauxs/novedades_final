@@ -142,6 +142,11 @@
                       </tr>
                     @endif
 
+                    @if (!empty($file))
+                     <a href="{{route('getfile', $file->name)}}"> soporte </a>
+                    @endif
+
+
 
 
 

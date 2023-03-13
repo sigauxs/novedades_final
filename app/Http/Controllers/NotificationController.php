@@ -13,6 +13,7 @@ Use App\Models\CenterCost;
 use App\Models\Employee;
 use App\Models\IdentificationType;
 use App\Models\Boss;
+use App\Models\File;
 use App\Models\Notification;
 use App\Models\NotificationType;
 use App\Models\Position;
@@ -22,9 +23,12 @@ use App\Models\User;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 use PeriodInterval;
+use Response;
 
 class NotificationController extends Controller
 {
@@ -146,6 +150,21 @@ class NotificationController extends Controller
 
 
        $notification = Notification::create($notification_array);
+
+       if($notification){
+
+        $fileModel = new File;
+        if($request->file()) {
+            $fileName = time().'_'.$request->file->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
+            $fileModel->name = time().'_'.$request->file->getClientOriginalName();
+            $fileModel->file_path = '/public/evidencias/' . $filePath;
+            $fileModel->notification_id = $notification->id;
+            $fileModel->save();
+        }
+
+       }
+
        return redirect()->route('notifications.show',compact('notification'))->with('success', 'Novedad creada');
 
 
@@ -156,9 +175,14 @@ class NotificationController extends Controller
     {
 
         $notification =  Notification::find($notification->id);
+        $file = File::where('notification_id',$notification->id)->select('name','file_path')->get();
 
-
-        return view('notifications.show',compact('notification'));
+        if(count($file) == 0 || $file == null ){
+            $file = [0];
+        }else{
+            $file = $file[0];
+        }
+        return view('notifications.show',compact('notification','file'));
     }
 
 
@@ -213,6 +237,12 @@ class NotificationController extends Controller
        return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
     }
 
+
+    public function getFile($file_name){
+      $url = Storage::url($file_name);
+
+      return Storage::download($url,$file_name, [header('Content-Type', '**')]);
+    }
 
     public function employee(User $user){
 

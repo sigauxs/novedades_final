@@ -32,7 +32,8 @@ class StoreNotificationRequest extends FormRequest
             'type_identification_id' => 'required',
             'notifications_type_id' => 'required',
             'started_time' => 'required',
-            'finish_time' => 'required'
+            'finish_time' => 'required',
+            'file' => 'max:1536'
         ];
     }
 
@@ -48,6 +49,7 @@ class StoreNotificationRequest extends FormRequest
               'notifications_type_id' => 'Tipo de novedades',
               'finish_time' => 'Hora de finalizacion',
               'started_time' => 'Hora de inicio',
+              'file' => 'Evidencia'
              ];
         }
 }

@@ -103,6 +103,8 @@ class EmployeeController extends Controller
         $b_fecha_inicio = $request->b_fecha_inicio;
         $b_fecha_final = $request->b_fecha_final;
 
+        $fechaReferencia = Carbon::parse($b_fecha_inicio);
+
        $horas_planificados = 205.7;
 
 
@@ -143,20 +145,24 @@ class EmployeeController extends Controller
          ->join('notification_categories as ct','nt.notification_category_id','=','ct.id')
          ->where('ct.id','=',10)
          ->whereDate('started_date','>=',$b_fecha_inicio)
-         ->whereDate('started_date','<=',$b_fecha_final)
-         ->count();
+         ->whereDate('started_date','<=',$b_fecha_final);
+
+         $retrasosMinutos = $retrasos->get()->sum('minutes');
+         $cantidadRetrasos = $retrasos->get()->count();
+         $retrasosHoras = $retrasosMinutos/60;
 
          $ausentimos = Notification::where('employee_id',$employee->id)
-                                    ->whereMonth('started_date', $b_fecha_inicio)
+                                    ->whereMonth('started_date', $fechaReferencia->month)
                                     ->get()->sum('total_hours');
 
-        $ausentimos =  $ausentimos / $horas_planificados;
+        $ausentimos =  ( ($ausentimos + $retrasosHoras)/ $horas_planificados)* 100;
 
 
 
 
 
-        $pdf = PDF::loadView('employees.reportepdf', compact('retrasos','vacaciones','eps','arl','sumaHoras','sumaDias','employee','notifications','b_fecha_final','b_fecha_inicio'))->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('employees.reportepdf', compact('retrasosMinutos','cantidadRetrasos','vacaciones','eps','arl','sumaHoras','sumaDias','employee','notifications','b_fecha_final','b_fecha_inicio','ausentimos'))
+        ->setPaper('letter','landscape')->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream('mypdf.pdf',array('Attachment'=>0));
 
     }

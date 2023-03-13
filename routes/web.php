@@ -42,6 +42,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     });
 
 
+    Route::get('get/{filename}', [NotificationController::class, 'getfile'])->name('getfile');
+
 });
 
 Route::get('/employeepdf', [EmployeeController::class, 'createPDF'])->name('employeepdf');
