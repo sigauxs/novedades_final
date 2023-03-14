@@ -28,7 +28,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use PeriodInterval;
-use Response;
+use Svg\Gradient\Stop;
+use Illuminate\Support\Facades\Response;
 
 class NotificationController extends Controller
 {
@@ -158,7 +159,7 @@ class NotificationController extends Controller
             $fileName = time().'_'.$request->file->getClientOriginalName();
             $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
             $fileModel->name = time().'_'.$request->file->getClientOriginalName();
-            $fileModel->file_path = '/public/evidencias/' . $filePath;
+            $fileModel->file_path = '/soportes/' . $filePath;
             $fileModel->notification_id = $notification->id;
             $fileModel->save();
         }
@@ -239,9 +240,27 @@ class NotificationController extends Controller
 
 
     public function getFile($file_name){
-      $url = Storage::url($file_name);
 
-      return Storage::download($url,$file_name, [header('Content-Type', '**')]);
+
+        $file = Storage::disk('evidencias')->get($file_name);
+        $ruta = Storage::disk('evidencias')->url($file_name);
+        $download =  Storage::disk('evidencias')->download($file_name);
+
+
+        // vizualiar iamgen
+
+            $type = substr($ruta, -3);
+
+if($type == "pdf"){
+    $response = Response::make($file, 200);
+
+    $response->header('Content-Type', ['application/pdf']);
+    return $response;
+}else{
+   return Response($file, 200) ->header('Content-Type', '**');
+}
+
+
     }
 
     public function employee(User $user){

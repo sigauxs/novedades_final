@@ -42,7 +42,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     });
 
 
-    Route::get('get/{filename}', [NotificationController::class, 'getfile'])->name('getfile');
+    Route::get('soportes/{filename}', [NotificationController::class, 'getfile'])->name('getfile');
 
 });
 

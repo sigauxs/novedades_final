@@ -57,8 +57,8 @@ return [
         ],
         'evidencias' => [
             'driver' => 'local',
-            'root' => storage_path('/public/evidencias'),
-            'url' => env('APP_URL').'/public/evidencias',
+            'root' => storage_path('app/evidencias'),
+            'url' => env('APP_URL').'/soportes',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -77,8 +77,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
-        public_path('evidencias')=> storage_path('app/public/evidencias')
+        public_path('evidencias')=> storage_path('app/evidencias')
     ],
 
 ];
