@@ -38,6 +38,30 @@
 
                         </td>
                     </tr>
+
+                    @if (count($file) == 0)
+
+                    <tr class="bg-white border-b">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Descargar soporte</td>
+                      <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                     
+                      </td>
+                    </tr>
+                 
+                    @else
+
+                    <tr class="bg-white border-b">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Minutos de retrasos</td>
+                      <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                        <a href="{{ route('getfile',$file[0]->name ) }}" target="_blank">  
+                          <span class="material-icons" style="color:green; font-size:26px;">file_open</span> </a>
+                      </td>
+                    </tr>
+                 
+              
+                    @endif
+
+
                     <tr class="bg-white border-b">
                         <td scope="col" class="text-sm font-medium px-6 py-4">
                            Tipo de identificación
@@ -142,10 +166,7 @@
                       </tr>
                     @endif
 
-                    @if (!empty($file))
-                     <a href="{{route('getfile', $file->name)}}"> soporte </a>
-                    @endif
-
+                    
 
 
 

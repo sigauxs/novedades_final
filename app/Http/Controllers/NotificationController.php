@@ -170,11 +170,7 @@ class NotificationController extends Controller
         $notification =  Notification::find($notification->id);
         $file = File::where('notification_id', $notification->id)->select('name', 'file_path')->get();
 
-        if (count($file) == 0 || $file == null) {
-            $file = [0];
-        } else {
-            $file = $file[0];
-        }
+     
         return view('notifications.show', compact('notification', 'file'));
     }
 
