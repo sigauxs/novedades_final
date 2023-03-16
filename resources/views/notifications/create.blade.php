@@ -163,7 +163,7 @@
       <div class="w-full px-3">
         {!! Form::label("file", "soporte", ['class'=>'label-control inline-block mb-2']) !!}
         {!! Form::file('file',["class"=>"form-control"]) !!}
-    </div>
+      </div>
       </div>
 
 

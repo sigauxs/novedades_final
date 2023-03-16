@@ -1,6 +1,6 @@
 <x-app-layout>
 
-        {!! Form::model($notification, ['route' => ['notifications.update', $notification->id ],'method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
+        {!! Form::model($notification, ['route' => ['notifications.update', $notification->id ],'enctype'=>'multipart/form-data','method'=>'put','class'=>'w-full max-w-lg mx-auto mt-10']) !!}
 
 
         <div class="flex flex-wrap  mb-6 mx-auto ">
@@ -144,6 +144,22 @@
              @enderror
           </div>
         </div>
+
+        <div class="flex flex-wrap  mb-6 mx-auto">
+            @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+          @endif
+          <div class="w-full px-3">
+            {!! Form::label("file", "soporte", ['class'=>'label-control inline-block mb-2']) !!}
+            {!! Form::file('file',["class"=>"form-control"]) !!}
+          </div>
+          </div>
 
         <div class="flex flex-wrap  mb-6 mx-auto">
 

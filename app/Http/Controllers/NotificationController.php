@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
 use PeriodInterval;
 use Svg\Gradient\Stop;
 use Illuminate\Support\Facades\Response;
+use Exception;
 
 class NotificationController extends Controller
 {
@@ -170,7 +171,7 @@ class NotificationController extends Controller
         $notification =  Notification::find($notification->id);
         $file = File::where('notification_id', $notification->id)->select('name', 'file_path')->get();
 
-     
+
         return view('notifications.show', compact('notification', 'file'));
     }
 
@@ -212,9 +213,49 @@ class NotificationController extends Controller
         $notification->minutes = $this->diasTrabajados((string)$inicio, (string)$final, $request->notifications_type_id)[2];
 
         $request['support'] = $request->support  != "" || $request->support != null ? true : false;
-        $notification->update($request->all());
+
+
+
+        if ($notification->update($request->all())) {
+
+            $fileModel = new File;
+            if ($request->file()) {
+
+                $fileNotification = File::where('notification_id', '=', $notification->id );
+
+                 if($fileNotification->exists()){
+
+                    $name_file = $fileNotification->select('name')->get()[0]->name;
+                    if(Storage::disk('evidencias')->delete($name_file)){
+
+                        $fileName = time() . '_' . $request->file->getClientOriginalName();
+                $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
+                $fileModel->name = time() . '_' . $request->file->getClientOriginalName();
+                $fileModel->file_path = '/soportes/' . $filePath;
+                $fileModel->notification_id = $notification->id;
+                $fileModel->save();
+                    }
+
+
+
+                    }else{
+
+                        $fileName = time() . '_' . $request->file->getClientOriginalName();
+                $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
+                $fileModel->name = time() . '_' . $request->file->getClientOriginalName();
+                $fileModel->file_path = '/soportes/' . $filePath;
+                $fileModel->notification_id = $notification->id;
+                $fileModel->save();
+
+                        }
+
+
+            }
+
 
         return redirect()->route('notifications.show', compact('notification'))->with('success', 'Novedad Actualizada');
+
+        }
     }
 
 
@@ -230,10 +271,19 @@ class NotificationController extends Controller
     public function getFile($file_name)
     {
 
-
-        $file = Storage::disk('evidencias')->get($file_name);
+try {
+    $file = Storage::disk('evidencias')->get($file_name);
         $ruta = Storage::disk('evidencias')->url($file_name);
         $download =  Storage::disk('evidencias')->download($file_name);
+} catch (Exception $e) {
+
+    $message = $e->getMessage();
+   return redirect()->route('notifications.index');
+
+
+    exit;
+}
+
 
 
         // vizualiar iamgen
