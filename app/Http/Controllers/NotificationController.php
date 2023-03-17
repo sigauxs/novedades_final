@@ -152,9 +152,9 @@ class NotificationController extends Controller
 
             $fileModel = new File;
             if ($request->file()) {
-                $fileName = time() . '_' . $request->file->getClientOriginalName();
+                $fileName = date('Y-m-d') . '_' . $notification->Employee->identification.'.'.$request->file->getClientOriginalExtension();
                 $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
-                $fileModel->name = time() . '_' . $request->file->getClientOriginalName();
+                $fileModel->name = date('Y-m-d') . '_' . $notification->Employee->identification.'.'.$request->file->getClientOriginalExtension();
                 $fileModel->file_path = '/soportes/' . $filePath;
                 $fileModel->notification_id = $notification->id;
                 $fileModel->save();
@@ -219,35 +219,38 @@ class NotificationController extends Controller
         if ($notification->update($request->all())) {
 
             $fileModel = new File;
+
             if ($request->file()) {
 
                 $fileNotification = File::where('notification_id', '=', $notification->id );
 
-                 if($fileNotification->exists()){
+                if(count($fileNotification->get()) == 0){
 
-                    $name_file = $fileNotification->select('name')->get()[0]->name;
-                    if(Storage::disk('evidencias')->delete($name_file)){
-
-                        $fileName = time() . '_' . $request->file->getClientOriginalName();
-                $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
-                $fileModel->name = time() . '_' . $request->file->getClientOriginalName();
-                $fileModel->file_path = '/soportes/' . $filePath;
-                $fileModel->notification_id = $notification->id;
-                $fileModel->save();
-                    }
+                    $fileName = date('Y-m-d') . '_' . $notification->Employee->identification.'.'.$request->file->getClientOriginalExtension();
+                    $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
+                    $fileModel->name = date('Y-m-d') . '_' . $notification->Employee->identification.'.'.$request->file->getClientOriginalExtension();
+                    $fileModel->file_path = '/soportes/' . $filePath;
+                    $fileModel->notification_id = $notification->id;
+                    $fileModel->save();
+                }
 
 
 
-                    }else{
+                if(Storage::disk('evidencias')->delete($fileNotification->get()[0]->name)){
 
-                        $fileName = time() . '_' . $request->file->getClientOriginalName();
-                $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
-                $fileModel->name = time() . '_' . $request->file->getClientOriginalName();
-                $fileModel->file_path = '/soportes/' . $filePath;
-                $fileModel->notification_id = $notification->id;
-                $fileModel->save();
+                    $fileName = date('Y-m-d') . '_' . $notification->Employee->identification.'.'.$request->file->getClientOriginalExtension();
+                    $filePath = $request->file('file')->storeAs('', $fileName, 'evidencias');
 
-                        }
+                    $fileNotificationUpdate = $fileNotification
+                    ->update(['name'=>$fileName , 'file_path'=>'/soportes/' . $filePath, 'notification_id'=>$notification->id]);
+
+                }
+
+
+
+
+
+
 
 
             }
@@ -263,8 +266,23 @@ class NotificationController extends Controller
     {
         $notification = Notification::find($id);
 
-        $notification->delete();
-        return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
+        $fileNotification = File::where('notification_id',$id);
+
+
+        if(count($fileNotification->get()) == 0){
+            $notification->delete();
+            return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
+        }
+
+        if(Storage::disk('evidencias')->delete($fileNotification->get()[0]->name)){
+           if($fileNotification->delete()){
+            $notification->delete();
+            return redirect()->route('notifications.index')->with('success', 'Novedad Eliminada');
+           }
+        }
+
+
+
     }
 
 

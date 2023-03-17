@@ -13,7 +13,7 @@
         <div class="w-11/12 mx-auto mt-5">
 
             <div class=" mb-6 mx-auto w-4/5">
-                {!! Form::open(['route' => ['notifications.index'], 'method' => 'get', 'id' => 'formSearch']) !!}
+                {!! Form::open(['route' => ['extrahours.index'], 'method' => 'get', 'id' => 'formSearch']) !!}
 
                 <div class="grid grid-cols-3 gap-x-2">
 
@@ -160,7 +160,7 @@
                                                 <a class=""
                                                     href="./extraHours/{{ $notification->id }}/edit"><span
                                                         class="material-icons"
-                                                        style="color:blue; font-size:26px">edit</span> {{ $notification->id }}</a>
+                                                        style="color:blue; font-size:26px">edit</span></a>
                                             @else
                                                 <a class="none"
                                                     href="./extraHours/{{ $notification->id }}/edit"><span
@@ -215,7 +215,7 @@
             <div>
                 <button
                     class="bg-transparent mt-10 hover:bg-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded">
-                    <a href='{{ url("/excel/{$b_fecha_inicio}/{$b_fecha_final}") }}'>Generar reporte por fechas </a>
+                    <a href='{{ url("/excel/{$b_fecha_inicio}/{$b_fecha_final}/7") }}'>Generar reporte por fechas </a>
                 </button>
             </div>
 

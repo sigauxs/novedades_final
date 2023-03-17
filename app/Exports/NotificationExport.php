@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-class NotificationExport implements FromCollection ,WithHeadings,WithMapping
+class NotificationExport implements FromCollection, WithHeadings, WithMapping
 {
     public $administrativo = 6;
     public $operacional = 1;
@@ -25,13 +25,14 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
     public $f_inicio;
     public $f_final;
+    public $category;
 
 
-    public function __construct($inicio,$final)
+    public function __construct($inicio, $final, $category)
     {
         $this->f_inicio = $inicio;
         $this->f_final  = $final;
-        
+        $this->category = $category;
     }
 
     public function collection()
@@ -46,32 +47,48 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
 
 
-        if(!empty($this->f_inicio) &&  !empty($this->f_final)){
-
-
+        if (!empty($this->f_inicio) &&  !empty($this->f_final) && !empty($this->category)) {
 
             $notification =  DB::table('notifications as n')
             ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
-            ->join('employees as em', 'n.employee_id','=','em.id')
-            ->join('positions as pos','em.position_id','=','pos.id')
-            ->join('center_costs as cc','n.center_cost_id','=','cc.id')
-            ->join('bosses as boss','n.boss_id','=','boss.id')
-            ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-            ->whereDate('started_date','>=',$this->f_inicio)->whereDate('started_date','<=',$this->f_final)
-            ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','started_time','finish_time','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
-            ->orderBy('started_date','desc')
-            ->get();
-        }else{
+            ->join('employees as em', 'n.employee_id', '=', 'em.id')
+            ->join('positions as pos', 'em.position_id', '=', 'pos.id')
+            ->join('center_costs as cc', 'n.center_cost_id', '=', 'cc.id')
+            ->join('bosses as boss', 'n.boss_id', '=', 'boss.id')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')->join('notification_categories as ct', 'nt.notification_category_id', '=', 'ct.id')
+                ->where('ct.id', '=', $this->category)
+                ->whereDate('started_date', '>=', $this->f_inicio)->whereDate('started_date', '<=', $this->f_final)
+                ->select('idt.name as tipo_id', 'em.identification as identificacion', 'em.first_name as nombres', 'em.last_name as apellidos', 'pos.name as cargo', 'cc.name as center_costo', 'boss.fullname as jefe_inmediato', 'nt.name as tipo_novedad', 'started_date', 'finish_date', 'started_time', 'finish_time', 'total_days as total_dias', 'total_hours as total_horas', 'observation as observacion', 'support as soporte')
+                ->orderBy('started_date', 'desc')
+                ->get();
+
+            return $notification;
+
+        } else if (!empty($this->f_inicio) &&  !empty($this->f_final)) {
             $notification =  DB::table('notifications as n')
             ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
-            ->join('employees as em', 'n.employee_id','=','em.id')
-            ->join('positions as pos','em.position_id','=','pos.id')
-            ->join('center_costs as cc','n.center_cost_id','=','cc.id')
-            ->join('bosses as boss','n.boss_id','=','boss.id')
-            ->join('notifications_types as nt','n.notifications_type_id','=','nt.id')
-            ->select('idt.name as tipo_id','em.identification as identificacion','em.first_name as nombres','em.last_name as apellidos','pos.name as cargo','cc.name as center_costo','boss.fullname as jefe_inmediato','nt.name as tipo_novedad','started_date','finish_date','started_time','finish_time','total_days as total_dias','total_hours as total_horas','observation as observacion','support as soporte')
-            ->orderBy('started_date','desc')
-            ->get();
+            ->join('employees as em', 'n.employee_id', '=', 'em.id')
+            ->join('positions as pos', 'em.position_id', '=', 'pos.id')
+            ->join('center_costs as cc', 'n.center_cost_id', '=', 'cc.id')
+            ->join('bosses as boss', 'n.boss_id', '=', 'boss.id')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')->whereDate('started_date', '>=', $this->f_inicio)->whereDate('started_date', '<=', $this->f_final)
+                ->select('idt.name as tipo_id', 'em.identification as identificacion', 'em.first_name as nombres', 'em.last_name as apellidos', 'pos.name as cargo', 'cc.name as center_costo', 'boss.fullname as jefe_inmediato', 'nt.name as tipo_novedad', 'started_date', 'finish_date', 'started_time', 'finish_time', 'total_days as total_dias', 'total_hours as total_horas', 'observation as observacion', 'support as soporte')
+                ->orderBy('started_date', 'desc')
+                ->get();
+
+                return $notification;
+        } else {
+            $notification =  DB::table('notifications as n')
+            ->join('identification_types as idt', 'n.type_identification_id', '=', 'idt.id')
+            ->join('employees as em', 'n.employee_id', '=', 'em.id')
+            ->join('positions as pos', 'em.position_id', '=', 'pos.id')
+            ->join('center_costs as cc', 'n.center_cost_id', '=', 'cc.id')
+            ->join('bosses as boss', 'n.boss_id', '=', 'boss.id')
+            ->join('notifications_types as nt', 'n.notifications_type_id', '=', 'nt.id')->select('idt.name as tipo_id', 'em.identification as identificacion', 'em.first_name as nombres', 'em.last_name as apellidos', 'pos.name as cargo', 'cc.name as center_costo', 'boss.fullname as jefe_inmediato', 'nt.name as tipo_novedad', 'started_date', 'finish_date', 'started_time', 'finish_time', 'total_days as total_dias', 'total_hours as total_horas', 'observation as observacion', 'support as soporte')
+                ->orderBy('started_date', 'desc')
+                ->get();
+
+            return $notification;
         }
 
 
@@ -103,11 +120,6 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
         // ->where('n.user_id',$user_model->id)->whereMonth('started_date',$date)
        }*/
-
-
-        return $notification;
-
-
     }
 
 
@@ -158,6 +170,4 @@ class NotificationExport implements FromCollection ,WithHeadings,WithMapping
 
         ];
     }
-
-
 }
